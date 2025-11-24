@@ -153,6 +153,7 @@ order by
 	c_orderline.qtyordered as c_orderline_qtyordered,
 	c_orderline.pricelist as c_orderline_pricelist,
 	c_orderline.priceactual as c_orderline_priceactual,
+	c_orderline.bay_masterorderline_id,
 	lit_multidiscount.lit_discount_1 as lit_discount_1,
 	lit_multidiscount.lit_discount_2 as lit_discount_2,
 	lit_multidiscount.lit_discount_3 as lit_discount_3,
@@ -162,7 +163,7 @@ order by
 	coalesce(c_uom_trl.uomsymbol, c_uom.uomsymbol) as c_uom_trl_uomsymbol,
 	m_product.sku as m_product_sku,
 	m_attributesetinstance.LIT_MsLegacyCode,
-	m_attributesetinstance.weight,
+	coalesce(m_attributesetinstance.weight, m_product.lit_grossweight) as weight,
 	coalesce(c_uom_weight_client.uomsymbol, c_uom_weight_trl.uomsymbol) as weight_symbol,
 	m_product.LIT_MsDimension,
 	M_AttributeInstance.valuenumber - 
@@ -256,7 +257,8 @@ left join M_AttributeInstance on
 	M_AttributeSetInstance.M_AttributeSetInstance_ID = m_attributeinstance.m_attributesetinstance_id
 where
 	c_order.c_order_id = $P{RECORD_ID}
-order by c_orderline.line]]>
+and c_orderline.bay_masterorderline_id is null	
+	order by c_orderline.line]]>
 	</queryString>
 	<field name="c_order_dateordered" class="java.sql.Timestamp">
 		<property name="com.jaspersoft.studio.field.name" value="c_order_dateordered"/>
@@ -501,6 +503,11 @@ order by c_orderline.line]]>
 	<field name="c_orderline_priceactual" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="c_orderline_priceactual"/>
 		<property name="com.jaspersoft.studio.field.label" value="c_orderline_priceactual"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="c_orderline"/>
+	</field>
+	<field name="bay_masterorderline_id" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="bay_masterorderline_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="bay_masterorderline_id"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="c_orderline"/>
 	</field>
 	<field name="lit_discount_1" class="java.math.BigDecimal">

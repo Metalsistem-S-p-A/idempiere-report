@@ -107,7 +107,9 @@ WHERE
 		<band height="14" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<subreport>
-				<reportElement positionType="Float" mode="Transparent" x="0" y="2" width="555" height="12" uuid="d885bc4e-1f03-41e9-bb5c-4e6a9febf463"/>
+				<reportElement positionType="Float" mode="Transparent" x="0" y="1" width="555" height="12" uuid="d885bc4e-1f03-41e9-bb5c-4e6a9febf463">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
 				<subreportParameter name="LIT_VAT_PERIOD_ID">
 					<subreportParameterExpression><![CDATA[$P{LIT_VAT_Period_ID}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -133,14 +135,16 @@ WHERE
 					<subreportParameterExpression><![CDATA[$P{REPORT_LOCALE}.toString()]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<returnValue subreportVariable="vat_c_invoicetax_taxamt3" toVariable="IVA_DEBITO"/>
+				<returnValue subreportVariable="amt_total" toVariable="IVA_DEBITO"/>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vat_summary.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 		<band height="21">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<subreport>
-				<reportElement positionType="Float" x="0" y="9" width="555" height="12" uuid="591f18a0-abf0-43b8-bf75-05a57b96e09d"/>
+				<reportElement positionType="Float" x="0" y="9" width="555" height="12" uuid="591f18a0-abf0-43b8-bf75-05a57b96e09d">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
 				<subreportParameter name="LIT_VAT_PERIOD_ID">
 					<subreportParameterExpression><![CDATA[$P{LIT_VAT_Period_ID}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -166,7 +170,7 @@ WHERE
 					<subreportParameterExpression><![CDATA[$P{REPORT_LOCALE}.toString()]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<returnValue subreportVariable="vat_c_invoicetax_taxamt3" toVariable="IVA_CREDITO"/>
+				<returnValue subreportVariable="amt_total" toVariable="IVA_CREDITO"/>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vat_summary.jasper"]]></subreportExpression>
 			</subreport>
 		</band>

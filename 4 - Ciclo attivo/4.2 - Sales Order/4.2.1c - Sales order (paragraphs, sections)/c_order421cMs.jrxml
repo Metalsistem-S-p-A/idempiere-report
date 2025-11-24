@@ -182,7 +182,7 @@ order by
 	coalesce(c_uom_trl.uomsymbol, c_uom.uomsymbol) as c_uom_trl_uomsymbol,
 	m_product.sku as m_product_sku,
 	m_attributesetinstance.LIT_MsLegacyCode,
-	m_attributesetinstance.weight,
+coalesce(m_attributesetinstance.weight, m_product.lit_grossweight) as weight,
 	coalesce(c_uom_weight_client.uomsymbol, c_uom_weight_trl.uomsymbol) as weight_symbol,
 	m_product.LIT_MsDimension,
 	M_AttributeInstance.valuenumber - 
@@ -194,6 +194,7 @@ order by
 	end as LIT_MsDimensionValue,
 	LIT_SOParagraph.value as paragraph_value,
 	LIT_SOParagraph.name as paragraph_name,
+		LIT_SOParagraph.description as paragraph_description,
 	lit_multidiscount_paragraph.lit_discount_1 as lit_discount_1_paragraph,
 	lit_multidiscount_paragraph.lit_discount_2 as lit_discount_2_paragraph,
 	lit_multidiscount_paragraph.lit_discount_3 as lit_discount_3_paragraph,
@@ -613,6 +614,11 @@ order by
 		<property name="com.jaspersoft.studio.field.label" value="paragraph_name"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="lit_soparagraph"/>
 	</field>
+	<field name="paragraph_description" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="paragraph_description"/>
+		<property name="com.jaspersoft.studio.field.label" value="paragraph_description"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="lit_soparagraph"/>
+	</field>
 	<field name="lit_discount_1_paragraph" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="lit_discount_1_paragraph"/>
 		<property name="com.jaspersoft.studio.field.label" value="lit_discount_1_paragraph"/>
@@ -688,7 +694,7 @@ order by
 					<textElement verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{paragraph_value} + " - " + $F{paragraph_name}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{paragraph_name} + " - " + $F{paragraph_description}]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="ScaleFont">
 					<reportElement x="410" y="0" width="145" height="20" uuid="2c3408b8-d86e-48e2-b443-3612715ceaf6"/>

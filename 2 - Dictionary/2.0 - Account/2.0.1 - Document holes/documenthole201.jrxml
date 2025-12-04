@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.18.1.final utlizzo versione della libreria JasperReports6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4_1" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="77adbb3d-88e5-4931-a452-4636d010990f">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="34 Test"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="255"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="740"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="417"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="573"/>
+	<parameter name="RESOURCE" class="java.util.PropertyResourceBundle" isForPrompting="false"/>
+	<parameter name="AD_LANGUAGE" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{AD_LANGUAGE}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="AD_ORG_ID" class="java.math.BigDecimal" isForPrompting="false"/>
+	<parameter name="RECORD_ID" class="java.lang.Integer"/>
+	<queryString language="SQL">
+		<![CDATA[select lsh.* ,
+lsh.ad_org_id as ad_org_id,
+ad_client."ad_language" as ad_language
+from lit_sequence_hole lsh
+inner join ad_client ad_client on lsh.ad_client_id=ad_client.ad_client_id]]>
+	</queryString>
+	<field name="ad_client_id" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="ad_client_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="ad_client_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="lit_sequence_hole"/>
+	</field>
+	<field name="ad_org_id" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="ad_org_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="ad_org_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="lit_sequence_hole"/>
+	</field>
+	<field name="c_doctypetarget_id" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="c_doctypetarget_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="c_doctypetarget_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="lit_sequence_hole"/>
+	</field>
+	<field name="ad_sequence_id" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="ad_sequence_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="ad_sequence_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="lit_sequence_hole"/>
+	</field>
+	<field name="vatdocumentno" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="vatdocumentno"/>
+		<property name="com.jaspersoft.studio.field.label" value="vatdocumentno"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="lit_sequence_hole"/>
+	</field>
+	<field name="dateinvoiced" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="dateinvoiced"/>
+		<property name="com.jaspersoft.studio.field.label" value="dateinvoiced"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="lit_sequence_hole"/>
+	</field>
+	<field name="xdocstatus" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="xdocstatus"/>
+		<property name="com.jaspersoft.studio.field.label" value="xdocstatus"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="lit_sequence_hole"/>
+	</field>
+	<field name="docnr" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="docnr"/>
+		<property name="com.jaspersoft.studio.field.label" value="docnr"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="lit_sequence_hole"/>
+	</field>
+	<field name="max" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="max"/>
+		<property name="com.jaspersoft.studio.field.label" value="max"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="lit_sequence_hole"/>
+	</field>
+	<field name="recoverynr" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="recoverynr"/>
+		<property name="com.jaspersoft.studio.field.label" value="recoverynr"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="lit_sequence_hole"/>
+	</field>
+	<field name="docname" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="docname"/>
+		<property name="com.jaspersoft.studio.field.label" value="docname"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="lit_sequence_hole"/>
+	</field>
+	<field name="docnametrl" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="docnametrl"/>
+		<property name="com.jaspersoft.studio.field.label" value="docnametrl"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="lit_sequence_hole"/>
+	</field>
+	<field name="COLUMN_13" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="ad_org_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="ad_org_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="lit_sequence_hole"/>
+	</field>
+	<field name="ad_language" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="ad_language"/>
+		<property name="com.jaspersoft.studio.field.label" value="ad_language"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ad_client"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="22">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement x="0" y="0" width="213" height="22" uuid="186ae1e4-337f-4473-bd41-b58f957059e8">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Report Controllo Numerazione"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="66">
+			<textField>
+				<reportElement x="213" y="32" width="128" height="18" uuid="6827773d-7c2b-4b15-95c1-85558f57d0c3"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{vatdocumentno}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="400" y="32" width="155" height="18" uuid="ff03d3ee-b321-46fe-a4d1-fd30ddb3b43b"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{recoverynr}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="32" width="160" height="18" uuid="9ee01c96-b9de-4920-9e71-8ed99fcd5907"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{docnametrl}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="400" y="10" width="155" height="22" uuid="e40b20cb-9964-43a2-a485-d10eecaa3e04"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Numero di Recupero"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="213" y="10" width="128" height="22" uuid="2eb54014-ab64-43e2-98a4-57986bfbb602"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{RESOURCE}.getString("documentnumber_"+$F{ad_language})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="10" width="160" height="22" uuid="3811fb67-1f27-43e1-b4fc-18b21e36e70f"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Nome Documento"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="10">
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField" x="475" y="0" width="48" height="10" uuid="9dd00f3a-ab10-4830-80e8-c8d2c6cddd22">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Pag " + $V{PAGE_NUMBER} + " / "]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" isBlankWhenNull="false">
+				<reportElement key="textField" x="523" y="0" width="32" height="10" uuid="8df8c866-19b8-4a0a-9f4d-7e252c2dbcce">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA["" + $V{PAGE_NUMBER} + ""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="160" height="10" uuid="36f01394-ff98-45a0-bf0b-cea502d3917f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="dialog" size="7" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[CONCATENATE(new java.text.SimpleDateFormat("dd/MM/yyyy").format(new Date()),"-","RP.201")]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="196" y="0" width="163" height="10" forecolor="#333333" uuid="769e4026-a200-4e0f-a290-968a5eda3430"/>
+				<textElement textAlignment="Center" markup="none">
+					<font fontName="dialog" size="7" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{RESOURCE}.getString("desc_0422")]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

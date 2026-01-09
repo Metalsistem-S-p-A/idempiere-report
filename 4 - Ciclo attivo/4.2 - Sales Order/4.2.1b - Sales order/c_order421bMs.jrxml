@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.17.0.final utlizzo versione della libreria JasperReports6.17.0-6d93193241dd8cc42629e188b94f9e0bc5722efd  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="421salesorder" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" isSummaryWithPageHeaderAndFooter="true" uuid="9847bff4-9f3a-49b0-9603-8d56c23b5d53">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempieredb-report-dev"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempiere - PRODUZIONE"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<style name="Header" mode="Opaque" backcolor="#D9D9D9"/>
 	<style name="EasyRead">
@@ -88,6 +88,9 @@ order by
 	</parameter>
 	<parameter name="LOCALE_CODE" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[$P{REPORT_LOCALE}.toString()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PRINT_TERM_COND" class="java.lang.String">
+		<defaultValueExpression><![CDATA["N"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[select
@@ -581,15 +584,14 @@ and c_orderline.bay_masterorderline_id is null
 	<variable name="TotalWeight" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{weight}.multiply($F{c_orderline_qtyordered})]]></variableExpression>
 	</variable>
-	<pageHeader>
-		<band height="328" splitType="Stretch">
-			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+	<title>
+		<band height="333">
 			<image scaleImage="RetainShape" hAlign="Left" isUsingCache="true" onErrorType="Blank">
-				<reportElement x="-20" y="0" width="595" height="80" uuid="73beff12-a762-4e9d-bedb-fbb00fc4cb67"/>
+				<reportElement x="-20" y="0" width="595" height="80" uuid="7be8cfa7-bb80-4b2a-94f6-5a11ccc44fc5"/>
 				<imageExpression><![CDATA[$F{header_image}]]></imageExpression>
 			</image>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement style="Header" positionType="Float" x="280" y="85" width="275" height="20" isRemoveLineWhenBlank="true" uuid="b83bb9c2-7d01-4fc2-80b3-375dbebba648">
+				<reportElement style="Header" positionType="Float" x="285" y="90" width="275" height="20" isRemoveLineWhenBlank="true" uuid="3b47272c-ed98-48d4-aaf5-eb63dd113642">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -607,7 +609,7 @@ and c_orderline.bay_masterorderline_id is null
 				<textFieldExpression><![CDATA[str("LIT_RP_421_ShipTo")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement style="Header" positionType="Float" x="0" y="85" width="275" height="20" isRemoveLineWhenBlank="true" uuid="3e8bba00-199b-4a78-9792-97295fda75e3">
+				<reportElement style="Header" positionType="Float" x="5" y="90" width="275" height="20" isRemoveLineWhenBlank="true" uuid="23ad0532-76cb-49b7-9635-dd82c4452f2e">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
@@ -626,7 +628,7 @@ and c_orderline.bay_masterorderline_id is null
 				<textFieldExpression><![CDATA[str("LIT_RP_421_TitleFirm")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="280" y="105" width="275" height="15" uuid="a669b11e-f70b-4a23-acf1-41b883b4293c">
+				<reportElement positionType="Float" x="285" y="110" width="275" height="15" uuid="5df8b263-58a0-4054-9829-6171a0d109f8">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -645,7 +647,7 @@ and c_orderline.bay_masterorderline_id is null
 )]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" mode="Transparent" x="280" y="120" width="275" height="15" backcolor="#FFFFFF" uuid="a2d95138-e3f3-489c-9525-56a4b1016071">
+				<reportElement positionType="Float" mode="Transparent" x="285" y="125" width="275" height="15" backcolor="#FFFFFF" uuid="d4371061-c469-4aff-9ec8-cc9e6714d56a">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 				</reportElement>
@@ -660,7 +662,7 @@ and c_orderline.bay_masterorderline_id is null
 				<textFieldExpression><![CDATA[($F{c_location_a_address1} == null ? "" : $F{c_location_a_address1}) + " - " + ($F{c_location_a_address2} == null ? "" : $F{c_location_a_address2})]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="280" y="135" width="275" height="15" uuid="e113c9a7-9ffb-46a4-9174-008d3f2a5561">
+				<reportElement positionType="Float" x="285" y="140" width="275" height="15" uuid="d25754e0-ffc2-4d99-997e-206f8695c181">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 				</reportElement>
@@ -678,7 +680,7 @@ and c_orderline.bay_masterorderline_id is null
 				<textFieldExpression><![CDATA[($F{c_location_a_postal} == null ? "" : $F{c_location_a_postal}) + " "+ ($F{c_location_a_city} == null ? "" : $F{c_location_a_city}) +" "+($F{c_location_a_regionname} == null ? "" : $F{c_location_a_regionname})+" " +($F{c_country_trl_a_name} == null ? "" : $F{c_country_trl_a_name})]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="105" width="275" height="15" forecolor="#000000" uuid="fb55a7da-1a8b-4307-b24c-3714ad916ade">
+				<reportElement positionType="Float" x="5" y="110" width="275" height="15" forecolor="#000000" uuid="d1f38b75-af35-45e5-a072-7151246d258e">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
@@ -695,7 +697,7 @@ and c_orderline.bay_masterorderline_id is null
 				<textFieldExpression><![CDATA[$F{c_bpartner_name}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="120" width="275" height="15" uuid="4bc594c7-9ce5-4a2d-9bab-30e413178b2a">
+				<reportElement positionType="Float" x="5" y="125" width="275" height="15" uuid="0a7c27f1-54ef-4845-a3f5-c4c35702c890">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -711,7 +713,7 @@ and c_orderline.bay_masterorderline_id is null
 				<textFieldExpression><![CDATA[($F{c_location_address1} == null ? "" : $F{c_location_address1}) + " - " + ($F{c_location_address2} == null ? "" : $F{c_location_address2})]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="135" width="275" height="15" uuid="4d869496-2e8a-497d-8fd6-f9c8b040bf89">
+				<reportElement positionType="Float" x="5" y="140" width="275" height="15" uuid="19b06336-54d3-4bd8-a244-2549a9380775">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -728,7 +730,7 @@ and c_orderline.bay_masterorderline_id is null
 				<textFieldExpression><![CDATA[($F{c_location_postal} == null ? "" : $F{c_location_postal}) + " "+ ($F{c_location_city} == null ? "" : $F{c_location_city}) +" "+($F{c_location_regionname} == null ? "" : $F{c_location_regionname})+" " +($F{c_country_trl_name} == null ? "" : $F{c_country_trl_name})]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement style="Header" positionType="Float" x="0" y="160" width="275" height="20" forecolor="#000000" uuid="a651d5e0-9932-42d4-b138-90a622e76e77">
+				<reportElement style="Header" positionType="Float" x="5" y="165" width="275" height="20" forecolor="#000000" uuid="944fd72f-ace9-4729-bbf3-ce8d4d6d1661">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
@@ -747,7 +749,7 @@ and c_orderline.bay_masterorderline_id is null
 				<textFieldExpression><![CDATA[$F{c_order_docstatus}.equals("CO") ? $F{c_doctype_printname}:$F{c_doctype_documentnote}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="185" width="140" height="15" forecolor="#000000" uuid="8789e620-f213-4378-ade6-bdb5dca90430">
+				<reportElement positionType="Float" x="5" y="190" width="140" height="15" forecolor="#000000" uuid="8bbcb901-868e-4898-a606-6e9567482924">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -766,7 +768,7 @@ and c_orderline.bay_masterorderline_id is null
 				<textFieldExpression><![CDATA[str("DocumentNo")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="200" width="140" height="15" forecolor="#000000" uuid="5b1efe4c-1026-4031-9e96-24ddf1a2a96d">
+				<reportElement positionType="Float" x="5" y="205" width="140" height="15" forecolor="#000000" uuid="c020528c-7e87-4c1c-aeeb-3056c9565ca1">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -785,7 +787,7 @@ and c_orderline.bay_masterorderline_id is null
 				<textFieldExpression><![CDATA[$F{c_order_documentno}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="145" y="185" width="80" height="15" forecolor="#000000" uuid="84df848d-920d-484c-85cb-3f5554637bea">
+				<reportElement positionType="Float" x="150" y="190" width="80" height="15" forecolor="#000000" uuid="ccdbb316-45e8-4382-aefa-4a90ce3ec97e">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -804,7 +806,7 @@ and c_orderline.bay_masterorderline_id is null
 				<textFieldExpression><![CDATA[str("DateOrdered")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="145" y="200" width="80" height="15" forecolor="#000000" uuid="c35bb1a2-3976-41a7-a5d4-95b40a9f942d">
+				<reportElement positionType="Float" x="150" y="205" width="80" height="15" forecolor="#000000" uuid="dd82b35a-c36a-48aa-82a5-21db99985e71">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -823,7 +825,7 @@ and c_orderline.bay_masterorderline_id is null
 				<textFieldExpression><![CDATA[DATEFORMAT($F{c_order_dateordered},$F{datepattern})]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="495" y="185" width="60" height="15" forecolor="#000000" uuid="c0de95e6-9c9c-40a3-aba3-8b318df75734">
+				<reportElement positionType="Float" x="500" y="190" width="60" height="15" forecolor="#000000" uuid="c26328c4-e700-441d-b90e-08cc99b707db">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -842,7 +844,7 @@ and c_orderline.bay_masterorderline_id is null
 				<textFieldExpression><![CDATA[str("Page")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="495" y="200" width="60" height="15" forecolor="#000000" uuid="c3e7fcce-be37-40a6-b14e-5253a3103573">
+				<reportElement positionType="Float" x="500" y="205" width="60" height="15" forecolor="#000000" uuid="f9516ab5-08d1-442b-95ae-83cbabe19168">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -861,7 +863,7 @@ and c_orderline.bay_masterorderline_id is null
 				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="222" width="140" height="15" forecolor="#000000" uuid="054ef5ac-a4ea-48f6-8647-f2a11c40f177">
+				<reportElement positionType="Float" x="5" y="227" width="140" height="15" forecolor="#000000" uuid="f7a4e57d-424b-462a-b87a-5c1384ad0e8e">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -880,7 +882,7 @@ and c_orderline.bay_masterorderline_id is null
 				<textFieldExpression><![CDATA[str("PaymentRule")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="237" width="140" height="15" forecolor="#000000" uuid="2de4728f-91cf-4dbb-87df-8c90f91ccd07">
+				<reportElement positionType="Float" x="5" y="242" width="140" height="15" forecolor="#000000" uuid="452e3c66-382d-4abb-852c-253b5f33c7f7">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -899,7 +901,7 @@ and c_orderline.bay_masterorderline_id is null
 				<textFieldExpression><![CDATA[$F{c_order_paymentrule}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="145" y="222" width="140" height="15" forecolor="#000000" uuid="abf75d0f-b8f7-4268-861d-9af02988a525">
+				<reportElement positionType="Float" x="150" y="227" width="140" height="15" forecolor="#000000" uuid="27511c55-20a8-4f78-baf3-27ce5ff737fc">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -918,7 +920,7 @@ and c_orderline.bay_masterorderline_id is null
 				<textFieldExpression><![CDATA[str("PaymentTerm")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="145" y="237" width="140" height="15" forecolor="#000000" uuid="8209f29e-2229-469f-9214-9c3eec88af74">
+				<reportElement positionType="Float" x="150" y="242" width="140" height="15" forecolor="#000000" uuid="81b4ed79-ebe2-49c9-9a25-76f4b4b884c4">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -937,7 +939,7 @@ and c_orderline.bay_masterorderline_id is null
 				<textFieldExpression><![CDATA[$F{c_paymentterm_name}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="410" y="185" width="60" height="15" forecolor="#000000" uuid="c243af5e-9588-42e1-8a16-67491160dd26">
+				<reportElement positionType="Float" x="415" y="190" width="60" height="15" forecolor="#000000" uuid="4d134b17-9028-449d-b1df-4eef8c6cc88a">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -956,7 +958,7 @@ and c_orderline.bay_masterorderline_id is null
 				<textFieldExpression><![CDATA[str("Currency")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="410" y="200" width="60" height="15" forecolor="#000000" uuid="8488e8bc-c5a4-4165-b848-4db2b8f1c7cd">
+				<reportElement positionType="Float" x="415" y="205" width="60" height="15" forecolor="#000000" uuid="a8ac5527-78bb-4000-84af-00605facfd31">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -975,7 +977,7 @@ and c_orderline.bay_masterorderline_id is null
 				<textFieldExpression><![CDATA[$F{c_currency_iso_code}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="410" y="222" width="145" height="15" forecolor="#000000" uuid="921fbf6e-1690-433a-8e14-ef75da5bb35b">
+				<reportElement positionType="Float" x="415" y="227" width="145" height="15" forecolor="#000000" uuid="3201deaa-41d8-4941-8850-ce9b6868578e">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -994,7 +996,7 @@ and c_orderline.bay_masterorderline_id is null
 				<textFieldExpression><![CDATA[str("DeliveryViaRule")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="410" y="237" width="145" height="15" forecolor="#000000" uuid="7adfba44-a845-40ca-aa6e-8bffa83633c8">
+				<reportElement positionType="Float" x="415" y="242" width="145" height="15" forecolor="#000000" uuid="d17dda70-b0aa-40e2-bfff-e5e8f3867bab">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1013,7 +1015,7 @@ and c_orderline.bay_masterorderline_id is null
 				<textFieldExpression><![CDATA[$F{c_order_deliveryviarule}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="260" y="185" width="80" height="15" forecolor="#000000" uuid="71be90fd-f0b9-42a3-8136-520a33b6c158">
+				<reportElement positionType="Float" x="265" y="190" width="80" height="15" forecolor="#000000" uuid="24082df8-9536-4cee-9cb6-ca1fccc45778">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1033,7 +1035,7 @@ and c_orderline.bay_masterorderline_id is null
 				<textFieldExpression><![CDATA[str("LIT_OfferValidityTime_ID")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="260" y="200" width="80" height="15" forecolor="#000000" uuid="de37a106-53de-47ba-9a37-5075ba20c5ee">
+				<reportElement positionType="Float" x="265" y="205" width="80" height="15" forecolor="#000000" uuid="a3422bf6-2271-4f04-b618-9777e3057940">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1053,7 +1055,7 @@ and c_orderline.bay_masterorderline_id is null
 				<textFieldExpression><![CDATA[$F{c_order_lit_offervaliditytime_name}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="260" width="140" height="15" forecolor="#000000" uuid="761dbf00-44ba-4cee-b0cb-032919a2a24b">
+				<reportElement positionType="Float" x="5" y="265" width="140" height="15" forecolor="#000000" uuid="bf020c35-f166-4a3b-a3d0-151ebb512d60">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1072,7 +1074,7 @@ and c_orderline.bay_masterorderline_id is null
 				<textFieldExpression><![CDATA[str("POReference")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="275" width="140" height="15" forecolor="#000000" uuid="708d7687-5cab-4ffd-bca9-071e78e606b6">
+				<reportElement positionType="Float" x="5" y="280" width="140" height="15" forecolor="#000000" uuid="19e2ddb5-e7ab-480d-92f2-e0761bfb0c1e">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1091,7 +1093,7 @@ and c_orderline.bay_masterorderline_id is null
 				<textFieldExpression><![CDATA[$F{c_order_poreference}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="145" y="260" width="256" height="15" forecolor="#000000" uuid="a0fd1b6e-035b-49cc-9b29-f96a90d7f250">
+				<reportElement positionType="Float" x="150" y="265" width="256" height="15" forecolor="#000000" uuid="d24ed693-8c8b-416a-8849-5cbe9d125bcf">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1110,7 +1112,7 @@ and c_orderline.bay_masterorderline_id is null
 				<textFieldExpression><![CDATA[str("Description")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="145" y="275" width="256" height="15" forecolor="#000000" uuid="8c37028f-e954-4657-bbc3-9b6297115703">
+				<reportElement positionType="Float" x="150" y="280" width="256" height="15" forecolor="#000000" uuid="409dc908-a511-4765-bfc9-aac0245bdfb1">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1129,7 +1131,7 @@ and c_orderline.bay_masterorderline_id is null
 				<textFieldExpression><![CDATA[$F{c_order_description}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="410" y="260" width="145" height="15" forecolor="#000000" uuid="18a5cac9-80ec-4840-aec7-6b5966b674e6">
+				<reportElement positionType="Float" x="415" y="265" width="145" height="15" forecolor="#000000" uuid="3009e2f7-e466-4ca0-98c7-226d12c3c857">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1148,7 +1150,7 @@ and c_orderline.bay_masterorderline_id is null
 				<textFieldExpression><![CDATA[str("FOB")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="410" y="275" width="145" height="15" forecolor="#000000" uuid="7f35ab2e-c736-4af7-87ab-9d0ce47df663">
+				<reportElement positionType="Float" x="415" y="280" width="145" height="15" forecolor="#000000" uuid="d3e6524b-19b1-44f3-966c-ed367da8ef7a">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1167,7 +1169,7 @@ and c_orderline.bay_masterorderline_id is null
 				<textFieldExpression><![CDATA[$F{c_order_fob}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="298" width="140" height="15" forecolor="#000000" uuid="3e8cb42b-699f-4376-8cdf-17690873f749">
+				<reportElement positionType="Float" x="5" y="303" width="140" height="15" forecolor="#000000" uuid="f3ec023f-e0a6-474c-ae03-7b066b2f7d2e">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1186,7 +1188,7 @@ and c_orderline.bay_masterorderline_id is null
 				<textFieldExpression><![CDATA[str("DatePromised")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="313" width="140" height="15" forecolor="#000000" uuid="d863edd1-4ac9-487c-aa67-cebdfba601c3">
+				<reportElement positionType="Float" x="5" y="318" width="140" height="15" forecolor="#000000" uuid="62c0c34c-6adb-4900-b831-6dcf23821945">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1205,7 +1207,7 @@ and c_orderline.bay_masterorderline_id is null
 				<textFieldExpression><![CDATA[DATEFORMAT($F{datepromised}, $F{datepattern} )]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="145" y="298" width="410" height="15" forecolor="#000000" uuid="2544e49d-56dd-4320-b044-99991e646f35">
+				<reportElement positionType="Float" x="150" y="303" width="410" height="15" forecolor="#000000" uuid="b73d16ec-4029-4b25-b5ca-c516dea066a5">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1224,7 +1226,7 @@ and c_orderline.bay_masterorderline_id is null
 				<textFieldExpression><![CDATA[str("Note")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="145" y="313" width="410" height="15" forecolor="#000000" uuid="5f6c3efa-2126-4ef4-a1f8-faae91d5bb69">
+				<reportElement positionType="Float" x="150" y="318" width="410" height="15" forecolor="#000000" uuid="9657b0df-1051-4477-a9a6-97d6496584c2">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1242,6 +1244,16 @@ and c_orderline.bay_masterorderline_id is null
 				</textElement>
 				<textFieldExpression><![CDATA[$F{note}]]></textFieldExpression>
 			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="80" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[$V{PAGE_NUMBER} > 1]]></printWhenExpression>
+			<image scaleImage="RetainShape" hAlign="Left" isUsingCache="true" onErrorType="Blank">
+				<reportElement x="-20" y="0" width="595" height="80" uuid="f1d0b568-eaba-4b15-83ac-8de7aacc8eb5"/>
+				<imageExpression><![CDATA[$F{header_image}]]></imageExpression>
+			</image>
 		</band>
 	</pageHeader>
 	<columnHeader>
@@ -1620,7 +1632,7 @@ and c_orderline.bay_masterorderline_id is null
 		</band>
 	</pageFooter>
 	<summary>
-		<band height="146">
+		<band height="155">
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement isPrintRepeatedValues="false" x="285" y="55" width="129" height="15" uuid="dbf23382-9816-4d16-b3e4-ecd0a24c058f">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -2036,6 +2048,21 @@ and c_orderline.bay_masterorderline_id is null
 				</textElement>
 				<textFieldExpression><![CDATA[$V{TotalWeight}]]></textFieldExpression>
 			</textField>
+			<break>
+				<reportElement x="0" y="143" width="99" height="1" uuid="38d27c2e-0a1c-419b-99da-c56b55705d9b">
+					<printWhenExpression><![CDATA["Y".equals($P{PRINT_TERM_COND})]]></printWhenExpression>
+				</reportElement>
+			</break>
+			<subreport>
+				<reportElement x="0" y="145" width="555" height="10" uuid="9a1860af-4307-461a-9270-f50cc9451fed">
+					<printWhenExpression><![CDATA["Y".equals($P{PRINT_TERM_COND})]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="RECORD_ID">
+					<subreportParameterExpression><![CDATA[$P{RECORD_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/term_conditions.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 	</summary>
 </jasperReport>

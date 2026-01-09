@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.17.0.final utlizzo versione della libreria JasperReports6.17.0-6d93193241dd8cc42629e188b94f9e0bc5722efd  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="421salesorder" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" isSummaryWithPageHeaderAndFooter="true" uuid="9847bff4-9f3a-49b0-9603-8d56c23b5d53">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempieredb-report-dev"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempiere - PRODUZIONE"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<style name="Header" mode="Opaque" backcolor="#D9D9D9"/>
 	<style name="EasyRead">
@@ -108,6 +108,9 @@ order by
 	</parameter>
 	<parameter name="PRINT_SECTION_DETAIL" class="java.lang.String">
 		<defaultValueExpression><![CDATA["Y"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PRINT_TERM_COND" class="java.lang.String">
+		<defaultValueExpression><![CDATA["N"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[select
@@ -288,8 +291,10 @@ left join M_AttributeInstance on
 	M_AttributeSetInstance.M_AttributeSetInstance_ID = m_attributeinstance.m_attributesetinstance_id
 left join LIT_SOParagraph on
 	LIT_SOParagraph.lit_soparagraph_id = c_orderline.LIT_SOParagraph_id
+left join m_discountschema on lit_soparagraph.m_discountschema_id = m_discountschema.m_discountschema_id 
+left join m_discountschemabreak on m_discountschema.m_discountschema_id = m_discountschemabreak.m_discountschema_id 
 left join LIT_MultiDiscount lit_multidiscount_paragraph on
-	LIT_SOParagraph.LIT_MultiDiscount_ID = lit_multidiscount_paragraph.lit_multidiscount_id
+	m_discountschemabreak.LIT_MultiDiscount_ID = lit_multidiscount_paragraph.lit_multidiscount_id
 where
 	c_order.c_order_id = $P{RECORD_ID}
 order by
@@ -694,9 +699,9 @@ order by
 					<textElement verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{paragraph_name} + " - " + $F{paragraph_description}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{paragraph_name} + ( $F{paragraph_description} != null ? " - " + $F{paragraph_description} : "")]]></textFieldExpression>
 				</textField>
-				<textField textAdjust="ScaleFont">
+				<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 					<reportElement x="410" y="0" width="145" height="20" uuid="2c3408b8-d86e-48e2-b443-3612715ceaf6"/>
 					<box leftPadding="2" rightPadding="2">
 						<topPen lineWidth="1.0"/>
@@ -1015,15 +1020,15 @@ order by
 			</band>
 		</groupHeader>
 	</group>
-	<pageHeader>
-		<band height="328" splitType="Stretch">
+	<title>
+		<band height="328">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<image scaleImage="RetainShape" hAlign="Left" isUsingCache="true" onErrorType="Blank">
-				<reportElement x="-20" y="0" width="595" height="80" uuid="73beff12-a762-4e9d-bedb-fbb00fc4cb67"/>
+				<reportElement x="-20" y="0" width="595" height="80" uuid="161aa7a0-1914-40d2-a16e-df06778cd1b7"/>
 				<imageExpression><![CDATA[$F{header_image}]]></imageExpression>
 			</image>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement style="Header" positionType="Float" x="280" y="85" width="275" height="20" isRemoveLineWhenBlank="true" uuid="b83bb9c2-7d01-4fc2-80b3-375dbebba648">
+				<reportElement style="Header" positionType="Float" x="280" y="85" width="275" height="20" isRemoveLineWhenBlank="true" uuid="3cae481a-29e7-4a7d-9d10-ce8822c2e138">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -1041,7 +1046,7 @@ order by
 				<textFieldExpression><![CDATA[str("LIT_RP_421_ShipTo")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement style="Header" positionType="Float" x="0" y="85" width="275" height="20" isRemoveLineWhenBlank="true" uuid="3e8bba00-199b-4a78-9792-97295fda75e3">
+				<reportElement style="Header" positionType="Float" x="0" y="85" width="275" height="20" isRemoveLineWhenBlank="true" uuid="fc9f98fd-bd72-455b-a322-6053de10e56d">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
@@ -1060,7 +1065,7 @@ order by
 				<textFieldExpression><![CDATA[str("LIT_RP_421_TitleFirm")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="280" y="105" width="275" height="15" uuid="a669b11e-f70b-4a23-acf1-41b883b4293c">
+				<reportElement positionType="Float" x="280" y="105" width="275" height="15" uuid="a83b4230-164d-4acf-8748-2472f7105d85">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1079,7 +1084,7 @@ order by
 )]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" mode="Transparent" x="280" y="120" width="275" height="15" backcolor="#FFFFFF" uuid="a2d95138-e3f3-489c-9525-56a4b1016071">
+				<reportElement positionType="Float" mode="Transparent" x="280" y="120" width="275" height="15" backcolor="#FFFFFF" uuid="e4f72641-ccfc-45e3-8c6b-93cb4317fa08">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 				</reportElement>
@@ -1094,7 +1099,7 @@ order by
 				<textFieldExpression><![CDATA[($F{c_location_a_address1} == null ? "" : $F{c_location_a_address1}) + " - " + ($F{c_location_a_address2} == null ? "" : $F{c_location_a_address2})]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="280" y="135" width="275" height="15" uuid="e113c9a7-9ffb-46a4-9174-008d3f2a5561">
+				<reportElement positionType="Float" x="280" y="135" width="275" height="15" uuid="a022273c-41f0-45db-84d5-087565c02d8a">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 				</reportElement>
@@ -1112,7 +1117,7 @@ order by
 				<textFieldExpression><![CDATA[($F{c_location_a_postal} == null ? "" : $F{c_location_a_postal}) + " "+ ($F{c_location_a_city} == null ? "" : $F{c_location_a_city}) +" "+($F{c_location_a_regionname} == null ? "" : $F{c_location_a_regionname})+" " +($F{c_country_trl_a_name} == null ? "" : $F{c_country_trl_a_name})]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="105" width="275" height="15" forecolor="#000000" uuid="fb55a7da-1a8b-4307-b24c-3714ad916ade">
+				<reportElement positionType="Float" x="0" y="105" width="275" height="15" forecolor="#000000" uuid="dc7de262-0723-42d4-90ad-7f4f7984fc18">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
@@ -1129,7 +1134,7 @@ order by
 				<textFieldExpression><![CDATA[$F{c_bpartner_name}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="120" width="275" height="15" uuid="4bc594c7-9ce5-4a2d-9bab-30e413178b2a">
+				<reportElement positionType="Float" x="0" y="120" width="275" height="15" uuid="77564ad8-b02d-47cf-a36e-c3cd6434ac47">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1145,7 +1150,7 @@ order by
 				<textFieldExpression><![CDATA[($F{c_location_address1} == null ? "" : $F{c_location_address1}) + " - " + ($F{c_location_address2} == null ? "" : $F{c_location_address2})]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="135" width="275" height="15" uuid="4d869496-2e8a-497d-8fd6-f9c8b040bf89">
+				<reportElement positionType="Float" x="0" y="135" width="275" height="15" uuid="9546f318-8a38-4a35-88f3-324a4126bb99">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1162,7 +1167,7 @@ order by
 				<textFieldExpression><![CDATA[($F{c_location_postal} == null ? "" : $F{c_location_postal}) + " "+ ($F{c_location_city} == null ? "" : $F{c_location_city}) +" "+($F{c_location_regionname} == null ? "" : $F{c_location_regionname})+" " +($F{c_country_trl_name} == null ? "" : $F{c_country_trl_name})]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement style="Header" positionType="Float" x="0" y="160" width="275" height="20" forecolor="#000000" uuid="a651d5e0-9932-42d4-b138-90a622e76e77">
+				<reportElement style="Header" positionType="Float" x="0" y="160" width="275" height="20" forecolor="#000000" uuid="13d46344-05c9-4953-aba9-475e06afff70">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
@@ -1181,7 +1186,7 @@ order by
 				<textFieldExpression><![CDATA[$F{c_doctype_printname}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="185" width="140" height="15" forecolor="#000000" uuid="8789e620-f213-4378-ade6-bdb5dca90430">
+				<reportElement positionType="Float" x="0" y="185" width="140" height="15" forecolor="#000000" uuid="536ed333-731c-46c9-80c7-3c899e866053">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1200,7 +1205,7 @@ order by
 				<textFieldExpression><![CDATA[str("DocumentNo")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="200" width="140" height="15" forecolor="#000000" uuid="5b1efe4c-1026-4031-9e96-24ddf1a2a96d">
+				<reportElement positionType="Float" x="0" y="200" width="140" height="15" forecolor="#000000" uuid="ef2eeb07-fe3d-46ca-aebc-a26bb312d2ae">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1219,7 +1224,7 @@ order by
 				<textFieldExpression><![CDATA[$F{c_order_documentno}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="145" y="185" width="80" height="15" forecolor="#000000" uuid="84df848d-920d-484c-85cb-3f5554637bea">
+				<reportElement positionType="Float" x="145" y="185" width="80" height="15" forecolor="#000000" uuid="e9813fa8-2ec6-4dc4-b194-67330627bdbf">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1238,7 +1243,7 @@ order by
 				<textFieldExpression><![CDATA[str("DateOrdered")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="145" y="200" width="80" height="15" forecolor="#000000" uuid="c35bb1a2-3976-41a7-a5d4-95b40a9f942d">
+				<reportElement positionType="Float" x="145" y="200" width="80" height="15" forecolor="#000000" uuid="76be32a8-cdd9-47d0-9eff-bb5fea518d82">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1257,7 +1262,7 @@ order by
 				<textFieldExpression><![CDATA[DATEFORMAT($F{c_order_dateordered},$F{datepattern})]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="495" y="185" width="60" height="15" forecolor="#000000" uuid="c0de95e6-9c9c-40a3-aba3-8b318df75734">
+				<reportElement positionType="Float" x="495" y="185" width="60" height="15" forecolor="#000000" uuid="cfc10f1a-64b7-45af-9b90-d7c089764d84">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1276,7 +1281,7 @@ order by
 				<textFieldExpression><![CDATA[str("Page")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="495" y="200" width="60" height="15" forecolor="#000000" uuid="c3e7fcce-be37-40a6-b14e-5253a3103573">
+				<reportElement positionType="Float" x="495" y="200" width="60" height="15" forecolor="#000000" uuid="018cdd5e-fc85-4d6e-8f1c-286265ee31fa">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1295,7 +1300,7 @@ order by
 				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="222" width="140" height="15" forecolor="#000000" uuid="054ef5ac-a4ea-48f6-8647-f2a11c40f177">
+				<reportElement positionType="Float" x="0" y="222" width="140" height="15" forecolor="#000000" uuid="731830d1-3870-4efa-b3a9-9023e52f2a7f">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1314,7 +1319,7 @@ order by
 				<textFieldExpression><![CDATA[str("PaymentRule")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="237" width="140" height="15" forecolor="#000000" uuid="2de4728f-91cf-4dbb-87df-8c90f91ccd07">
+				<reportElement positionType="Float" x="0" y="237" width="140" height="15" forecolor="#000000" uuid="c6971a56-0c87-410f-9dc1-92cb4f75cf06">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1333,7 +1338,7 @@ order by
 				<textFieldExpression><![CDATA[$F{c_order_paymentrule}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="145" y="222" width="140" height="15" forecolor="#000000" uuid="abf75d0f-b8f7-4268-861d-9af02988a525">
+				<reportElement positionType="Float" x="145" y="222" width="140" height="15" forecolor="#000000" uuid="60486c31-ad26-4bfc-9cc4-f5fb81d56fd1">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1352,7 +1357,7 @@ order by
 				<textFieldExpression><![CDATA[str("PaymentTerm")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="145" y="237" width="140" height="15" forecolor="#000000" uuid="8209f29e-2229-469f-9214-9c3eec88af74">
+				<reportElement positionType="Float" x="145" y="237" width="140" height="15" forecolor="#000000" uuid="fc6fc6f0-8926-42ab-8aca-8155110e5b0a">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1371,7 +1376,7 @@ order by
 				<textFieldExpression><![CDATA[$F{c_paymentterm_name}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="410" y="185" width="60" height="15" forecolor="#000000" uuid="c243af5e-9588-42e1-8a16-67491160dd26">
+				<reportElement positionType="Float" x="410" y="185" width="60" height="15" forecolor="#000000" uuid="a8fc29a4-ac9c-49e1-a757-d1196beaa899">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1390,7 +1395,7 @@ order by
 				<textFieldExpression><![CDATA[str("Currency")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="410" y="200" width="60" height="15" forecolor="#000000" uuid="8488e8bc-c5a4-4165-b848-4db2b8f1c7cd">
+				<reportElement positionType="Float" x="410" y="200" width="60" height="15" forecolor="#000000" uuid="4e92da4f-216b-4fd9-9cc6-4995ac41ba90">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1409,7 +1414,7 @@ order by
 				<textFieldExpression><![CDATA[$F{c_currency_iso_code}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="410" y="222" width="145" height="15" forecolor="#000000" uuid="921fbf6e-1690-433a-8e14-ef75da5bb35b">
+				<reportElement positionType="Float" x="410" y="222" width="145" height="15" forecolor="#000000" uuid="826e4136-1b5e-4a6e-97b4-50050f57ac15">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1428,7 +1433,7 @@ order by
 				<textFieldExpression><![CDATA[str("DeliveryViaRule")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="410" y="237" width="145" height="15" forecolor="#000000" uuid="7adfba44-a845-40ca-aa6e-8bffa83633c8">
+				<reportElement positionType="Float" x="410" y="237" width="145" height="15" forecolor="#000000" uuid="ec4079de-7a60-4f15-a6d4-9fabd399aad9">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1447,7 +1452,7 @@ order by
 				<textFieldExpression><![CDATA[$F{c_order_deliveryviarule}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="260" y="185" width="80" height="15" forecolor="#000000" uuid="71be90fd-f0b9-42a3-8136-520a33b6c158">
+				<reportElement positionType="Float" x="260" y="185" width="80" height="15" forecolor="#000000" uuid="6d90457c-9e24-4e73-8009-962ee921084f">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1467,7 +1472,7 @@ order by
 				<textFieldExpression><![CDATA[str("LIT_OfferValidityTime_ID")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="260" y="200" width="80" height="15" forecolor="#000000" uuid="de37a106-53de-47ba-9a37-5075ba20c5ee">
+				<reportElement positionType="Float" x="260" y="200" width="80" height="15" forecolor="#000000" uuid="fbe8bd2d-5e28-4e4f-8022-1cbeb3191f6c">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1487,7 +1492,7 @@ order by
 				<textFieldExpression><![CDATA[$F{c_order_lit_offervaliditytime_name}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="260" width="140" height="15" forecolor="#000000" uuid="761dbf00-44ba-4cee-b0cb-032919a2a24b">
+				<reportElement positionType="Float" x="0" y="260" width="140" height="15" forecolor="#000000" uuid="f514372a-9413-454a-a86a-0519b7434cb1">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1506,7 +1511,7 @@ order by
 				<textFieldExpression><![CDATA[str("POReference")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="275" width="140" height="15" forecolor="#000000" uuid="708d7687-5cab-4ffd-bca9-071e78e606b6">
+				<reportElement positionType="Float" x="0" y="275" width="140" height="15" forecolor="#000000" uuid="45e09cc3-1b52-4191-af95-aa11ec00accf">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1525,7 +1530,7 @@ order by
 				<textFieldExpression><![CDATA[$F{c_order_poreference}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="145" y="260" width="256" height="15" forecolor="#000000" uuid="a0fd1b6e-035b-49cc-9b29-f96a90d7f250">
+				<reportElement positionType="Float" x="145" y="260" width="256" height="15" forecolor="#000000" uuid="6cb916f8-d38a-4fa1-b7b2-07e26b4cabab">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1544,7 +1549,7 @@ order by
 				<textFieldExpression><![CDATA[str("Description")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="145" y="275" width="256" height="15" forecolor="#000000" uuid="8c37028f-e954-4657-bbc3-9b6297115703">
+				<reportElement positionType="Float" x="145" y="275" width="256" height="15" forecolor="#000000" uuid="e786264a-2aca-4d0d-91dd-c6c9cbedc116">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1563,7 +1568,7 @@ order by
 				<textFieldExpression><![CDATA[$F{c_order_description}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="410" y="260" width="145" height="15" forecolor="#000000" uuid="18a5cac9-80ec-4840-aec7-6b5966b674e6">
+				<reportElement positionType="Float" x="410" y="260" width="145" height="15" forecolor="#000000" uuid="dfc6b276-a4eb-456b-a861-cfe38206692e">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1582,7 +1587,7 @@ order by
 				<textFieldExpression><![CDATA[str("FOB")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="410" y="275" width="145" height="15" forecolor="#000000" uuid="7f35ab2e-c736-4af7-87ab-9d0ce47df663">
+				<reportElement positionType="Float" x="410" y="275" width="145" height="15" forecolor="#000000" uuid="e35af7ca-ea49-4623-885b-134e7778268a">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1601,7 +1606,7 @@ order by
 				<textFieldExpression><![CDATA[$F{c_order_fob}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="298" width="140" height="15" forecolor="#000000" uuid="3e8cb42b-699f-4376-8cdf-17690873f749">
+				<reportElement positionType="Float" x="0" y="298" width="140" height="15" forecolor="#000000" uuid="ea854d2b-b97f-4859-925a-a0d0648a9317">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1620,7 +1625,7 @@ order by
 				<textFieldExpression><![CDATA[str("DatePromised")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="313" width="140" height="15" forecolor="#000000" uuid="d863edd1-4ac9-487c-aa67-cebdfba601c3">
+				<reportElement positionType="Float" x="0" y="313" width="140" height="15" forecolor="#000000" uuid="36c48f9b-4dbb-431e-a98f-6941c5500abb">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1639,7 +1644,7 @@ order by
 				<textFieldExpression><![CDATA[DATEFORMAT($F{datepromised}, $F{datepattern} )]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="145" y="298" width="410" height="15" forecolor="#000000" uuid="2544e49d-56dd-4320-b044-99991e646f35">
+				<reportElement positionType="Float" x="145" y="298" width="410" height="15" forecolor="#000000" uuid="bb57fc5d-a0db-45e6-99d1-eac0249ca808">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1658,7 +1663,7 @@ order by
 				<textFieldExpression><![CDATA[str("Note")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="145" y="313" width="410" height="15" forecolor="#000000" uuid="5f6c3efa-2126-4ef4-a1f8-faae91d5bb69">
+				<reportElement positionType="Float" x="145" y="313" width="410" height="15" forecolor="#000000" uuid="04b13e09-b530-48f2-94ee-51179209cb9d">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1676,6 +1681,16 @@ order by
 				</textElement>
 				<textFieldExpression><![CDATA[$F{note}]]></textFieldExpression>
 			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="80" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[$V{PAGE_NUMBER} > 1]]></printWhenExpression>
+			<image scaleImage="RetainShape" hAlign="Left" isUsingCache="true" onErrorType="Blank">
+				<reportElement x="-20" y="0" width="595" height="80" uuid="73beff12-a762-4e9d-bedb-fbb00fc4cb67"/>
+				<imageExpression><![CDATA[$F{header_image}]]></imageExpression>
+			</image>
 		</band>
 	</pageHeader>
 	<detail>
@@ -1711,7 +1726,7 @@ order by
 					<font fontName="SansSerif" size="7" isBold="false" isItalic="true"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{c_orderline_name} + 
+				<textFieldExpression><![CDATA[($F{c_orderline_name} != null ? $F{c_orderline_name} : "") + 
 ($F{lit_msdimension} != null && !$F{lit_msdimension}.isEmpty() && $F{lit_msdimensionvalue} != null && $F{lit_msdimensionvalue}.compareTo(BigDecimal.ZERO) > 0 ? $F{lit_msdimension} + new DecimalFormat("0").format($F{lit_msdimensionvalue}) : "")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" pattern="#,##0.00" isBlankWhenNull="true">
@@ -1911,7 +1926,7 @@ order by
 		</band>
 	</pageFooter>
 	<summary>
-		<band height="146">
+		<band height="155">
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement isPrintRepeatedValues="false" x="285" y="55" width="129" height="15" uuid="dbf23382-9816-4d16-b3e4-ecd0a24c058f">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -2328,6 +2343,21 @@ order by
 				</textElement>
 				<textFieldExpression><![CDATA[$V{TotalWeight}]]></textFieldExpression>
 			</textField>
+			<break>
+				<reportElement x="0" y="143" width="99" height="1" uuid="26e97b3b-67f2-4812-9f0a-c95fd23d6ce3">
+					<printWhenExpression><![CDATA["Y".equals($P{PRINT_TERM_COND})]]></printWhenExpression>
+				</reportElement>
+			</break>
+			<subreport>
+				<reportElement x="0" y="145" width="555" height="10" uuid="499a1aab-9227-4796-a290-69344120dc7b">
+					<printWhenExpression><![CDATA["Y".equals($P{PRINT_TERM_COND})]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="RECORD_ID">
+					<subreportParameterExpression><![CDATA[$P{RECORD_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "/term_conditions.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 	</summary>
 </jasperReport>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.17.0.final utlizzo versione della libreria JasperReports6.17.0-6d93193241dd8cc42629e188b94f9e0bc5722efd  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="421salesorder" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" isSummaryWithPageHeaderAndFooter="true" uuid="9847bff4-9f3a-49b0-9603-8d56c23b5d53">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempiere - PRODUZIONE"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempieredb"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<style name="Header" mode="Opaque" backcolor="#D9D9D9"/>
 	<style name="EasyRead">
@@ -168,14 +168,7 @@ order by
 	m_attributesetinstance.LIT_MsLegacyCode,
 	coalesce(m_attributesetinstance.weight, m_product.lit_grossweight) as weight,
 	coalesce(c_uom_weight_client.uomsymbol, c_uom_weight_trl.uomsymbol) as weight_symbol,
-	m_product.LIT_MsDimension,
-	M_AttributeInstance.valuenumber - 
-	case
-		m_product.LIT_MsDimension
-	when 'L' then m_product.LIT_MsConvWidth
-		when 'H' then m_product.LIT_MsConvHeight
-		when 'P' then m_product.LIT_MsConvDepth
-	end as LIT_MsDimensionValue
+	m_attributesetinstance.description as description
 from
 	c_order c_order
 left join c_orderline c_orderline on
@@ -256,8 +249,6 @@ left join ad_ref_list_trl ad_ref_list_trl_fob on
 	and ad_ref_list_trl_fob.ad_language = $P{LOCALE_CODE}
 left join M_AttributeSetInstance on
 	M_AttributeSetInstance.M_AttributeSetInstance_ID = c_orderline.M_AttributeSetInstance_ID
-left join M_AttributeInstance on
-	M_AttributeSetInstance.M_AttributeSetInstance_ID = m_attributeinstance.m_attributesetinstance_id
 where
 	c_order.c_order_id = $P{RECORD_ID}
 and c_orderline.bay_masterorderline_id is null	
@@ -566,12 +557,7 @@ and c_orderline.bay_masterorderline_id is null
 		<property name="com.jaspersoft.studio.field.name" value="weight_symbol"/>
 		<property name="com.jaspersoft.studio.field.label" value="weight_symbol"/>
 	</field>
-	<field name="lit_msdimension" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="lit_msdimension"/>
-		<property name="com.jaspersoft.studio.field.label" value="lit_msdimension"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="m_product"/>
-	</field>
-	<field name="lit_msdimensionvalue" class="java.math.BigDecimal">
+	<field name="description" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="lit_msdimensionvalue"/>
 		<property name="com.jaspersoft.studio.field.label" value="lit_msdimensionvalue"/>
 	</field>
@@ -1434,8 +1420,7 @@ and c_orderline.bay_masterorderline_id is null
 					<font size="7" isBold="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{c_orderline_name} + 
-($F{lit_msdimension} != null && !$F{lit_msdimension}.isEmpty() && $F{lit_msdimensionvalue} != null && $F{lit_msdimensionvalue}.compareTo(BigDecimal.ZERO) > 0 ? $F{lit_msdimension} + new DecimalFormat("0").format($F{lit_msdimensionvalue}) : "")]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{c_orderline_name} + ($F{description} != null ? " " + $F{description} : "")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement style="EasyRead" positionType="Float" stretchType="ContainerHeight" x="274" y="0" width="50" height="11" isPrintInFirstWholeBand="true" uuid="4303d7e7-b9e2-4154-b039-a931c6ca9f14">

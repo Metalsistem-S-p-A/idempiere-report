@@ -9,7 +9,7 @@
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="831"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="495"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="495"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempieredb-report"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempieredb"/>
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="false"/>
 	<style name="bg_gray" mode="Opaque" backcolor="#D9D9D9"/>
 	<style name="easy_read">
@@ -176,8 +176,8 @@
      LEFT JOIN c_paymentterm c_paymentterm ON c_invoice.c_paymentterm_id = c_paymentterm.c_paymentterm_id
      LEFT JOIN c_doctype c_doctype ON c_invoice.c_doctypetarget_id = c_doctype.c_doctype_id
      LEFT JOIN c_doctype_trl c_doctype_trl ON c_doctype.c_doctype_id = c_doctype_trl.c_doctype_id AND c_doctype_trl.ad_language::text = $P{LOCALE_CODE}
-     LEFT JOIN c_bank c_bank ON c_invoice.ad_org_id = c_bank.ad_org_id
-     LEFT JOIN c_bankaccount c_bankaccount ON c_bank.c_bank_id = c_bankaccount.c_bank_id
+     LEFT JOIN c_bankaccount c_bankaccount ON c_invoice.c_bankaccount_id = c_bankaccount.c_bankaccount_id
+  	 LEFT JOIN c_bank c_bank ON c_bankaccount.c_bank_id = c_bank.c_bank_id	
      LEFT JOIN c_bp_bankaccount ON c_bpartner.c_bpartner_id = c_bp_bankaccount.c_bpartner_id AND c_bp_bankaccount.isprinted = 'Y'::bpchar
      LEFT JOIN c_bank c_bank_bp ON c_bp_bankaccount.c_bank_id = c_bank_bp.c_bank_id
      LEFT JOIN c_bankaccount c_bankaccount_bp ON c_bank_bp.c_bank_id = c_bankaccount_bp.c_bank_id AND c_bankaccount_bp.c_bankaccount_id = (( SELECT cba.c_bankaccount_id

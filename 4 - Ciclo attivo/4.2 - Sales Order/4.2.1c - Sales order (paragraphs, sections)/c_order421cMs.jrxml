@@ -2,7 +2,7 @@
 <!-- Created with Jaspersoft Studio version 6.17.0.final utlizzo versione della libreria JasperReports6.17.0-6d93193241dd8cc42629e188b94f9e0bc5722efd  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="421salesorder" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" isSummaryWithPageHeaderAndFooter="true" uuid="9847bff4-9f3a-49b0-9603-8d56c23b5d53">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempieredb"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempiere - PRODUZIONE"/>
 	<style name="Header" mode="Opaque" backcolor="#D9D9D9"/>
 	<style name="EasyRead">
 		<conditionalStyle>
@@ -200,13 +200,7 @@ order by
 coalesce(m_attributesetinstance.weight, m_product.lit_grossweight) as weight,
 	coalesce(c_uom_weight_client.uomsymbol, c_uom_weight_trl.uomsymbol) as weight_symbol,
 	m_product.LIT_MsDimension,
-	M_AttributeInstance.valuenumber - 
-	case
-		m_product.LIT_MsDimension
-	when 'L' then m_product.LIT_MsConvWidth
-		when 'H' then m_product.LIT_MsConvHeight
-		when 'P' then m_product.LIT_MsConvDepth
-	end as LIT_MsDimensionValue,
+	m_attributesetinstance.description as asi_description,
 	LIT_SOParagraph.value as paragraph_value,
 	LIT_SOParagraph.name as paragraph_name,
 		LIT_SOParagraph.description as paragraph_description,
@@ -299,8 +293,6 @@ left join ad_ref_list_trl ad_ref_list_trl_fob on
 	and ad_ref_list_trl_fob.ad_language = $P{LOCALE_CODE}
 left join M_AttributeSetInstance on
 	M_AttributeSetInstance.M_AttributeSetInstance_ID = c_orderline.M_AttributeSetInstance_ID
-left join M_AttributeInstance on
-	M_AttributeSetInstance.M_AttributeSetInstance_ID = m_attributeinstance.m_attributesetinstance_id
 left join LIT_SOParagraph on
 	LIT_SOParagraph.lit_soparagraph_id = c_orderline.LIT_SOParagraph_id
 left join m_discountschema on lit_soparagraph.m_discountschema_id = m_discountschema.m_discountschema_id 
@@ -617,9 +609,10 @@ order by
 		<property name="com.jaspersoft.studio.field.label" value="lit_msdimension"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="m_product"/>
 	</field>
-	<field name="lit_msdimensionvalue" class="java.math.BigDecimal">
-		<property name="com.jaspersoft.studio.field.name" value="lit_msdimensionvalue"/>
-		<property name="com.jaspersoft.studio.field.label" value="lit_msdimensionvalue"/>
+	<field name="asi_description" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="asi_description"/>
+		<property name="com.jaspersoft.studio.field.label" value="asi_description"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="m_attributesetinstance"/>
 	</field>
 	<field name="paragraph_value" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="paragraph_value"/>
@@ -1739,7 +1732,7 @@ order by
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[($F{c_orderline_name} != null ? $F{c_orderline_name} : "") + 
-($F{lit_msdimension} != null && !$F{lit_msdimension}.isEmpty() && $F{lit_msdimensionvalue} != null && $F{lit_msdimensionvalue}.compareTo(BigDecimal.ZERO) > 0 ? $F{lit_msdimension} + new DecimalFormat("0").format($F{lit_msdimensionvalue}) : "")]]></textFieldExpression>
+($F{asi_description} != null ? " " + $F{asi_description} : "")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement style="EasyRead" positionType="Float" stretchType="ContainerHeight" mode="Opaque" x="274" y="0" width="50" height="11" isPrintInFirstWholeBand="true" forecolor="#444444" uuid="4303d7e7-b9e2-4154-b039-a931c6ca9f14">

@@ -14,6 +14,9 @@
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempieredb-report-dev"/>
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<parameter name="RECORD_ID" class="java.lang.Integer"/>
+		<parameter name="IsTax" class="java.lang.String">
+			<defaultValueExpression><![CDATA["Y"]]></defaultValueExpression>
+		</parameter>
 		<queryString>
 			<![CDATA[select
 	c_tax.taxindicator,
@@ -2060,12 +2063,14 @@ order by
 			<componentElement>
 				<reportElement x="285" y="84" width="260" height="30" uuid="e1f7dc0c-ec15-43a8-85e4-fdd40caec45f">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
-					<printWhenExpression><![CDATA["Y".equals($P{IsTax})]]></printWhenExpression>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="witholding_sub_vat" uuid="899f3ef4-118b-43cf-9893-9774b256a420">
+					<datasetRun subDataset="witholding_sub_vat" uuid="bf420aa1-c2e6-45a1-8aae-4ed08c940bff">
 						<datasetParameter name="RECORD_ID">
 							<datasetParameterExpression><![CDATA[$P{RECORD_ID}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="IsTax">
+							<datasetParameterExpression><![CDATA[$P{IsTax}]]></datasetParameterExpression>
 						</datasetParameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 						<returnValue fromVariable="GrandTotal" toVariable="GrandTotal"/>
@@ -2224,6 +2229,12 @@ order by
 							</textField>
 						</jr:detailCell>
 					</jr:column>
+					<jr:columnHeader>
+						<printWhenExpression><![CDATA["Y".equals($P{IsTax})]]></printWhenExpression>
+					</jr:columnHeader>
+					<jr:detail>
+						<printWhenExpression><![CDATA["Y".equals($P{IsTax})]]></printWhenExpression>
+					</jr:detail>
 				</jr:table>
 			</componentElement>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">

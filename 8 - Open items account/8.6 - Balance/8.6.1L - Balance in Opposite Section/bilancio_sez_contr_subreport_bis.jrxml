@@ -173,6 +173,7 @@ case
      when ce.accounttype in ('E') and fa.dateacct between $P{DateAcct1} and $P{DateAcct2} then (fa.amtacctdr-fa.amtacctcr)     
       when ce.accounttype in ('R') and fa.dateacct between $P{DateAcct1} and $P{DateAcct2} then (fa.amtacctdr-fa.amtacctcr)*-1 end), 0) as SALDO
 FROM ad_treenode tn
+inner join ad_tree t on tn.ad_tree_id = t.ad_tree_id and t.treetype = 'EV'
 JOIN c_elementvalue ce ON ce.c_elementvalue_id = tn.node_id
 inner join lateral get_ev_tree($P{AD_CLIENT_ID}, $P{AD_Org_ID}) et on
 	tn.parent_id = et.c_elementvalue_id

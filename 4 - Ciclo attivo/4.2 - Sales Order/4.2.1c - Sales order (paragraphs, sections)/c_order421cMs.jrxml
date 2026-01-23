@@ -2,7 +2,7 @@
 <!-- Created with Jaspersoft Studio version 6.17.0.final utlizzo versione della libreria JasperReports6.17.0-6d93193241dd8cc42629e188b94f9e0bc5722efd  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="421salesorder" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" isSummaryWithPageHeaderAndFooter="true" uuid="9847bff4-9f3a-49b0-9603-8d56c23b5d53">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempiere - PRODUZIONE"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempieredb"/>
 	<style name="Header" mode="Opaque" backcolor="#D9D9D9"/>
 	<style name="EasyRead">
 		<conditionalStyle>
@@ -717,10 +717,10 @@ order by
 					<textElement verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[str("Discounts") + ": "
+					<textFieldExpression><![CDATA["Y".equals($P{IsDiscount})  ? (str("Discounts") + ": "
 + ($F{lit_discount_1_paragraph}.compareTo(BigDecimal.ZERO) > 0 ? $F{lit_discount_1_paragraph} : "") + "   "
 + ($F{lit_discount_2_paragraph}.compareTo(BigDecimal.ZERO) > 0 ? $F{lit_discount_2_paragraph} : "") + "   "
-+ ($F{lit_discount_3_paragraph}.compareTo(BigDecimal.ZERO) > 0 ? $F{lit_discount_3_paragraph} : "") + "   "]]></textFieldExpression>
++ ($F{lit_discount_3_paragraph}.compareTo(BigDecimal.ZERO) > 0 ? $F{lit_discount_3_paragraph} : "") + "   ") : ""]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 					<reportElement style="Header" positionType="Float" x="374" y="23" width="81" height="13" forecolor="#333333" uuid="23bcbca8-1ae5-438a-bb91-1f732fd34990">
@@ -738,7 +738,7 @@ order by
 						<font size="8" isBold="true"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
-					<textFieldExpression><![CDATA[str("Discounts")]]></textFieldExpression>
+					<textFieldExpression><![CDATA["Y".equals($P{IsDiscount}) ? str("Discounts") : ""]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 					<reportElement style="Header" positionType="Float" x="505" y="23" width="50" height="13" forecolor="#333333" uuid="48884d43-a288-4937-81d8-08aeab72ab87">
@@ -775,7 +775,7 @@ order by
 						<font size="8" isBold="true"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
-					<textFieldExpression><![CDATA[str("actual.price")]]></textFieldExpression>
+					<textFieldExpression><![CDATA["Y".equals($P{IsDiscount}) ? str("actual.price") : ""]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 					<reportElement style="Header" x="0" y="23" width="67" height="13" forecolor="#333333" uuid="a462e4c1-bb6e-4a58-bc09-35e3aa7f5ff2">
@@ -959,7 +959,7 @@ order by
 						<font size="8" isBold="true"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{SectionUnitPrice}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["Y".equals($P{IsDiscount}) ? $V{SectionUnitPrice} : ""]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="ScaleFont" evaluationTime="Auto" pattern="#,##0.00" isBlankWhenNull="true">
 					<reportElement positionType="Float" stretchType="ContainerHeight" x="505" y="6" width="50" height="15" isPrintInFirstWholeBand="true" uuid="775cd7f8-b1c0-44ec-91e1-b1fafa8ef3b0">
@@ -1803,7 +1803,7 @@ order by
 					<font size="7" isBold="false" isItalic="true"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Y".equals($P{PRINT_SECTION_DETAIL_PRICE}) ? (($F{ad_orginfo_lit_report_param}.charAt(11)) == 'Y' ? $F{c_orderline_pricelist} : $F{c_orderline_priceactual}) : ""]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Y".equals($P{PRINT_SECTION_DETAIL_PRICE}) && "Y".equals($P{IsDiscount}) ? (($F{ad_orginfo_lit_report_param}.charAt(11)) == 'Y' ? $F{c_orderline_pricelist} : $F{c_orderline_priceactual}) : ""]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="true">
 				<reportElement style="EasyRead" positionType="Float" stretchType="ContainerHeight" mode="Opaque" x="244" y="0" width="30" height="11" isPrintInFirstWholeBand="true" forecolor="#444444" uuid="a2432bbc-3a8c-477f-91c4-1f17a8ac80e9">
@@ -1933,10 +1933,11 @@ order by
 	<summary>
 		<band height="155">
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement isPrintRepeatedValues="false" x="285" y="40" width="129" height="15" uuid="dbf23382-9816-4d16-b3e4-ecd0a24c058f">
+				<reportElement isPrintRepeatedValues="false" x="285" y="65" width="129" height="15" uuid="dbf23382-9816-4d16-b3e4-ecd0a24c058f">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<box>
 					<pen lineWidth="1.0"/>
@@ -1952,7 +1953,7 @@ order by
 				<textFieldExpression><![CDATA[str("LIT_RP_421_NetTotal")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement isPrintRepeatedValues="false" x="285" y="55" width="129" height="15" uuid="0b8be086-26c9-4cb9-a8cc-27bbf8d66921">
+				<reportElement isPrintRepeatedValues="false" x="285" y="45" width="129" height="15" uuid="0b8be086-26c9-4cb9-a8cc-27bbf8d66921">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -1972,9 +1973,11 @@ order by
 				<textFieldExpression><![CDATA[str("LIT_RP_421_DiscountTotal")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement isPrintRepeatedValues="false" x="285" y="25" width="129" height="15" uuid="efe9a736-9adc-4096-82c1-e103f5fc4f02">
+				<reportElement isPrintRepeatedValues="false" x="285" y="30" width="129" height="15" uuid="efe9a736-9adc-4096-82c1-e103f5fc4f02">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA["Y".equals($P{IsDiscount}) ]]></printWhenExpression>
 				</reportElement>
 				<box>
 					<pen lineWidth="1.0"/>
@@ -1990,12 +1993,13 @@ order by
 				<textFieldExpression><![CDATA[str("LIT_RP_421_GrossTotal")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" evaluationTime="Auto" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement mode="Transparent" x="414" y="25" width="131" height="15" forecolor="#000000" backcolor="#DFDFDF" uuid="0e6e57c6-8301-4449-a683-03f40ec12f2f">
+				<reportElement mode="Transparent" x="414" y="30" width="131" height="15" forecolor="#000000" backcolor="#DFDFDF" uuid="0e6e57c6-8301-4449-a683-03f40ec12f2f">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
+					<printWhenExpression><![CDATA["Y".equals($P{IsDiscount}) ]]></printWhenExpression>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2">
 					<pen lineWidth="1.0"/>
@@ -2011,7 +2015,7 @@ order by
 				<textFieldExpression><![CDATA[$V{GrossTotal}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement mode="Transparent" x="414" y="55" width="131" height="15" forecolor="#000000" backcolor="#DFDFDF" uuid="526cd00a-c823-4734-bb1a-21222a51bcb6">
+				<reportElement mode="Transparent" x="414" y="45" width="131" height="15" forecolor="#000000" backcolor="#DFDFDF" uuid="526cd00a-c823-4734-bb1a-21222a51bcb6">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -2033,12 +2037,13 @@ order by
 				<textFieldExpression><![CDATA[$V{GrossTotal}.subtract($V{NetTotal})]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" evaluationTime="Auto" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement mode="Transparent" x="414" y="40" width="131" height="15" forecolor="#000000" backcolor="#DFDFDF" uuid="1d1bb7fe-2b38-41a7-9dd4-73465de7b429">
+				<reportElement mode="Transparent" x="414" y="65" width="131" height="15" forecolor="#000000" backcolor="#DFDFDF" uuid="1d1bb7fe-2b38-41a7-9dd4-73465de7b429">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2">
 					<pen lineWidth="1.0"/>
@@ -2054,8 +2059,9 @@ order by
 				<textFieldExpression><![CDATA[$V{NetTotal}]]></textFieldExpression>
 			</textField>
 			<componentElement>
-				<reportElement x="285" y="84" width="260" height="30" uuid="e1f7dc0c-ec15-43a8-85e4-fdd40caec45f">
+				<reportElement x="285" y="89" width="260" height="30" uuid="e1f7dc0c-ec15-43a8-85e4-fdd40caec45f">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="witholding_sub_vat" uuid="bf420aa1-c2e6-45a1-8aae-4ed08c940bff">

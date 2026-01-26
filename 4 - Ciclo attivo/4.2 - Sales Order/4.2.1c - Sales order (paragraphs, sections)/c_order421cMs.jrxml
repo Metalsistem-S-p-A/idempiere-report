@@ -1667,7 +1667,7 @@ order by
 				</textElement>
 				<textFieldExpression><![CDATA[str("Note")]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement positionType="Float" x="145" y="313" width="410" height="15" forecolor="#000000" uuid="04b13e09-b530-48f2-94ee-51179209cb9d">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1977,7 +1977,7 @@ order by
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<printWhenExpression><![CDATA["Y".equals($P{IsDiscount}) ]]></printWhenExpression>
+					<printWhenExpression><![CDATA["Y".equals($P{IsDiscount})]]></printWhenExpression>
 				</reportElement>
 				<box>
 					<pen lineWidth="1.0"/>
@@ -1999,7 +1999,7 @@ order by
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
-					<printWhenExpression><![CDATA["Y".equals($P{IsDiscount}) ]]></printWhenExpression>
+					<printWhenExpression><![CDATA["Y".equals($P{IsDiscount})]]></printWhenExpression>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2">
 					<pen lineWidth="1.0"/>

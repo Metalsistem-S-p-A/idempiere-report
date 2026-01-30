@@ -174,7 +174,7 @@ order by
 	ad_user_2.name as ad_user_2_name,
 	ad_user_2.email as ad_user_2_email,
 	ad_user_2.phone as ad_user_2_phone,
-	c_paymentterm.name as c_paymentterm_name,
+	coalesce(c_paymentterm_trl.name, c_paymentterm.name) as c_paymentterm_name,
 	lit_tables.name as c_order_lit_offervaliditytime_name,
 	c_bpartner_location_a.ispreservecustomname as c_bpartner_location_ispreservecustomname,
 	c_location.address1 as c_location_address1,
@@ -249,6 +249,9 @@ left join c_doctype_trl c_doctype_trl on
 	and c_doctype_trl.ad_language = $P{LOCALE_CODE}
 left join c_paymentterm c_paymentterm on
 	c_order.c_paymentterm_id = c_paymentterm.c_paymentterm_id
+left join c_paymentterm_trl c_paymentterm_trl on
+	c_paymentterm_trl.c_paymentterm_id = c_paymentterm.c_paymentterm_id
+	and c_paymentterm_trl.ad_language = $P{LOCALE_CODE}
 left join c_bpartner_location c_bpartner_location_a on
 	c_order.c_bpartner_location_id = c_bpartner_location_a.c_bpartner_location_id
 left join ad_user ad_user_2 on

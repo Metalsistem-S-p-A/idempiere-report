@@ -93,8 +93,7 @@ left join LIT_msfinish_trl LIT_MsFinish_ASI_trl on
 where
 	c_orderline.c_order_id = $P{RECORD_ID}
 order by 
-	coalesce(LIT_MsFinish_ASI."value",LIT_MsFinish_Prod."value")
-]]>
+	coalesce(LIT_MsFinish_ASI."value",LIT_MsFinish_Prod."value")]]>
 		</queryString>
 		<field name="value" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.name" value="value"/>
@@ -1036,7 +1035,7 @@ order by
 		</groupHeader>
 	</group>
 	<title>
-		<band height="328">
+		<band height="330">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<image scaleImage="RetainShape" hAlign="Left" isUsingCache="true" onErrorType="Blank">
 				<reportElement x="-20" y="0" width="595" height="80" uuid="161aa7a0-1914-40d2-a16e-df06778cd1b7"/>
@@ -1353,7 +1352,7 @@ order by
 				<textFieldExpression><![CDATA[$F{c_order_paymentrule}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement positionType="Float" x="145" y="222" width="140" height="15" forecolor="#000000" uuid="60486c31-ad26-4bfc-9cc4-f5fb81d56fd1">
+				<reportElement positionType="Float" x="145" y="222" width="256" height="15" forecolor="#000000" uuid="60486c31-ad26-4bfc-9cc4-f5fb81d56fd1">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1372,7 +1371,7 @@ order by
 				<textFieldExpression><![CDATA[str("PaymentTerm")]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement positionType="Float" x="145" y="237" width="140" height="15" forecolor="#000000" uuid="fc6fc6f0-8926-42ab-8aca-8155110e5b0a">
+				<reportElement positionType="Float" x="145" y="237" width="256" height="15" forecolor="#000000" uuid="fc6fc6f0-8926-42ab-8aca-8155110e5b0a">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1507,44 +1506,6 @@ order by
 				<textFieldExpression><![CDATA[$F{c_order_lit_offervaliditytime_name}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="260" width="140" height="15" forecolor="#000000" uuid="f514372a-9413-454a-a86a-0519b7434cb1">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
-				</reportElement>
-				<box leftPadding="2" rightPadding="2">
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement verticalAlignment="Middle" markup="html">
-					<font fontName="SansSerif" size="9" isBold="true"/>
-					<paragraph lineSpacing="Single" firstLineIndent="0" leftIndent="4"/>
-				</textElement>
-				<textFieldExpression><![CDATA[str("POReference")]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="275" width="140" height="15" forecolor="#000000" uuid="45e09cc3-1b52-4191-af95-aa11ec00accf">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
-				</reportElement>
-				<box leftPadding="2" rightPadding="2">
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement verticalAlignment="Middle" markup="html">
-					<font fontName="SansSerif" size="9" isBold="false"/>
-					<paragraph lineSpacing="Single" firstLineIndent="0" leftIndent="4"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{c_order_poreference}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
 				<reportElement positionType="Float" x="145" y="260" width="256" height="15" forecolor="#000000" uuid="6cb916f8-d38a-4fa1-b7b2-07e26b4cabab">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1621,7 +1582,7 @@ order by
 				<textFieldExpression><![CDATA[$F{c_order_fob}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="298" width="140" height="15" forecolor="#000000" uuid="ea854d2b-b97f-4859-925a-a0d0648a9317">
+				<reportElement positionType="Float" x="0" y="260" width="140" height="15" forecolor="#000000" uuid="ea854d2b-b97f-4859-925a-a0d0648a9317">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1640,7 +1601,7 @@ order by
 				<textFieldExpression><![CDATA[str("DatePromised")]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="313" width="140" height="15" forecolor="#000000" uuid="36c48f9b-4dbb-431e-a98f-6941c5500abb">
+				<reportElement positionType="Float" x="0" y="275" width="140" height="15" forecolor="#000000" uuid="36c48f9b-4dbb-431e-a98f-6941c5500abb">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1659,7 +1620,7 @@ order by
 				<textFieldExpression><![CDATA[DATEFORMAT($F{datepromised}, $F{datepattern} )]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement positionType="Float" x="145" y="298" width="410" height="15" forecolor="#000000" uuid="bb57fc5d-a0db-45e6-99d1-eac0249ca808">
+				<reportElement positionType="Float" x="0" y="300" width="554" height="15" forecolor="#000000" uuid="bb57fc5d-a0db-45e6-99d1-eac0249ca808">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1678,7 +1639,7 @@ order by
 				<textFieldExpression><![CDATA[str("Note")]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="145" y="313" width="410" height="15" forecolor="#000000" uuid="04b13e09-b530-48f2-94ee-51179209cb9d">
+				<reportElement positionType="Float" x="0" y="315" width="554" height="15" forecolor="#000000" uuid="04b13e09-b530-48f2-94ee-51179209cb9d">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>

@@ -157,7 +157,8 @@
     c_order2.poreference AS c_order2_poreference,
     c_bp_partner_letterintent.bp_letterintentnrletter,
     c_bp_partner_letterintent.bp_letterintentdateletter,
-    (select COALESCE(datepattern, 'yyyy-MM-dd') from ad_language where ad_language = $P{LOCALE_CODE})AS datepattern
+    (select COALESCE(datepattern, 'yyyy-MM-dd') from ad_language where ad_language = $P{LOCALE_CODE})AS datepattern,
+    c_invoice.issotrx AS c_invoice_issotrx
    FROM c_invoice c_invoice
      LEFT JOIN c_invoiceline c_invoiceline ON c_invoice.c_invoice_id = c_invoiceline.c_invoice_id
      LEFT JOIN c_project c_project ON c_invoice.c_project_id = c_project.c_project_id
@@ -840,6 +841,11 @@
 		<property name="com.jaspersoft.studio.field.label" value="datepattern"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="ad_language"/>
 	</field>
+	<field name="c_invoice_issotrx" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="c_invoice_issotrx"/>
+		<property name="com.jaspersoft.studio.field.name" value="c_invoice_issotrx"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="c_invoice"/>
+	</field>
 	<variable name="v1" class="java.math.BigDecimal">
 		<variableExpression><![CDATA[new BigDecimal(1)]]></variableExpression>
 	</variable>
@@ -865,6 +871,7 @@
 				<staticText>
 					<reportElement x="0" y="0" width="555" height="5" uuid="dbed1fd1-79aa-4264-89c3-f0776cda3ca3">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					</reportElement>
 					<box>
 						<topPen lineWidth="1.0"/>
@@ -1387,6 +1394,7 @@
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 					<printWhenExpression><![CDATA[$F{c_bpartner_lit_bpreportparam}.charAt(0)=='Y' && !($F{c_invoiceline_isdescription}.equals("N")) && $F{c_doctype_name}.equals("AR Invoice")]]></printWhenExpression>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2">
@@ -1408,12 +1416,14 @@
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<imageExpression><![CDATA[$F{footer_image}]]></imageExpression>
 			</image>
 			<textField>
 				<reportElement positionType="FixRelativeToBottom" x="506" y="0" width="49" height="10" uuid="b1f80967-b19d-4420-9d14-a6d8fc2581e8">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right">
 					<font fontName="dialog" size="7" isBold="false"/>
@@ -1515,16 +1525,18 @@
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "c_invoice_withholding_sub_withholding.jasper"]]></subreportExpression>
 			</subreport>
 			<image scaleImage="RetainShape" hAlign="Left" vAlign="Bottom" isUsingCache="true" onErrorType="Blank">
-				<reportElement positionType="FixRelativeToBottom" x="-20" y="125" width="595" height="80" isRemoveLineWhenBlank="true" uuid="a8568dbd-2fdc-4418-a0ae-94543c6900ee">
+				<reportElement positionType="FixRelativeToBottom" x="-20" y="130" width="595" height="75" isRemoveLineWhenBlank="true" uuid="a8568dbd-2fdc-4418-a0ae-94543c6900ee">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<imageExpression><![CDATA[$F{footer_image}]]></imageExpression>
 			</image>
 			<textField>
-				<reportElement positionType="Float" x="506" y="115" width="49" height="10" uuid="6767a818-bd10-4c2c-b7b7-76cb1774e973">
+				<reportElement positionType="Float" x="506" y="120" width="49" height="10" uuid="6767a818-bd10-4c2c-b7b7-76cb1774e973">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right">
 					<font fontName="dialog" size="7" isBold="false"/>
@@ -1544,6 +1556,17 @@
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{c_currency_iso_code}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight">
+				<reportElement x="0" y="114" width="555" height="6" uuid="4d30fd2b-5ba1-4608-9fd5-c161c4e58bd4">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA["Y".equals($F{c_invoice_issotrx})]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="dialog" size="6" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[str("LIT_RP_411_GoodsPropertyDiclaimer")]]></textFieldExpression>
 			</textField>
 		</band>
 	</lastPageFooter>

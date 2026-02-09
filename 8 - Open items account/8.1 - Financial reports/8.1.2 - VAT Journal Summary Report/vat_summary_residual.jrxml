@@ -96,7 +96,7 @@ lit_vat_period_id=$P{LIT_VAT_Period_ID}-1]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{vdiff} == null ? new BigDecimal(0) : $V{vdiff}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement positionType="Float" x="410" y="0" width="59" height="13" uuid="898db5e6-82fa-44fd-a9c2-5db4ab5a88d4">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -130,7 +130,7 @@ lit_vat_period_id=$P{LIT_VAT_Period_ID}-1]]>
 				</textElement>
 				<textFieldExpression><![CDATA[str("LIT_REP_812_VatEarlyCredit")]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement positionType="Float" x="410" y="0" width="59" height="13" uuid="a1e7faae-1f65-4711-aaab-78e995ce3c8f">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>

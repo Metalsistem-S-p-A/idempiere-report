@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.17.0.final utlizzo versione della libreria JasperReports6.17.0-6d93193241dd8cc42629e188b94f9e0bc5722efd  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vat_journal_summary815" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="0a81b9c9-15f9-484d-bac0-0cdeae140aa6">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempiere - PRODUZIONE"/>
+	<style name="EasyRead">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2==1]]></conditionExpression>
+			<style mode="Opaque" backcolor="#EEEEEE"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="AD_Org_ID" class="java.lang.Integer"/>
+	<parameter name="Year" class="java.math.BigDecimal"/>
+	<parameter name="IsPrintDetail" class="java.lang.String"/>
+	<parameter name="AD_CLIENT_ID" class="java.lang.Integer"/>
+	<parameter name="LOCALE_CODE" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{REPORT_LOCALE}.toString()]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select 
+Case when LIT_YearVATBaseSO is  not null and issotrx = 'Y' then LIT_YearVATBaseSO 
+	when LIT_YearVATAmtSO is  not null and issotrx = 'Y' then LIT_YearVATAmtSO
+	when LIT_YearVATAmtSO is  not null and issotrx = 'Y' then LIT_YearVATAmtSO
+	when LIT_YearVATBaseSO1 is  not null and issotrx = 'Y' then LIT_YearVATBaseSO1
+	when LIT_YearVATBaseToTSO is  not null and issotrx = 'Y'  then LIT_YearVATBaseToTSO
+	when LIT_YearVATAmtPO is  not null and issotrx = 'N' then LIT_YearVATAmtPO
+	when LIT_YearVATBasePO1 is  not null and issotrx = 'N' then LIT_YearVATBasePO1
+	when LIT_YearVATAmtPO1 is  not null and issotrx = 'N' then LIT_YearVATAmtPO1
+	when LIT_YearVATBasePO2 is  not null and issotrx = 'N' then LIT_YearVATBasePO2
+	when LIT_YearVATAmtPO2 is  not null and issotrx = 'N' then LIT_YearVATAmtPO2
+	END as TaxCode ,
+	Case when LIT_YearVATAmtSO is  not null then LIT_YearVATAmtSO 
+	END as TaxVatCode ,
+documentno, dateinvoiced,  vatperioddate,
+COALESCE(taxbaseamtfull,0) as Amt,
+COALESCE(taxamt,0) as TaxAmt,
+taxbaseamtnotax,
+notaxamt,
+vatcodename,
+lit_vatjournal_accountsign,
+taxindicator,
+ ad_orginfo.LIT_Prorata/100 as lit_prorata,
+ lit_adorg_header_portrait_image($P{AD_CLIENT_ID}, $P{AD_Org_ID} ),
+ lit_adorg_footer_portrait_image($P{AD_CLIENT_ID}, $P{AD_Org_ID} ),
+lit_datetime_pattern($P{LOCALE_CODE}) AS datetimepattern,
+lit_date_pattern($P{LOCALE_CODE}) AS datepattern,
+ c_currency.iso_code
+ from lit_vat_journal_v
+ inner join ad_orginfo on lit_vat_journal_v.ad_client_id=ad_orginfo.ad_client_id
+inner join C_AcctSchema on c_acctschema.ad_client_id = lit_vat_journal_v.ad_client_id
+inner join c_currency on c_acctschema.c_currency_id = c_currency.c_currency_id
+where
+ date_part('year', vatperioddate)= $P{Year} 
+ and value is not null
+and lit_vat_journal_v.ad_org_id =$P{AD_Org_ID}
+order by lit_vatjournal_accountsign, taxcode, vatcodename, dateinvoiced]]>
+	</queryString>
+	<field name="taxcode" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="taxcode"/>
+		<property name="com.jaspersoft.studio.field.label" value="taxcode"/>
+	</field>
+	<field name="taxvatcode" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="taxvatcode"/>
+		<property name="com.jaspersoft.studio.field.label" value="taxvatcode"/>
+	</field>
+	<field name="documentno" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="documentno"/>
+		<property name="com.jaspersoft.studio.field.label" value="documentno"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="lit_vat_journal_v"/>
+	</field>
+	<field name="dateinvoiced" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="dateinvoiced"/>
+		<property name="com.jaspersoft.studio.field.label" value="dateinvoiced"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="lit_vat_journal_v"/>
+	</field>
+	<field name="vatperioddate" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="vatperioddate"/>
+		<property name="com.jaspersoft.studio.field.label" value="vatperioddate"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="lit_vat_journal_v"/>
+	</field>
+	<field name="amt" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="amt"/>
+		<property name="com.jaspersoft.studio.field.label" value="amt"/>
+	</field>
+	<field name="taxamt" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="taxamt"/>
+		<property name="com.jaspersoft.studio.field.label" value="taxamt"/>
+	</field>
+	<field name="taxbaseamtnotax" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="taxbaseamtnotax"/>
+		<property name="com.jaspersoft.studio.field.label" value="taxbaseamtnotax"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="lit_vat_journal_v"/>
+	</field>
+	<field name="notaxamt" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="notaxamt"/>
+		<property name="com.jaspersoft.studio.field.label" value="notaxamt"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="lit_vat_journal_v"/>
+	</field>
+	<field name="vatcodename" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="vatcodename"/>
+		<property name="com.jaspersoft.studio.field.label" value="vatcodename"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="lit_vat_journal_v"/>
+	</field>
+	<field name="lit_vatjournal_accountsign" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="lit_vatjournal_accountsign"/>
+		<property name="com.jaspersoft.studio.field.label" value="lit_vatjournal_accountsign"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="lit_vat_journal_v"/>
+	</field>
+	<field name="taxindicator" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="taxindicator"/>
+		<property name="com.jaspersoft.studio.field.label" value="taxindicator"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="lit_vat_journal_v"/>
+	</field>
+	<field name="lit_prorata" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="lit_prorata"/>
+		<property name="com.jaspersoft.studio.field.label" value="lit_prorata"/>
+	</field>
+	<field name="lit_adorg_header_portrait_image" class="byte[]">
+		<property name="com.jaspersoft.studio.field.name" value="lit_adorg_header_portrait_image"/>
+		<property name="com.jaspersoft.studio.field.label" value="lit_adorg_header_portrait_image"/>
+	</field>
+	<field name="lit_adorg_footer_portrait_image" class="byte[]">
+		<property name="com.jaspersoft.studio.field.name" value="lit_adorg_footer_portrait_image"/>
+		<property name="com.jaspersoft.studio.field.label" value="lit_adorg_footer_portrait_image"/>
+	</field>
+	<field name="datetimepattern" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="datetimepattern"/>
+		<property name="com.jaspersoft.studio.field.label" value="datetimepattern"/>
+	</field>
+	<field name="datepattern" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="datepattern"/>
+		<property name="com.jaspersoft.studio.field.label" value="datepattern"/>
+	</field>
+	<field name="iso_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="iso_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="iso_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="c_currency"/>
+	</field>
+	<variable name="amt1" class="java.math.BigDecimal" resetType="Group" resetGroup="Gruppo1" calculation="Sum">
+		<variableExpression><![CDATA[$F{amt}]]></variableExpression>
+	</variable>
+	<variable name="amt2" class="java.math.BigDecimal" resetType="Group" resetGroup="Gruppo2" calculation="Sum">
+		<variableExpression><![CDATA[$F{amt}]]></variableExpression>
+	</variable>
+	<variable name="taxamt1" class="java.math.BigDecimal" resetType="Group" resetGroup="Gruppo1" calculation="Sum">
+		<variableExpression><![CDATA[$F{taxamt}]]></variableExpression>
+	</variable>
+	<variable name="taxamt2" class="java.math.BigDecimal" resetType="Group" resetGroup="Gruppo2" calculation="Sum">
+		<variableExpression><![CDATA[$F{taxamt}]]></variableExpression>
+	</variable>
+	<variable name="taxbaseamtnotax1" class="java.math.BigDecimal" resetType="Group" resetGroup="Gruppo1" calculation="Sum">
+		<variableExpression><![CDATA[$F{taxbaseamtnotax}]]></variableExpression>
+	</variable>
+	<variable name="taxbaseamtnotax2" class="java.math.BigDecimal" resetType="Group" resetGroup="Gruppo2" calculation="Sum">
+		<variableExpression><![CDATA[$F{taxbaseamtnotax}]]></variableExpression>
+	</variable>
+	<variable name="notaxamt1" class="java.math.BigDecimal" resetType="Group" resetGroup="Gruppo1" calculation="Sum">
+		<variableExpression><![CDATA[$F{notaxamt}]]></variableExpression>
+	</variable>
+	<variable name="notaxamt2" class="java.math.BigDecimal" resetType="Group" resetGroup="Gruppo2" calculation="Sum">
+		<variableExpression><![CDATA[$F{notaxamt}]]></variableExpression>
+	</variable>
+	<group name="gruppo segno">
+		<groupExpression><![CDATA[$F{lit_vatjournal_accountsign}]]></groupExpression>
+		<groupHeader>
+			<band height="37">
+				<printWhenExpression><![CDATA[$F{lit_vatjournal_accountsign} != null]]></printWhenExpression>
+				<textField>
+					<reportElement mode="Transparent" x="0" y="2" width="555" height="20" backcolor="#D6D6D6" uuid="f8e7bc65-eecb-4c91-b4f8-7bb69d8eb6e4">
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font size="13" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[str("LIT_REP_815_VAT_" + ("D".equals($F{lit_vatjournal_accountsign}) ? "Debit" : "Credit"))]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="Gruppo1">
+		<groupExpression><![CDATA[$F{taxcode}]]></groupExpression>
+		<groupFooter>
+			<band height="29">
+				<textField textAdjust="ScaleFont" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="0" y="5" width="65" height="15" backcolor="#D9D9D9" uuid="fd2c2563-b468-47ac-8a90-62948f2af1bf">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="2" rightPadding="2"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{taxcode}]]></textFieldExpression>
+				</textField>
+				<textField textAdjust="ScaleFont" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="65" y="5" width="65" height="15" backcolor="#D9D9D9" uuid="5a257645-d7a1-40b1-900f-0f8c1d9a7e96">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="2" rightPadding="2"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{amt1}]]></textFieldExpression>
+				</textField>
+				<textField textAdjust="ScaleFont" pattern="#,##0.00">
+					<reportElement mode="Opaque" x="195" y="5" width="65" height="15" backcolor="#D9D9D9" uuid="c3d4198b-12e3-4f12-90de-b6288b3cf421"/>
+					<box leftPadding="2" rightPadding="2"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{taxamt1}]]></textFieldExpression>
+				</textField>
+				<textField textAdjust="ScaleFont" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="325" y="5" width="230" height="15" backcolor="#D9D9D9" uuid="b1cd7e75-8d30-4181-af0e-3cba302b8e0d"/>
+					<box leftPadding="2" rightPadding="2"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{taxvatcode}]]></textFieldExpression>
+				</textField>
+				<textField textAdjust="ScaleFont" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="130" y="5" width="65" height="15" backcolor="#D9D9D9" uuid="222955c9-f994-482b-bb57-9c651748643e">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="2" rightPadding="2"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{taxbaseamtnotax1}]]></textFieldExpression>
+				</textField>
+				<textField textAdjust="ScaleFont" pattern="#,##0.00">
+					<reportElement mode="Opaque" x="260" y="5" width="65" height="15" backcolor="#D9D9D9" uuid="2231394d-bed0-4be5-8e4a-5705ae3a846f"/>
+					<box leftPadding="2" rightPadding="2"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{notaxamt1}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Gruppo2">
+		<groupExpression><![CDATA[$F{vatcodename}]]></groupExpression>
+		<groupHeader>
+			<band height="32">
+				<textField textAdjust="ScaleFont" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement x="65" y="18" width="65" height="14" uuid="f8bd37a5-63c0-4d71-8e4e-90e2192efaa3">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="2" rightPadding="2"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[str("LIT_REP_815_DeductibleAmt")]]></textFieldExpression>
+				</textField>
+				<textField textAdjust="ScaleFont" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement x="130" y="18" width="65" height="14" uuid="de301329-5ac9-4694-bfbd-9fd7051fa146">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="2" rightPadding="2"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[str("LIT_REP_815_NonDeductibleAmt")]]></textFieldExpression>
+				</textField>
+				<textField textAdjust="ScaleFont" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement x="195" y="18" width="65" height="14" uuid="d4efcf88-14f2-4ffb-88a7-79fb34217143">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box leftPadding="2" rightPadding="2"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[str("LIT_REP_815_DeductibleVat")]]></textFieldExpression>
+				</textField>
+				<textField textAdjust="ScaleFont" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement x="260" y="18" width="65" height="14" uuid="c26dd01e-07b2-413f-9075-8a11cf912232">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box leftPadding="2" rightPadding="2"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[str("LIT_REP_815_NonDeductibleVat")]]></textFieldExpression>
+				</textField>
+				<textField textAdjust="ScaleFont">
+					<reportElement x="325" y="18" width="81" height="14" uuid="e4f92bc3-ff2b-4be5-b0fd-1c55f36c650b">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<printWhenExpression><![CDATA[$P{IsPrintDetail}.equals("Y")]]></printWhenExpression>
+					</reportElement>
+					<box leftPadding="2" rightPadding="2"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[str("LIT_VAT_Period_ID")]]></textFieldExpression>
+				</textField>
+				<textField textAdjust="ScaleFont">
+					<reportElement x="406" y="18" width="89" height="14" uuid="2f017bcd-c388-4ab2-89a6-312cef72726e">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<printWhenExpression><![CDATA[$P{IsPrintDetail}.equals("Y")]]></printWhenExpression>
+					</reportElement>
+					<box leftPadding="2" rightPadding="2"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[str("DocumentNo")]]></textFieldExpression>
+				</textField>
+				<textField textAdjust="ScaleFont">
+					<reportElement x="495" y="18" width="60" height="14" uuid="dbb7b81e-c066-408a-8814-baff13fb5df6">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<printWhenExpression><![CDATA[$P{IsPrintDetail}.equals("Y")]]></printWhenExpression>
+					</reportElement>
+					<box leftPadding="2" rightPadding="2"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[str("DateInvoiced")]]></textFieldExpression>
+				</textField>
+				<textField textAdjust="ScaleFont" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement x="0" y="18" width="65" height="14" uuid="5588d874-8f75-4b64-b374-b0942df377d7">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box leftPadding="2" rightPadding="2"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[str("TaxIndicator")]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="14">
+				<textField textAdjust="ScaleFont" isBlankWhenNull="true">
+					<reportElement x="195" y="0" width="65" height="14" uuid="5943f887-4131-4879-afac-7363430821af">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box leftPadding="2" rightPadding="2">
+						<bottomPen lineWidth="1.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{taxamt2}]]></textFieldExpression>
+				</textField>
+				<textField textAdjust="ScaleFont" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement x="130" y="0" width="65" height="14" uuid="3d3e944f-ce13-48c0-9dd3-8a6fe71c24f6">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="2" rightPadding="2">
+						<bottomPen lineWidth="1.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{taxbaseamtnotax2}]]></textFieldExpression>
+				</textField>
+				<textField textAdjust="ScaleFont" isBlankWhenNull="true">
+					<reportElement x="260" y="0" width="65" height="14" uuid="aa9288bf-e3cb-44ae-9ba3-7348767365a8"/>
+					<box leftPadding="2" rightPadding="2">
+						<bottomPen lineWidth="1.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{notaxamt2}]]></textFieldExpression>
+				</textField>
+				<textField textAdjust="ScaleFont" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement x="65" y="0" width="65" height="14" uuid="5d9a3b2c-8296-45ee-a332-0582430a81c8">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="2" rightPadding="2">
+						<bottomPen lineWidth="1.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{amt2}]]></textFieldExpression>
+				</textField>
+				<textField textAdjust="ScaleFont" isBlankWhenNull="true">
+					<reportElement x="325" y="0" width="230" height="14" uuid="9f12eab0-2aaf-486e-8837-a4cd3a6c0a50"/>
+					<box leftPadding="2" rightPadding="2">
+						<bottomPen lineWidth="1.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+				</textField>
+				<textField textAdjust="ScaleFont">
+					<reportElement x="0" y="0" width="65" height="14" uuid="7c31a578-5d5c-443c-8724-ac0b92b328b6">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box leftPadding="2" rightPadding="2">
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.5" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{taxindicator} + " - " + T($F{vatcodename})]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<pageHeader>
+		<band height="84">
+			<textField>
+				<reportElement positionType="Float" x="0" y="70" width="555" height="14" uuid="4e499ba5-a41b-4c0e-98f6-cb7f0a8a3b55">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[str("LIT_REP_815_Title")]]></textFieldExpression>
+			</textField>
+			<image onErrorType="Blank">
+				<reportElement x="-20" y="0" width="595" height="70" isRemoveLineWhenBlank="true" uuid="f45fce43-5dc8-44d0-8de9-b97a1f37dd2d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA[$F{lit_adorg_header_portrait_image}]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="14">
+			<printWhenExpression><![CDATA[$P{IsPrintDetail}.equals("Y")]]></printWhenExpression>
+			<textField textAdjust="ScaleFont">
+				<reportElement style="EasyRead" x="406" y="0" width="89" height="14" uuid="249074fd-4e76-406f-a4d3-eb185f47d8f3">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{documentno}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont" pattern="yyyy-MM">
+				<reportElement style="EasyRead" x="325" y="0" width="81" height="14" uuid="27a93d0e-da8e-487f-a138-073361b40d7f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{vatperioddate}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement style="EasyRead" x="65" y="0" width="65" height="14" uuid="0ef5eab5-9a82-4fa0-b56e-4a48fc8c40cc">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{amt}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement style="EasyRead" x="195" y="0" width="65" height="14" uuid="8d9c47f3-3fc2-4926-80f8-cf4364d727cf">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{taxamt}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement style="EasyRead" x="130" y="0" width="65" height="14" uuid="68069be2-78d7-42d7-b661-e335db9a7dd6">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{taxbaseamtnotax}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement style="EasyRead" x="260" y="0" width="65" height="14" uuid="0ded99a5-4e90-420a-8b56-08b25ad0b2c7">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{notaxamt}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement style="EasyRead" x="495" y="0" width="60" height="14" uuid="4f662c7a-8239-4ee5-9237-8aacb05c31c2">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new java.text.SimpleDateFormat($F{datepattern}).format($F{dateinvoiced})]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement style="EasyRead" x="0" y="0" width="65" height="14" uuid="84913c24-7f65-4563-9200-80a3031a23a2">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="2" rightPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{taxindicator} + " - " + T($F{vatcodename})]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="92">
+			<image onErrorType="Blank">
+				<reportElement x="-20" y="22" width="595" height="70" isRemoveLineWhenBlank="true" uuid="849acdfc-c7a4-423e-914e-7287671e7e2f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA[$F{lit_adorg_footer_portrait_image}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="481" y="4" width="74" height="10" uuid="658bced9-d394-4e69-9323-d5fe68fc05b1">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="dialog" size="7" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="4" width="113" height="10" uuid="3ccec328-91e1-4642-baa5-89ceb9df9466">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="dialog" size="7" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["RP.815" + " - " + new SimpleDateFormat($F{datetimepattern}, $P{REPORT_LOCALE}).format(new Date())]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

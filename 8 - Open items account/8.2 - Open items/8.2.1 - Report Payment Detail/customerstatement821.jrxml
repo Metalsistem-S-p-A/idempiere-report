@@ -344,7 +344,8 @@ LEFT  JOIN C_LOCATION l ON bpl.C_LOCATION_ID = l.C_LOCATION_ID
 and
    CASE
     WHEN  $P{C_BPartner_ID}  <>0 then bp.c_bpartner_id = $P{C_BPartner_ID} 
-  END
+  end
+and p.C_Charge_ID is NULL
 order by "BPARTNER",datetrx,documentno
 ) x]]>
 	</queryString>

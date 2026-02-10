@@ -55,7 +55,15 @@ and c_acctschema.ad_org_id in (0, $P{AD_Org_ID})) as iso_code
 from 
 LIT_VAT_Summary 
 where 
-lit_vat_period_id=$P{LIT_VAT_Period_ID}-1]]>
+lit_vat_period_id = (
+	select lit_vat_period_id
+	from LIT_VAT_Period
+	where ad_client_id in (0, $P{AD_CLIENT_ID})
+	and ad_org_id in (0, $P{AD_Org_ID})
+	and enddate < (select startdate from lit_Vat_period where lit_vat_period_id = $P{LIT_VAT_Period_ID})
+	order by enddate desc
+	limit 1
+)]]>
 	</queryString>
 	<field name="lit_vat_credit_total" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="lit_vat_credit_total"/>
@@ -67,7 +75,7 @@ lit_vat_period_id=$P{LIT_VAT_Period_ID}-1]]>
 		<property name="com.jaspersoft.studio.field.label" value="iso_code"/>
 	</field>
 	<variable name="vdiff" class="java.math.BigDecimal" incrementType="Report" calculation="Sum">
-		<variableExpression><![CDATA[$F{lit_vat_credit_total} .add(new BigDecimal(0))]]></variableExpression>
+		<variableExpression><![CDATA[$F{lit_vat_credit_total}]]></variableExpression>
 		<initialValueExpression><![CDATA[new BigDecimal(0)]]></initialValueExpression>
 	</variable>
 	<group name="lit_iva">

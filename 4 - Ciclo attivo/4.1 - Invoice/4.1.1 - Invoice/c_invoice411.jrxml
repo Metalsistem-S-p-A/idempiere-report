@@ -208,9 +208,7 @@
      LEFT JOIN c_orderline c_orderline ON m_inoutline.c_orderline_id = c_orderline.c_orderline_id
      LEFT JOIN c_order c_order2 ON c_orderline.c_order_id = c_order2.c_order_id
      LEFT JOIN c_bp_partner_letterintent c_bp_partner_letterintent ON c_invoice.c_bp_partner_letterintent_id = c_bp_partner_letterintent.c_bp_partner_letterintent_id
-  WHERE c_bankaccount.isprinted = 'Y'::bpchar
-    AND
-     (CASE
+  WHERE (CASE
     WHEN $P{RECORD_ID} IS NOT NULL THEN c_invoice.c_invoice_id = $P{RECORD_ID}
     ELSE 1=1
   END)

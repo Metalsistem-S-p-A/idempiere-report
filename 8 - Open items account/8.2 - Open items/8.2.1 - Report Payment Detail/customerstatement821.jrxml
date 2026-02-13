@@ -15,7 +15,7 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="mm"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempieredb-report-dev"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempiere - PRODUZIONE"/>
 	<style name="Header" mode="Opaque" backcolor="#D9D9D9"/>
 	<style name="EasyRead">
 		<conditionalStyle>
@@ -23,28 +23,15 @@
 			<style mode="Opaque" backcolor="#EEEEEE"/>
 		</conditionalStyle>
 	</style>
-	<parameter name="C_BPartner_ID" class="java.lang.Integer"/>
-	<parameter name="DateAcctFrom" class="java.util.Date"/>
-	<parameter name="DateAcctTo" class="java.util.Date">
-		<defaultValueExpression><![CDATA[new Date()]]></defaultValueExpression>
+	<parameter name="C_BPartner_ID" class="java.math.BigDecimal">
+		<defaultValueExpression><![CDATA[BigDecimal.ZERO]]></defaultValueExpression>
 	</parameter>
-	<parameter name="TOTALS" class="java.util.HashMap" isForPrompting="false"/>
+	<parameter name="DateAcctFrom" class="java.util.Date"/>
+	<parameter name="DateAcctTo" class="java.util.Date"/>
 	<parameter name="AD_CLIENT_ID" class="java.lang.Integer"/>
 	<parameter name="AD_Org_ID" class="java.lang.Integer"/>
-	<parameter name="image_file_name" class="java.lang.String" isForPrompting="false"/>
-	<parameter name="RESOURCE_DIR" class="java.lang.String" isForPrompting="false">
-		<parameterDescription><![CDATA[]]></parameterDescription>
-		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
-	</parameter>
 	<parameter name="AD_LANGUAGE" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[$P{AD_LANGUAGE}]]></defaultValueExpression>
-	</parameter>
-	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
-	</parameter>
-	<parameter name="RESOURCE" class="java.util.PropertyResourceBundle" isForPrompting="false"/>
-	<parameter name="RECORD_ID" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<parameter name="IsCustomer" class="java.lang.String"/>
 	<parameter name="IsVendor" class="java.lang.String"/>
@@ -347,7 +334,8 @@ and
   end
 and p.C_Charge_ID is NULL
 order by "BPARTNER",datetrx,documentno
-) x]]>
+) x
+]]>
 	</queryString>
 	<field name="openningbal" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="openningbal"/>
@@ -535,7 +523,7 @@ order by "BPARTNER",datetrx,documentno
 	<variable name="Returnamt" class="java.math.BigDecimal"/>
 	<variable name="importoabbianto2" class="java.math.BigDecimal" resetType="Group" resetGroup="BPartner" calculation="Sum">
 		<variableExpression><![CDATA[OR(new Date($F{paymentdate}.getTime()).before( $P{DateAcctTo}),new Date($F{paymentdate}.getTime()).equals( $P{DateAcctTo} )) ?$F{allocationamt} : new BigDecimal(0)]]></variableExpression>
-		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
 	</variable>
 	<variable name="running" class="java.math.BigDecimal" resetType="Group" resetGroup="BPartner" incrementType="Group" incrementGroup="BPartner" calculation="Sum">
 		<variableExpression><![CDATA[$V{running}.add($V{grandtotaldoc}).add($V{importoabbianto1})]]></variableExpression>
@@ -788,7 +776,7 @@ order by "BPARTNER",datetrx,documentno
 		<groupHeader>
 			<band height="16">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				<printWhenExpression><![CDATA[!($F{name}.equals("prepaid" ))]]></printWhenExpression>
+				<printWhenExpression><![CDATA[!$F{name}.equals("prepaid")]]></printWhenExpression>
 				<textField textAdjust="ScaleFont" pattern="" isBlankWhenNull="true">
 					<reportElement key="textField" positionType="Float" stretchType="RelativeToTallestObject" x="161" y="0" width="254" height="16" uuid="2c32e329-3e9c-484b-8219-9089f9aeae08">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -839,7 +827,7 @@ order by "BPARTNER",datetrx,documentno
 					<textElement verticalAlignment="Middle">
 						<font fontName="SansSerif" size="10" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{name}=="prepaid" ? $P{RESOURCE}.getString("Prepaid_"+$F{ad_language}) :$F{name}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{name}=="prepaid" ? str("Prepaid") :$F{name}]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 					<reportElement x="0" y="0" width="70" height="16" uuid="c300911d-51bd-4094-90f5-a49c20993f2c">

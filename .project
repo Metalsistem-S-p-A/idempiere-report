@@ -26,4 +26,11 @@
 		<nature>net.sf.jasperreports.nature</nature>
 		<nature>com.jaspersoft.studio.babel.editor.rbeNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>Carico_ordini_giornaliero_peso.jrxml</name>
+			<type>1</type>
+			<location>C:/Users/longomichael/Report Metalsistem/RPT00072 - CARICO SPEDITO GENERALE/Carico_ordini_giornaliero_peso.jrxml</location>
+		</link>
+	</linkedResources>
 </projectDescription>

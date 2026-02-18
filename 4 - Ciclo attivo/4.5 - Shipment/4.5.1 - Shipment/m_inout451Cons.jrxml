@@ -106,6 +106,8 @@
 	io.docstatus as m_inout_docstatus,
 	coalesce(io.nopackages , c_order.nopackages)as m_inout_nopackages,
 	io.movementtype as m_inout_movementtype,
+	io.lit_fob_notes as m_inout_lit_fob_notes,
+	io.deliveryviarule as m_inout_deliveryviarule_key,
 	iol.description as m_inoutline_description,
 	iol.movementqty as m_inoutline_movementqty,
 	iol.name as m_inoutline_name,
@@ -433,6 +435,16 @@ where
 		<property name="com.jaspersoft.studio.field.label" value="m_inout_movementtype"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="m_inout"/>
 	</field>
+	<field name="m_inout_lit_fob_notes" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="m_inout_lit_fob_notes"/>
+		<property name="com.jaspersoft.studio.field.label" value="m_inout_lit_fob_notes"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="m_inout"/>
+	</field>
+	<field name="m_inout_deliveryviarule_key" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="m_inout_deliveryviarule_key"/>
+		<property name="com.jaspersoft.studio.field.label" value="m_inout_deliveryviarule_key"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="m_inout"/>
+	</field>
 	<field name="m_inoutline_description" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="m_inoutline_description"/>
 		<property name="com.jaspersoft.studio.field.label" value="m_inoutline_description"/>
@@ -616,7 +628,7 @@ where
 	<field name="m_inout_deliveryviarule" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="m_inout_deliveryviarule"/>
 		<property name="com.jaspersoft.studio.field.label" value="m_inout_deliveryviarule"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="ad_ref_list_trl"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="m_inout"/>
 	</field>
 	<field name="m_inout_deliveryviarule_trl" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="m_inout_deliveryviarule_trl"/>
@@ -850,6 +862,7 @@ where
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
+					<printWhenExpression><![CDATA[!"Free sample shipment".equals($F{c_doctype_name})]]></printWhenExpression>
 				</reportElement>
 				<box topPadding="2"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="html">
@@ -864,6 +877,7 @@ where
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					<printWhenExpression><![CDATA[!"Free sample shipment".equals($F{c_doctype_name})]]></printWhenExpression>
 				</reportElement>
 				<box topPadding="2"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" markup="html">
@@ -893,6 +907,7 @@ where
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
+					<printWhenExpression><![CDATA[!"Free sample shipment".equals($F{c_doctype_name})]]></printWhenExpression>
 				</reportElement>
 				<box topPadding="2"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" markup="html">
@@ -908,6 +923,7 @@ where
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
+					<printWhenExpression><![CDATA[!"Free sample shipment".equals($F{c_doctype_name})]]></printWhenExpression>
 				</reportElement>
 				<box topPadding="2"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" markup="html">
@@ -1799,7 +1815,7 @@ where
 					<font fontName="SansSerif" size="8" isBold="false"/>
 					<paragraph lineSpacing="Single" firstLineIndent="4" leftIndent="1"/>
 				</textElement>
-				<textFieldExpression><![CDATA[T($F{m_shipper_name}) + "-"+T($F{c_location_b_address1})+"-"+T($F{c_location_b_city})]]></textFieldExpression>
+				<textFieldExpression><![CDATA["D".equals($F{m_inout_deliveryviarule_key}) ? $F{m_inout_lit_fob_notes} : T($F{m_shipper_name}) + "-"+T($F{c_location_b_address1})+"-"+T($F{c_location_b_city}) ]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 				<reportElement positionType="Float" mode="Transparent" x="0" y="95" width="150" height="15" forecolor="#000000" backcolor="#DFDFDF" uuid="80cb2dd8-bd58-41f7-b47b-0b2c8d17b9d4">

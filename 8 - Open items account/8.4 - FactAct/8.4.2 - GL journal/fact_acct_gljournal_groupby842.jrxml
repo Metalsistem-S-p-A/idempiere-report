@@ -431,7 +431,7 @@ ORDER BY NrRiga,DTREG,isexclude, AD_TABLE_ID, CAUSALE,DTDOC,NRDOC,CONTO,DESCRIZI
 				</textElement>
 				<textFieldExpression><![CDATA[str("DocumentNo")]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField textAdjust="ScaleFont">
 				<reportElement key="staticText-7" positionType="Float" mode="Opaque" x="284" y="4" width="45" height="13" backcolor="#E3E3E3" uuid="160f3ebe-7255-485b-b335-241409e60bdd"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -443,7 +443,7 @@ ORDER BY NrRiga,DTREG,isexclude, AD_TABLE_ID, CAUSALE,DTDOC,NRDOC,CONTO,DESCRIZI
 					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA[str("LIT_REP_842_RegNo")]]></textFieldExpression>
+				<textFieldExpression><![CDATA[str("VatDocumentNo")]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement key="staticText-8" positionType="Float" mode="Opaque" x="658" y="4" width="62" height="13" backcolor="#E3E3E3" uuid="db0acf5f-4db5-4758-acaa-a26b7de803ac"/>
@@ -667,7 +667,7 @@ ORDER BY NrRiga,DTREG,isexclude, AD_TABLE_ID, CAUSALE,DTDOC,NRDOC,CONTO,DESCRIZI
 					<font size="7"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{nrriga}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{vatdocumentno}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 				<reportElement key="textField" positionType="Float" stretchType="RelativeToBandHeight" x="47" y="0" width="79" height="16" isPrintWhenDetailOverflows="true" uuid="b5fcfa1f-4eda-4264-97df-99046e15196d"/>

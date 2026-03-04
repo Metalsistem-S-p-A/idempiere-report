@@ -9,7 +9,7 @@
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="831"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="495"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="495"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempieredb"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempiere - PRODUZIONE"/>
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="false"/>
 	<style name="bg_gray" mode="Opaque" backcolor="#D9D9D9"/>
 	<style name="easy_read">
@@ -196,7 +196,7 @@
      LEFT JOIN c_bpartner_location c_bpartner_location_a ON c_order.c_bpartner_location_id = c_bpartner_location_a.c_bpartner_location_id
      LEFT JOIN c_location c_location_a ON c_bpartner_location_a.c_location_id = c_location_a.c_location_id
      left join c_country c_country_a on c_location_a.c_country_id = c_country_a.c_country_id
-     LEFT JOIN c_country_trl c_country_trl_a ON c_country_trl.c_country_id = c_country_a.c_country_id AND c_country_trl_a.ad_language::text = $P{LOCALE_CODE}
+     LEFT JOIN c_country_trl c_country_trl_a ON c_country_trl_a.c_country_id = c_country_a.c_country_id AND c_country_trl_a.ad_language::text = $P{LOCALE_CODE}
      LEFT JOIN m_product m_product ON c_invoiceline.m_product_id = m_product.m_product_id
      LEFT JOIN m_parttype m_parttype ON m_product.m_parttype_id = m_parttype.m_parttype_id
      LEFT JOIN c_uom c_uom ON c_invoiceline.c_uom_id = c_uom.c_uom_id
@@ -208,10 +208,7 @@
      LEFT JOIN c_orderline c_orderline ON m_inoutline.c_orderline_id = c_orderline.c_orderline_id
      LEFT JOIN c_order c_order2 ON c_orderline.c_order_id = c_order2.c_order_id
      LEFT JOIN c_bp_partner_letterintent c_bp_partner_letterintent ON c_invoice.c_bp_partner_letterintent_id = c_bp_partner_letterintent.c_bp_partner_letterintent_id
-  WHERE (CASE
-    WHEN $P{RECORD_ID} IS NOT NULL THEN c_invoice.c_invoice_id = $P{RECORD_ID}
-    ELSE 1=1
-  END)
+  WHERE c_invoice.c_invoice_id = $P{RECORD_ID}
   ORDER BY c_invoiceline.line]]>
 	</queryString>
 	<field name="c_invoice_withholdingamt" class="java.math.BigDecimal">
@@ -1107,7 +1104,7 @@
 					<font fontName="SansSerif" size="9" isBold="false"/>
 					<paragraph lineSpacing="Single" firstLineIndent="0" leftIndent="4" rightIndent="0"/>
 				</textElement>
-				<textFieldExpression><![CDATA["<b>" + str("C_Bank_ID") + "</b>: " + ($F{c_bank_bp_name} == null ? $F{c_bank_name} + " IBAN : " + $F{c_bankaccount_iban} 	+ ($F{c_bank_swiftcode} == null ? "" : " SwiftCode : " + $F{c_bank_swiftcode} )	 : 	 ($F{c_bp_bankaccount_isach}.equals("N") ? T($F{c_bank_bp_name} ) + " IBAN :" + $F{c_bankaccount_bp_iban} + ($F{c_bank_bp_swiftcode} == null ? "" : " SwiftCode : " + $F{c_bank_bp_swiftcode} )    :  T($F{c_bp_bankaccount_banknamebp}) + " " +T($F{c_bank_bp_name}) +" "+ "   ABICAB : "+T($F{c_bank__bp_routingno})))]]></textFieldExpression>
+				<textFieldExpression><![CDATA["<b>" + str("C_Bank_ID") + "</b>: " + ($F{c_bank_bp_name} == null ? T($F{c_bank_name}) + " IBAN : " + T($F{c_bankaccount_iban}) + ($F{c_bank_swiftcode} == null ? "" : " SwiftCode : " + $F{c_bank_swiftcode} )	 : 	 ($F{c_bp_bankaccount_isach}.equals("N") ? T($F{c_bank_bp_name} ) + " IBAN :" + $F{c_bankaccount_bp_iban} + ($F{c_bank_bp_swiftcode} == null ? "" : " SwiftCode : " + $F{c_bank_bp_swiftcode} )    :  T($F{c_bp_bankaccount_banknamebp}) + " " +T($F{c_bank_bp_name}) +" "+ "   ABICAB : "+T($F{c_bank__bp_routingno})))]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -1126,7 +1123,7 @@
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
-					<font fontName="Dialog" size="8"/>
+					<font size="8"/>
 					<paragraph lineSpacing="Single" leftIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[str("Amount")]]></textFieldExpression>
@@ -1143,7 +1140,7 @@
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Middle" markup="none">
-					<font fontName="Dialog" size="8" isBold="false"/>
+					<font size="8" isBold="false"/>
 					<paragraph lineSpacing="Single" leftIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[str("ProductDescription")]]></textFieldExpression>
@@ -1161,7 +1158,7 @@
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Middle" markup="none">
-					<font fontName="Dialog" size="8" isBold="false"/>
+					<font size="8" isBold="false"/>
 					<paragraph lineSpacing="Single" leftIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[str("M_Product_ID")]]></textFieldExpression>
@@ -1178,7 +1175,7 @@
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
-					<font fontName="Dialog" size="8" isBold="false"/>
+					<font size="8" isBold="false"/>
 					<paragraph lineSpacing="Single" rightIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[str("C_Tax_ID")]]></textFieldExpression>
@@ -1196,7 +1193,7 @@
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
-					<font fontName="Dialog" size="8"/>
+					<font size="8"/>
 					<paragraph lineSpacing="Single" leftIndent="2" rightIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[str("PriceActual")]]></textFieldExpression>
@@ -1212,7 +1209,7 @@
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
-					<font fontName="Dialog" size="8" isBold="false"/>
+					<font size="8" isBold="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[str("InvoicedQty")]]></textFieldExpression>
@@ -1231,7 +1228,7 @@
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
-					<font fontName="Dialog" size="8" isBold="false"/>
+					<font size="8" isBold="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[str("C_UOM_ID")]]></textFieldExpression>
@@ -1424,16 +1421,26 @@
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right">
-					<font fontName="dialog" size="7" isBold="false"/>
+					<font size="7" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement positionType="Float" x="0" y="0" width="554" height="10" uuid="69e2be4b-5653-4e19-8790-69fa47ba54d1">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="7" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[str("LIT_RP_411_GoodsPropertyDiclaimer")]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageFooter>
-	<lastPageFooter>
-		<band height="205" splitType="Stretch">
+	<summary>
+		<band height="119">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<subreport isUsingCache="true" runToBottom="true">
+			<subreport>
 				<reportElement positionType="Float" x="0" y="25" width="260" height="75" isPrintWhenDetailOverflows="true" uuid="9d18b91b-ec1c-45c2-bf3d-bb09d2910d88">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -1484,7 +1491,7 @@
 					<bottomPen lineWidth="1.0" lineColor="#999999"/>
 				</box>
 				<textElement verticalAlignment="Middle" markup="none">
-					<font fontName="Dialog" size="10" isBold="true"/>
+					<font fontName="&#xD;&#xA;SansSerif" size="10" isBold="true"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[str("GrandTotal")]]></textFieldExpression>
@@ -1522,25 +1529,6 @@
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "c_invoice_withholding_sub_withholding.jasper"]]></subreportExpression>
 			</subreport>
-			<image scaleImage="RetainShape" hAlign="Left" vAlign="Bottom" isUsingCache="true" onErrorType="Blank">
-				<reportElement positionType="FixRelativeToBottom" x="-20" y="130" width="595" height="75" isRemoveLineWhenBlank="true" uuid="a8568dbd-2fdc-4418-a0ae-94543c6900ee">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<imageExpression><![CDATA[$F{footer_image}]]></imageExpression>
-			</image>
-			<textField>
-				<reportElement positionType="Float" x="506" y="120" width="49" height="10" uuid="6767a818-bd10-4c2c-b7b7-76cb1774e973">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Right">
-					<font fontName="dialog" size="7" isBold="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
-			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement style="bg_gray" positionType="Float" x="420" y="93" width="47" height="16" uuid="325626e8-3c46-41d5-9816-a20a377a31cf"/>
 				<box leftPadding="2" rightPadding="2">
@@ -1550,22 +1538,11 @@
 					<bottomPen lineWidth="1.0" lineColor="#999999"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
-					<font fontName="Dialog" size="10" isBold="true"/>
+					<font size="10" isBold="true"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{c_currency_iso_code}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight">
-				<reportElement x="0" y="114" width="555" height="6" uuid="4d30fd2b-5ba1-4608-9fd5-c161c4e58bd4">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<printWhenExpression><![CDATA["Y".equals($F{c_invoice_issotrx})]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Center" verticalAlignment="Top">
-					<font fontName="dialog" size="6" isBold="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[str("LIT_RP_411_GoodsPropertyDiclaimer")]]></textFieldExpression>
-			</textField>
 		</band>
-	</lastPageFooter>
+	</summary>
 </jasperReport>

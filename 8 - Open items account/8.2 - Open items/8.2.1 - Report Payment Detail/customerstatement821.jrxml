@@ -23,8 +23,8 @@
 			<style mode="Opaque" backcolor="#EEEEEE"/>
 		</conditionalStyle>
 	</style>
-	<parameter name="C_BPartner_ID" class="java.math.BigDecimal">
-		<defaultValueExpression><![CDATA[BigDecimal.ZERO]]></defaultValueExpression>
+	<parameter name="C_BPartner_ID" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 	</parameter>
 	<parameter name="DateAcctFrom" class="java.util.Date"/>
 	<parameter name="DateAcctTo" class="java.util.Date"/>
@@ -334,8 +334,7 @@ and
   end
 and p.C_Charge_ID is NULL
 order by "BPARTNER",datetrx,documentno
-) x
-]]>
+) x]]>
 	</queryString>
 	<field name="openningbal" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="openningbal"/>
@@ -519,8 +518,8 @@ order by "BPARTNER",datetrx,documentno
 	</variable>
 	<variable name="GRANDTOTAL1" class="java.math.BigDecimal" incrementType="Group" incrementGroup="Documentno" calculation="Sum">
 		<variableExpression><![CDATA[$F{grandtotal}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
 	</variable>
-	<variable name="Returnamt" class="java.math.BigDecimal"/>
 	<variable name="importoabbianto2" class="java.math.BigDecimal" resetType="Group" resetGroup="BPartner" calculation="Sum">
 		<variableExpression><![CDATA[OR(new Date($F{paymentdate}.getTime()).before( $P{DateAcctTo}),new Date($F{paymentdate}.getTime()).equals( $P{DateAcctTo} )) ?$F{allocationamt} : new BigDecimal(0)]]></variableExpression>
 		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
@@ -531,9 +530,11 @@ order by "BPARTNER",datetrx,documentno
 	</variable>
 	<variable name="grandtotaldoc" class="java.math.BigDecimal" resetType="Group" resetGroup="Documentno" incrementType="Group" incrementGroup="Documentno" calculation="Sum">
 		<variableExpression><![CDATA[$F{grandtotal}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
 	</variable>
 	<variable name="TotaleDoc" class="java.math.BigDecimal" resetType="Group" resetGroup="Documentno" incrementType="Group" incrementGroup="Documentno" calculation="Sum">
 		<variableExpression><![CDATA[$V{grandtotaldoc}.add($V{importoabbianto1} == null? new BigDecimal(0): $V{importoabbianto1})]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
 	</variable>
 	<variable name="TotaleTOT" class="java.math.BigDecimal" resetType="Group" resetGroup="BPartner" incrementType="Group" incrementGroup="Documentno" calculation="Sum">
 		<variableExpression><![CDATA[$V{grandtotaldoc}.add($V{importoabbianto1} == null? new BigDecimal(0): $V{importoabbianto1})]]></variableExpression>
@@ -548,6 +549,7 @@ order by "BPARTNER",datetrx,documentno
 	</variable>
 	<variable name="grandtotal1" class="java.math.BigDecimal" incrementType="Group" incrementGroup="Documentno" calculation="Sum">
 		<variableExpression><![CDATA[$F{grandtotal}]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
 	</variable>
 	<group name="BPartner" isStartNewPage="true" isReprintHeaderOnEachPage="true" keepTogether="true">
 		<groupExpression><![CDATA[$F{c_bpartner_id}]]></groupExpression>

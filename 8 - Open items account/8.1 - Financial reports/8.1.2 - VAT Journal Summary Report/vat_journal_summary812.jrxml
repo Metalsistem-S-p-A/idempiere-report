@@ -5,7 +5,20 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempieredb"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempiere - PRODUZIONE"/>
+	<template><![CDATA["styles/ms-style.jrtx"]]></template>
+	<style name="easy_read" style="easy_read_bg">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT} % 2 == 1]]></conditionExpression>
+			<style mode="Opaque" backcolor="#FFFFFF"/>
+		</conditionalStyle>
+	</style>
+	<style name="easy_read_code" style="easy_read_code_bg">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT} % 2 == 1]]></conditionExpression>
+			<style mode="Opaque" backcolor="#FFFFFF"/>
+		</conditionalStyle>
+	</style>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
@@ -86,13 +99,10 @@ WHERE
 	<pageHeader>
 		<band height="92">
 			<textField>
-				<reportElement positionType="Float" x="0" y="70" width="555" height="14" uuid="1304d2e8-c017-4e09-94ec-2ee28fd081e4">
+				<reportElement style="title" positionType="Float" x="0" y="70" width="555" height="20" uuid="1304d2e8-c017-4e09-94ec-2ee28fd081e4">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<textElement>
-					<font size="10" isBold="true"/>
-				</textElement>
 				<textFieldExpression><![CDATA[str("LIT_REP_812_Title") + " " + $F{lit_vat_period_name}]]></textFieldExpression>
 			</textField>
 			<image onErrorType="Blank">
@@ -194,118 +204,101 @@ WHERE
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vat_summary_residual.jasper"]]></subreportExpression>
 			</subreport>
 			<textField textAdjust="ScaleFont" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement positionType="Float" mode="Opaque" x="469" y="42" width="86" height="14" forecolor="#000000" backcolor="#BFBFBF" uuid="d92fe68e-93d8-4d99-96c3-535ccde1aece">
+				<reportElement style="code_highlight" positionType="Float" x="469" y="42" width="86" height="14" uuid="d92fe68e-93d8-4d99-96c3-535ccde1aece">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{IVA_DEBITO}.subtract($V{IVA_CREDITO}).add($V{IVA_CREDITO}.multiply( $F{lit_prorata} ))]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement positionType="Float" mode="Opaque" x="0" y="42" width="410" height="14" backcolor="#BFBFBF" uuid="ccca1e2f-4da7-4584-9826-cf552c84e988">
+				<reportElement style="highlight" positionType="Float" x="0" y="42" width="410" height="14" uuid="ccca1e2f-4da7-4584-9826-cf552c84e988">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2"/>
-				<textElement verticalAlignment="Middle">
-					<font size="10" isBold="true"/>
-				</textElement>
+				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[str("LIT_REP_812_Difference")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement positionType="Float" mode="Transparent" x="469" y="9" width="86" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="d65d200d-9e3a-4eea-acec-2bed099dcd12">
+				<reportElement style="code_highlight" positionType="Float" x="469" y="9" width="86" height="14" uuid="d65d200d-9e3a-4eea-acec-2bed099dcd12">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<box leftPadding="2" rightPadding="2">
-					<bottomPen lineWidth="1.0"/>
-				</box>
+				<box leftPadding="2" rightPadding="2"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="SansSerif" size="9" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[($V{IVA_CREDITO} != null ? $V{IVA_CREDITO} : BigDecimal.ZERO).multiply( $F{lit_prorata} )]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.##%">
-				<reportElement x="120" y="9" width="290" height="14" uuid="25ce3883-77bb-4d60-b4b0-77bb3fa3d0c7">
+				<reportElement style="highlight" x="120" y="9" width="290" height="14" uuid="25ce3883-77bb-4d60-b4b0-77bb3fa3d0c7">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<box>
-					<bottomPen lineWidth="1.0"/>
-				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="9" isBold="true"/>
-				</textElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{lit_prorata}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement positionType="Float" x="0" y="9" width="120" height="14" uuid="35fdf68f-da65-41c3-885c-9b2ce84f8ef7"/>
-				<box leftPadding="2" rightPadding="2">
-					<bottomPen lineWidth="1.0"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font size="9" isBold="true"/>
-				</textElement>
+				<reportElement style="highlight" positionType="Float" x="0" y="9" width="120" height="14" uuid="35fdf68f-da65-41c3-885c-9b2ce84f8ef7"/>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[str("LIT_REP_812_VAT_Deducted")]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement positionType="Float" mode="Opaque" x="0" y="28" width="410" height="14" backcolor="#BFBFBF" uuid="42cdf338-787c-471d-8b75-7a39a2abf706">
+				<reportElement style="highlight" positionType="Float" x="0" y="28" width="410" height="14" uuid="42cdf338-787c-471d-8b75-7a39a2abf706">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2"/>
-				<textElement verticalAlignment="Middle">
-					<font size="10" isBold="true"/>
-				</textElement>
+				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[str("LIT_REP_812_TotalCredit")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement positionType="Float" mode="Opaque" x="469" y="28" width="86" height="14" forecolor="#000000" backcolor="#BFBFBF" uuid="33f24ee9-5c44-4424-b21d-a7130d115ab0">
+				<reportElement style="code_highlight" positionType="Float" x="469" y="28" width="86" height="14" uuid="33f24ee9-5c44-4424-b21d-a7130d115ab0">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{IVA_CREDITO}.subtract($V{IVA_CREDITO}.multiply( $F{lit_prorata} ))]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement positionType="Float" mode="Transparent" x="410" y="9" width="59" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="623ef9ad-9a36-4bd7-8dd0-67d271677150">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<box leftPadding="2" rightPadding="2">
-					<bottomPen lineWidth="1.0"/>
-				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="SansSerif" size="9" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{iso_code}]]></textFieldExpression>
-			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="410" y="28" width="59" height="14" forecolor="#000000" backcolor="#BFBFBF" uuid="2ef707d0-cd33-452a-81bf-7a6527deff74">
+				<reportElement style="highlight" positionType="Float" x="410" y="9" width="59" height="14" uuid="623ef9ad-9a36-4bd7-8dd0-67d271677150">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{iso_code}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="410" y="42" width="59" height="14" forecolor="#000000" backcolor="#BFBFBF" uuid="909e1d21-84b0-456c-9965-f319e039760e">
+				<reportElement style="highlight" x="410" y="28" width="59" height="14" uuid="2ef707d0-cd33-452a-81bf-7a6527deff74">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{iso_code}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement style="highlight" x="410" y="42" width="59" height="14" uuid="909e1d21-84b0-456c-9965-f319e039760e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{iso_code}]]></textFieldExpression>
@@ -313,13 +306,13 @@ WHERE
 		</band>
 		<band height="24">
 			<textField textAdjust="ScaleFont" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="469" y="10" width="86" height="14" forecolor="#000000" backcolor="#BFBFBF" uuid="d2554107-cfc1-4186-ab90-89b35406af82">
+				<reportElement style="code_highlight" x="469" y="10" width="86" height="14" uuid="d2554107-cfc1-4186-ab90-89b35406af82">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[ABS(($V{IVA_CREDITOPREC} != null ? $V{IVA_CREDITOPREC} : BigDecimal.ZERO)
@@ -337,14 +330,12 @@ WHERE
 ))]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
-				<reportElement positionType="Float" mode="Opaque" x="0" y="10" width="410" height="14" backcolor="#BFBFBF" uuid="0bc20e6b-8782-412a-8e51-f31f42d4dfac">
+				<reportElement style="highlight" positionType="Float" x="0" y="10" width="410" height="14" uuid="0bc20e6b-8782-412a-8e51-f31f42d4dfac">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2"/>
-				<textElement verticalAlignment="Middle" markup="none">
-					<font size="10" isBold="true"/>
-				</textElement>
+				<textElement verticalAlignment="Middle" markup="none"/>
 				<textFieldExpression><![CDATA[BigDecimal.ZERO.compareTo(
     ($V{IVA_CREDITOPREC} != null ? $V{IVA_CREDITOPREC} : BigDecimal.ZERO)
     .subtract(
@@ -356,13 +347,13 @@ WHERE
 ) <= 0 ? str("LIT_REP_812_CreditPeriod") : str("LIT_REP_812_VatDue")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement mode="Opaque" x="410" y="10" width="59" height="14" forecolor="#000000" backcolor="#BFBFBF" uuid="c3fe64a6-b26f-4d86-ac6a-520f578aa3f7">
+				<reportElement style="highlight" x="410" y="10" width="59" height="14" uuid="c3fe64a6-b26f-4d86-ac6a-520f578aa3f7">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{iso_code}]]></textFieldExpression>
@@ -378,22 +369,17 @@ WHERE
 				<imageExpression><![CDATA[$F{lit_adorg_footer_portrait_image}]]></imageExpression>
 			</image>
 			<textField>
-				<reportElement x="481" y="4" width="74" height="10" uuid="5c58a155-268d-4795-a66c-54cd08228046">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Right">
-					<font fontName="dialog" size="7" isBold="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+				<reportElement style="page_number" positionType="FixRelativeToBottom" x="0" y="10" width="280" height="12" uuid="a04e3b25-15c3-445a-9106-420a95245a00"/>
+				<textFieldExpression><![CDATA["RP.812 - " + str("DatePrinted") + ": " + DATEFORMAT(NOW( ),$F{datetimepattern})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="4" width="113" height="10" uuid="3c56a544-a39e-4e66-9c6f-c4f56d7fc42e">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<reportElement style="page_number" positionType="FixRelativeToBottom" x="280" y="10" width="275" height="12" uuid="2399912d-18a2-4bcc-b5c6-ad518e18338f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<textElement verticalAlignment="Middle">
-					<font fontName="dialog" size="7" isBold="false"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA["RP.812" + " - " + new SimpleDateFormat($F{datetimepattern}, $P{REPORT_LOCALE}).format(new Date())]]></textFieldExpression>
+				<textFieldExpression><![CDATA[str("Page") +" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>

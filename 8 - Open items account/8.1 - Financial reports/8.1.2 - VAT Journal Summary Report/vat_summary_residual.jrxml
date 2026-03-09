@@ -8,32 +8,18 @@
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempieredb-report"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="463"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="523"/>
-	<style name="table">
-		<box>
-			<pen lineWidth="1.0" lineColor="#000000"/>
-		</box>
-		<paragraph lineSpacing="Single"/>
+	<template><![CDATA["styles/ms-style.jrtx"]]></template>
+	<style name="easy_read" style="easy_read_bg">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT} % 2 == 1]]></conditionExpression>
+			<style mode="Opaque" backcolor="#FFFFFF"/>
+		</conditionalStyle>
 	</style>
-	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
-		<box>
-			<pen lineWidth="0.5" lineColor="#000000"/>
-		</box>
-		<paragraph lineSpacing="Single"/>
-	</style>
-	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
-		<box>
-			<pen lineWidth="0.5" lineColor="#000000"/>
-		</box>
-		<paragraph lineSpacing="Single"/>
-	</style>
-	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
-		<box>
-			<pen lineWidth="0.5" lineColor="#000000"/>
-		</box>
-		<paragraph lineSpacing="Single"/>
-	</style>
-	<style name="Crosstab Data Text" hTextAlign="Center" hImageAlign="Center">
-		<paragraph lineSpacing="Single"/>
+	<style name="easy_read_code" style="easy_read_code_bg">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT} % 2 == 1]]></conditionExpression>
+			<style mode="Opaque" backcolor="#FFFFFF"/>
+		</conditionalStyle>
 	</style>
 	<parameter name="LIT_VAT_Period_ID" class="java.lang.Integer"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
@@ -86,33 +72,27 @@ lit_vat_period_id = (
 	<summary>
 		<band height="13">
 			<textField>
-				<reportElement positionType="Float" x="0" y="0" width="410" height="13" uuid="da1ec965-73ef-4d2e-9a50-8b5ffc460840"/>
+				<reportElement style="label" positionType="Float" x="0" y="0" width="410" height="13" uuid="da1ec965-73ef-4d2e-9a50-8b5ffc460840"/>
 				<box leftPadding="2" rightPadding="2"/>
-				<textElement verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
+				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[str("LIT_REP_812_VatEarlyCredit")]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="469" y="0" width="85" height="13" uuid="5b173d43-c2ac-4c76-b493-bcedb90bd855">
+				<reportElement style="code" x="469" y="0" width="85" height="13" uuid="5b173d43-c2ac-4c76-b493-bcedb90bd855">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$V{vdiff} == null ? new BigDecimal(0) : $V{vdiff}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement positionType="Float" x="410" y="0" width="59" height="13" uuid="898db5e6-82fa-44fd-a9c2-5db4ab5a88d4">
+				<reportElement style="label" positionType="Float" x="410" y="0" width="59" height="13" uuid="898db5e6-82fa-44fd-a9c2-5db4ab5a88d4">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{iso_code}]]></textFieldExpression>
 			</textField>
 		</band>
@@ -121,32 +101,26 @@ lit_vat_period_id = (
 		<band height="13">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="469" y="0" width="85" height="13" uuid="3cb5a471-11e3-4d7d-baa2-2011d424ad74">
+				<reportElement style="code" x="469" y="0" width="85" height="13" uuid="3cb5a471-11e3-4d7d-baa2-2011d424ad74">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$V{vdiff} == null ? new BigDecimal(0) : $V{vdiff}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement positionType="Float" x="0" y="0" width="410" height="13" uuid="9efd0697-ca13-43fa-99e5-37deb1c43f2f"/>
+				<reportElement style="label" positionType="Float" x="0" y="0" width="410" height="13" uuid="9efd0697-ca13-43fa-99e5-37deb1c43f2f"/>
 				<box leftPadding="2" rightPadding="2"/>
-				<textElement verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
+				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[str("LIT_REP_812_VatEarlyCredit")]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement positionType="Float" x="410" y="0" width="59" height="13" uuid="a1e7faae-1f65-4711-aaab-78e995ce3c8f">
+				<reportElement style="label" positionType="Float" x="410" y="0" width="59" height="13" uuid="a1e7faae-1f65-4711-aaab-78e995ce3c8f">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{iso_code}]]></textFieldExpression>
 			</textField>
 		</band>

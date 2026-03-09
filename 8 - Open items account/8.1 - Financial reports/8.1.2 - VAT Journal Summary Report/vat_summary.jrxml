@@ -12,6 +12,19 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<template><![CDATA["styles/ms-style.jrtx"]]></template>
+	<style name="easy_read" style="easy_read_bg">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT} % 2 == 1]]></conditionExpression>
+			<style mode="Opaque" backcolor="#FFFFFF"/>
+		</conditionalStyle>
+	</style>
+	<style name="easy_read_code" style="easy_read_code_bg">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT} % 2 == 1]]></conditionExpression>
+			<style mode="Opaque" backcolor="#FFFFFF"/>
+		</conditionalStyle>
+	</style>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
@@ -429,28 +442,28 @@ dateacct,vatdocumentno]]>
 		<groupFooter>
 			<band height="13">
 				<textField textAdjust="StretchHeight" pattern="#,##0.00">
-					<reportElement x="390" y="0" width="165" height="13" uuid="978f0658-c660-434a-b39c-c7abd6a1eab4"/>
+					<reportElement style="code" x="390" y="0" width="165" height="13" uuid="978f0658-c660-434a-b39c-c7abd6a1eab4"/>
 					<box leftPadding="2" rightPadding="2">
-						<topPen lineStyle="Solid" lineColor="#000000"/>
-						<leftPen lineStyle="Solid" lineColor="#000000"/>
-						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<topPen lineStyle="Solid"/>
+						<leftPen lineStyle="Solid"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font size="9" isBold="true"/>
+						<font size="8" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[SUM($V{amt_journal}, $V{notaxamt_journal})]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="StretchHeight" pattern="#,##0.00">
-					<reportElement x="294" y="0" width="96" height="13" uuid="fd8694d8-573b-4d93-9037-7a9e05f31fd6"/>
+					<reportElement style="code" x="294" y="0" width="96" height="13" uuid="fd8694d8-573b-4d93-9037-7a9e05f31fd6"/>
 					<box leftPadding="2" rightPadding="2">
-						<topPen lineStyle="Solid" lineColor="#000000"/>
-						<leftPen lineStyle="Solid" lineColor="#000000"/>
-						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-						<rightPen lineStyle="Solid" lineColor="#000000"/>
+						<topPen lineStyle="Solid"/>
+						<leftPen lineStyle="Solid"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+						<rightPen lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font size="9" isBold="true"/>
+						<font size="8" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[SUM($P{LIT_IsExcludeLIPE}.equals("Y")?$V{baseamt_journal}:$V{baseamtfull_journal}, $V{baseamtnotax_journal})]]></textFieldExpression>
 				</textField>
@@ -459,26 +472,26 @@ dateacct,vatdocumentno]]>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
 					<box leftPadding="2" rightPadding="2">
-						<topPen lineStyle="Solid" lineColor="#000000"/>
-						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-						<rightPen lineStyle="Solid" lineColor="#000000"/>
+						<topPen lineStyle="Solid"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+						<rightPen lineStyle="Solid"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font size="9" isBold="true"/>
+						<font size="8" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{lit_vatjournal_name}]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="StretchHeight">
 					<reportElement x="236" y="0" width="58" height="13" uuid="8fe5264c-cbb1-4cb9-adfd-46b848c3a105"/>
 					<box leftPadding="2" rightPadding="2">
-						<topPen lineStyle="Solid" lineColor="#000000"/>
-						<leftPen lineStyle="Solid" lineColor="#000000"/>
-						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-						<rightPen lineStyle="Solid" lineColor="#000000"/>
+						<topPen lineStyle="Solid"/>
+						<leftPen lineStyle="Solid"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+						<rightPen lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font size="9" isBold="true"/>
+						<font size="8" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{iso_code}]]></textFieldExpression>
 				</textField>
@@ -490,63 +503,63 @@ dateacct,vatdocumentno]]>
 		<groupHeader>
 			<band height="26">
 				<textField>
-					<reportElement x="0" y="0" width="555" height="13" uuid="232fdf81-afd3-4f50-930e-576f476b2e6a"/>
+					<reportElement style="label" x="0" y="0" width="555" height="13" uuid="232fdf81-afd3-4f50-930e-576f476b2e6a"/>
 					<box leftPadding="2" rightPadding="2">
-						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<topPen lineWidth="1.0" lineStyle="Solid"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font size="8" isBold="true"/>
+						<font size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{vat_c_tax_taxindicator} + " - " + $F{vat_c_tax_name}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="0" y="13" width="100" height="13" uuid="d9492e3d-8f1f-444f-8034-fad5b11d5ba4"/>
+					<reportElement style="label" x="0" y="13" width="100" height="13" uuid="d9492e3d-8f1f-444f-8034-fad5b11d5ba4"/>
 					<box leftPadding="2" rightPadding="2">
 						<leftPen lineWidth="1.0"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font size="8" isBold="true"/>
+						<font size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$P{LIT_IsDetail}.equals("Y") ? str("DocumentNo") : ""]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="100" y="13" width="136" height="13" uuid="03a78175-7c53-410c-9ab6-a773f1cd86bd"/>
+					<reportElement style="label" x="100" y="13" width="136" height="13" uuid="03a78175-7c53-410c-9ab6-a773f1cd86bd"/>
 					<box leftPadding="2" rightPadding="2"/>
 					<textElement verticalAlignment="Middle">
-						<font size="8" isBold="true"/>
+						<font size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$P{LIT_IsDetail}.equals("Y") ? str("DocumentType") : ""]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="294" y="13" width="96" height="13" uuid="0713d8c2-1834-47fa-b418-6a00d3b6204e">
+					<reportElement style="label" x="294" y="13" width="96" height="13" uuid="0713d8c2-1834-47fa-b418-6a00d3b6204e">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
 					<box leftPadding="2" rightPadding="2"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font size="8" isBold="true"/>
+						<font size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[str("LIT_REP_812_VAT_Vatable")]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="390" y="13" width="165" height="13" uuid="4a53c11e-3870-4e2a-a1ca-62cb2f87f97e"/>
+					<reportElement style="label" x="390" y="13" width="165" height="13" uuid="4a53c11e-3870-4e2a-a1ca-62cb2f87f97e"/>
 					<box leftPadding="2" rightPadding="2">
 						<rightPen lineWidth="1.0"/>
 					</box>
 					<textElement textAlignment="Right">
-						<font size="8" isBold="true"/>
+						<font size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[str("LIT_REP_812_" + ("D".equals($P{LIT_AccountSign}) ? "Debit" : "Credit"))]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="ScaleFont">
-					<reportElement x="236" y="13" width="58" height="13" uuid="0cada874-24cd-4e2c-bc99-cf0b95be222e">
+					<reportElement style="label" x="236" y="13" width="58" height="13" uuid="0cada874-24cd-4e2c-bc99-cf0b95be222e">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
 					<box leftPadding="2" rightPadding="2"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font size="8" isBold="true"/>
+						<font size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[str("C_Currency_ID")]]></textFieldExpression>
 				</textField>
@@ -555,12 +568,12 @@ dateacct,vatdocumentno]]>
 		<groupFooter>
 			<band height="13">
 				<textField textAdjust="StretchHeight" pattern="#,##0.00">
-					<reportElement x="294" y="0" width="96" height="13" uuid="adb575be-1de3-4efa-b81b-7703dae25e44"/>
+					<reportElement style="code" x="294" y="0" width="96" height="13" uuid="adb575be-1de3-4efa-b81b-7703dae25e44"/>
 					<box leftPadding="2" rightPadding="2">
 						<bottomPen lineWidth="1.0"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font size="8" isBold="false"/>
+						<font size="8" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$P{LIT_IsExcludeLIPE}.equals("Y")
 ?
@@ -569,34 +582,34 @@ dateacct,vatdocumentno]]>
 	BigDecimal.ZERO.compareTo($V{baseamtfull_ctax}) != 0? $V{baseamtfull_ctax} : "[" +$V{baseamtnotax_ctax} + "]"]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="StretchHeight" pattern="#,##0.00">
-					<reportElement x="390" y="0" width="165" height="13" uuid="97abb6bb-be3b-4f72-adc8-08b9c146fd16"/>
+					<reportElement style="code" x="390" y="0" width="165" height="13" uuid="97abb6bb-be3b-4f72-adc8-08b9c146fd16"/>
 					<box leftPadding="2" rightPadding="2">
 						<bottomPen lineWidth="1.0"/>
 						<rightPen lineWidth="1.0"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font size="8" isBold="false"/>
+						<font size="8" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[BigDecimal.ZERO.compareTo($V{amt_ctax}) != 0 ?$V{amt_ctax} : "[" + $V{notaxamt_ctax}+ "]"]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="0" y="0" width="236" height="13" uuid="db266b60-2ef6-4c1e-88b4-596ba87075a0"/>
+					<reportElement style="label" x="0" y="0" width="236" height="13" uuid="db266b60-2ef6-4c1e-88b4-596ba87075a0"/>
 					<box leftPadding="2" rightPadding="2">
 						<leftPen lineWidth="1.0"/>
 						<bottomPen lineWidth="1.0"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font size="8" isBold="true"/>
+						<font size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[str("LIT_REP_812_Total")]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="StretchHeight">
-					<reportElement x="236" y="0" width="58" height="13" uuid="96db4bad-86d9-4ad9-8b4e-b72fbcaa76c2"/>
+					<reportElement style="label" x="236" y="0" width="58" height="13" uuid="96db4bad-86d9-4ad9-8b4e-b72fbcaa76c2"/>
 					<box leftPadding="2" rightPadding="2">
 						<bottomPen lineWidth="1.0"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font size="8" isBold="false"/>
+						<font size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{iso_code}]]></textFieldExpression>
 				</textField>
@@ -610,15 +623,12 @@ dateacct,vatdocumentno]]>
 		<band height="19">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField>
-				<reportElement x="0" y="0" width="555" height="14" uuid="8dee5bda-d782-4726-9d0f-c78494e710b5">
+				<reportElement style="label" x="0" y="0" width="555" height="14" uuid="8dee5bda-d782-4726-9d0f-c78494e710b5">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
 					<bottomPen lineWidth="1.0"/>
 				</box>
-				<textElement>
-					<font size="10" isBold="true"/>
-				</textElement>
 				<textFieldExpression><![CDATA[str("LIT_REP_812_VAT_" + ("D".equals($P{LIT_AccountSign}) ? "Debit" : "Credit"))]]></textFieldExpression>
 			</textField>
 		</band>
@@ -628,7 +638,7 @@ dateacct,vatdocumentno]]>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<printWhenExpression><![CDATA[$P{LIT_IsDetail}.equals("Y")]]></printWhenExpression>
 			<textField pattern="#,##0.00">
-				<reportElement positionType="Float" x="294" y="0" width="96" height="14" uuid="f8a99ef0-87cc-42df-8a0b-5c7742d17fab">
+				<reportElement style="easy_read_code" positionType="Float" x="294" y="0" width="96" height="14" uuid="f8a99ef0-87cc-42df-8a0b-5c7742d17fab">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e50a010e-cf67-4444-9581-569d35822a6d"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -642,7 +652,7 @@ dateacct,vatdocumentno]]>
 	BigDecimal.ZERO.compareTo($F{vat_c_invoicetax_taxbaseamtfull}) != 0? $F{vat_c_invoicetax_taxbaseamtfull}: "[" +$F{vat_c_invoicetax_taxbaseamtnotax} + "]"]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="390" y="0" width="165" height="14" uuid="a24d2e10-eb95-466a-8d23-c1d15469a9a3">
+				<reportElement style="easy_read_code" x="390" y="0" width="165" height="14" uuid="a24d2e10-eb95-466a-8d23-c1d15469a9a3">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e50ad8d4-c95d-4779-b95b-5fe99089fcb8"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -656,7 +666,7 @@ dateacct,vatdocumentno]]>
 				<textFieldExpression><![CDATA[BigDecimal.ZERO.compareTo($F{vat_c_invoicetax_taxamt}) != 0 ? $F{vat_c_invoicetax_taxamt} : "[" + $F{vat_cinvoicetax_notaxamt} + "]"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="100" y="0" width="136" height="14" uuid="87e1ac74-0cc6-45d0-8c74-3784ea91f0ef">
+				<reportElement style="easy_read" x="100" y="0" width="136" height="14" uuid="87e1ac74-0cc6-45d0-8c74-3784ea91f0ef">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0c74b470-eb60-4b71-83f5-fd275f2f19b3"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -667,7 +677,7 @@ dateacct,vatdocumentno]]>
 				<textFieldExpression><![CDATA[$F{documenttype}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="0" width="100" height="14" uuid="5654d06a-3128-4720-afff-98b858e0af52">
+				<reportElement style="easy_read" x="0" y="0" width="100" height="14" uuid="5654d06a-3128-4720-afff-98b858e0af52">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0c74b470-eb60-4b71-83f5-fd275f2f19b3"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -680,7 +690,7 @@ dateacct,vatdocumentno]]>
 				<textFieldExpression><![CDATA[$F{vat_vatdocumentno}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement positionType="Float" x="236" y="0" width="58" height="14" uuid="7cc8e560-e8e1-4545-9944-97287f619a85">
+				<reportElement style="easy_read" positionType="Float" x="236" y="0" width="58" height="14" uuid="7cc8e560-e8e1-4545-9944-97287f619a85">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e50a010e-cf67-4444-9581-569d35822a6d"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -695,37 +705,31 @@ dateacct,vatdocumentno]]>
 	<lastPageFooter>
 		<band height="20">
 			<textField textAdjust="StretchHeight" pattern="#,##0.00">
-				<reportElement mode="Opaque" x="294" y="6" width="96" height="14" backcolor="#BFBFBF" uuid="b91dc5a1-5234-41e4-b616-3df0a5bbc0a1">
+				<reportElement style="code_highlight" x="294" y="6" width="96" height="14" uuid="b91dc5a1-5234-41e4-b616-3df0a5bbc0a1">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font isBold="true"/>
-				</textElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[SUM($P{LIT_IsExcludeLIPE}.equals("Y")?$V{baseamt_total}:$V{baseamtfull_total}, $V{baseamtnotax_total})]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" pattern="#,##0.00">
-				<reportElement mode="Opaque" x="390" y="6" width="165" height="14" backcolor="#BFBFBF" uuid="b756a7ec-0fdb-45b0-bb9b-273bc171da8c">
+				<reportElement style="code_highlight" x="390" y="6" width="165" height="14" uuid="b756a7ec-0fdb-45b0-bb9b-273bc171da8c">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font isBold="true"/>
-				</textElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[SUM($V{amt_total}, $V{notaxamt_total})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement mode="Opaque" x="0" y="6" width="236" height="14" backcolor="#BFBFBF" uuid="bcade0a6-dbc3-4dfd-9540-82f3ce7670b7">
+				<reportElement style="highlight" x="0" y="6" width="236" height="14" uuid="bcade0a6-dbc3-4dfd-9540-82f3ce7670b7">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2"/>
-				<textElement verticalAlignment="Middle">
-					<font size="10" isBold="true"/>
-				</textElement>
+				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[str("LIT_REP_812_Total" + ("D".equals($P{LIT_AccountSign}) ? "Debit" : "Credit"))]]></textFieldExpression>
 			</textField>
 			<line>
@@ -740,14 +744,12 @@ dateacct,vatdocumentno]]>
 				</graphicElement>
 			</line>
 			<textField>
-				<reportElement mode="Opaque" x="236" y="6" width="58" height="14" backcolor="#BFBFBF" uuid="197bef5c-fa20-4d84-b3b4-77a6aec43096">
+				<reportElement style="highlight" x="236" y="6" width="58" height="14" uuid="197bef5c-fa20-4d84-b3b4-77a6aec43096">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="10" isBold="true"/>
-				</textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{iso_code}]]></textFieldExpression>
 			</textField>
 		</band>

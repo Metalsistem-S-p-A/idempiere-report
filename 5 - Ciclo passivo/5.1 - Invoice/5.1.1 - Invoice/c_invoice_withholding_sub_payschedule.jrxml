@@ -15,17 +15,22 @@
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempieredb-report"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<style name="bg_gray" mode="Opaque" backcolor="#D9D9D9"/>
-	<style name="easy_read">
+	<template><![CDATA["styles/ms-style.jrtx"]]></template>
+	<style name="easy_read" style="easy_read_bg">
 		<conditionalStyle>
-			<conditionExpression><![CDATA[$V{REPORT_COUNT} % 2 == 0]]></conditionExpression>
-			<style mode="Opaque" backcolor="#EEEEEE"/>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT} % 2 == 1]]></conditionExpression>
+			<style mode="Opaque" backcolor="#FFFFFF"/>
+		</conditionalStyle>
+	</style>
+	<style name="easy_read_code" style="easy_read_code_bg">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT} % 2 == 1]]></conditionExpression>
+			<style mode="Opaque" backcolor="#FFFFFF"/>
 		</conditionalStyle>
 	</style>
 	<parameter name="RECORD_ID" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
-	<parameter name="RESOURCE" class="java.util.PropertyResourceBundle" isForPrompting="false"/>
 	<parameter name="AD_LANGUAGE" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -74,36 +79,29 @@ order by  c_invoicepayschedule."duedate"]]>
 	<columnHeader>
 		<band height="20" splitType="Stretch">
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement style="bg_gray" positionType="Float" x="0" y="0" width="125" height="20" uuid="096da98e-f7e2-43df-bb34-ab6960f8d169">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<reportElement style="column_header" positionType="Float" x="0" y="0" width="115" height="20" uuid="096da98e-f7e2-43df-bb34-ab6960f8d169">
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2">
 					<pen lineWidth="1.0"/>
-					<topPen lineColor="#999999"/>
-					<leftPen lineColor="#999999"/>
-					<bottomPen lineColor="#999999"/>
 					<rightPen lineWidth="0.0"/>
 				</box>
 				<textElement verticalAlignment="Middle" markup="none">
-					<font fontName="Dialog" size="8"/>
 					<paragraph lineSpacing="Single" leftIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[str("DueDate")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement style="bg_gray" positionType="Float" x="125" y="0" width="125" height="20" uuid="9418da4c-8cab-4058-900a-726dfeedf900">
+				<reportElement style="column_header" positionType="Float" x="115" y="0" width="135" height="20" uuid="9418da4c-8cab-4058-900a-726dfeedf900">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2">
-					<pen lineWidth="1.0" lineColor="#999999"/>
-					<topPen lineColor="#999999"/>
-					<bottomPen lineColor="#999999"/>
-					<rightPen lineColor="#999999"/>
+					<pen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="Dialog" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single" rightIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[str("DueAmt")]]></textFieldExpression>
@@ -113,37 +111,33 @@ order by  c_invoicepayschedule."duedate"]]>
 	<detail>
 		<band height="12" splitType="Stretch">
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement style="easy_read" positionType="Float" x="0" y="0" width="125" height="12" uuid="a7f5fb6d-c9d1-4360-9719-fe5ac03508a7">
+				<reportElement style="easy_read" positionType="Float" x="0" y="0" width="115" height="12" uuid="a7f5fb6d-c9d1-4360-9719-fe5ac03508a7">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2">
-					<pen lineWidth="1.0" lineColor="#999999"/>
-					<topPen lineColor="#999999"/>
-					<leftPen lineColor="#999999"/>
-					<bottomPen lineWidth="1.0" lineColor="#999999"/>
+					<pen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="0.0"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="8"/>
 					<paragraph lineSpacing="Single" leftIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[T(new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($F{c_invoicepayschedule_duedate}))]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement style="easy_read" positionType="Float" x="125" y="0" width="125" height="12" uuid="c27120cc-da36-4c16-b05e-d845b2f7a393">
+				<reportElement style="easy_read_code" positionType="Float" x="115" y="0" width="135" height="12" uuid="c27120cc-da36-4c16-b05e-d845b2f7a393">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2">
 					<pen lineWidth="1.0"/>
-					<topPen lineWidth="1.0" lineColor="#999999"/>
+					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="0.0"/>
-					<bottomPen lineWidth="1.0" lineColor="#999999"/>
-					<rightPen lineWidth="1.0" lineColor="#999999"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="8"/>
 					<paragraph lineSpacing="Single" rightIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{c_invoicepayschedule_dueamt}]]></textFieldExpression>

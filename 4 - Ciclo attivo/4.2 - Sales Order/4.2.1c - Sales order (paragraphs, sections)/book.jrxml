@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.17.0.final utlizzo versione della libreria JasperReports6.17.0-6d93193241dd8cc42629e188b94f9e0bc5722efd  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="book" pageWidth="595" pageHeight="842" sectionType="Part" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="d2716064-8ae4-40cf-a575-33afba400e3a">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempiere - PRODUZIONE"/>
+	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="AD_CLIENT_ID" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="AD_ROLE_ID" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="AD_USER_ID" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="RECORD_ID" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="LOCALE_CODE" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{REPORT_LOCALE}.toString()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PRINT_SECTION_DETAIL" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Y"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PRINT_TERM_COND" class="java.lang.String">
+		<defaultValueExpression><![CDATA["N"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PRINT_SECTION_DETAIL_PRICE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["N"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="IsDiscount" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Y"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="IsTax" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Y"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PRINT_EXTRA_COSTS" class="java.lang.String">
+		<defaultValueExpression><![CDATA['N']]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT CURRENT_DATE]]>
+	</queryString>
+	<field name="current_date" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="current_date"/>
+		<property name="com.jaspersoft.studio.field.label" value="current_date"/>
+	</field>
+	<detail>
+		<part uuid="33d3aa1e-4216-4f17-916d-a6c168c284bd">
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd">
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="AD_CLIENT_ID">
+					<subreportParameterExpression><![CDATA[$P{AD_CLIENT_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="AD_ROLE_ID">
+					<subreportParameterExpression><![CDATA[$P{AD_ROLE_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="AD_USER_ID">
+					<subreportParameterExpression><![CDATA[$P{AD_USER_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="RECORD_ID">
+					<subreportParameterExpression><![CDATA[$P{RECORD_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="LOCALE_CODE">
+					<subreportParameterExpression><![CDATA[$P{LOCALE_CODE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="PRINT_SECTION_DETAIL">
+					<subreportParameterExpression><![CDATA[$P{PRINT_SECTION_DETAIL}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="PRINT_TERM_COND">
+					<subreportParameterExpression><![CDATA[$P{PRINT_TERM_COND}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="PRINT_SECTION_DETAIL_PRICE">
+					<subreportParameterExpression><![CDATA[$P{PRINT_SECTION_DETAIL_PRICE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="IsDiscount">
+					<subreportParameterExpression><![CDATA[$P{IsDiscount}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="IsTax">
+					<subreportParameterExpression><![CDATA[$P{IsTax}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="PRINT_EXTRA_COSTS">
+					<subreportParameterExpression><![CDATA[$P{PRINT_EXTRA_COSTS}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_RESOURCE_BUNDLE">
+					<subreportParameterExpression><![CDATA[$P{REPORT_RESOURCE_BUNDLE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "c_order421cMs.jasper"]]></subreportExpression>
+			</p:subreportPart>
+		</part>
+		<part uuid="bc40bb69-1a70-4f02-b36e-bc7b3044db37">
+			<printWhenExpression><![CDATA["Y".equals($P{PRINT_TERM_COND})]]></printWhenExpression>
+			<p:subreportPart xmlns:p="http://jasperreports.sourceforge.net/jasperreports/parts" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/parts http://jasperreports.sourceforge.net/xsd/parts.xsd">
+				<subreportParameter name="REPORT_CONNECTION">
+					<subreportParameterExpression><![CDATA[$P{REPORT_CONNECTION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="RECORD_ID">
+					<subreportParameterExpression><![CDATA[$P{RECORD_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="LOCALE_CODE">
+					<subreportParameterExpression><![CDATA[$P{LOCALE_CODE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_RESOURCE_BUNDLE">
+					<subreportParameterExpression><![CDATA[$P{REPORT_RESOURCE_BUNDLE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "term_conditions.jasper"]]></subreportExpression>
+			</p:subreportPart>
+		</part>
+	</detail>
+</jasperReport>

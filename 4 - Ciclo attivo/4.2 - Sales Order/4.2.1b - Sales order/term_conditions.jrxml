@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.17.0.final utlizzo versione della libreria JasperReports6.17.0-6d93193241dd8cc42629e188b94f9e0bc5722efd  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="term_conditions" columnCount="3" pageWidth="555" pageHeight="842" columnWidth="185" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="d322a157-2acb-40d9-9258-959cb1d67730">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="term_conditions" columnCount="3" pageWidth="595" pageHeight="842" columnWidth="185" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" uuid="d322a157-2acb-40d9-9258-959cb1d67730">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempiere - PRODUZIONE"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<template><![CDATA["styles/ms-style.jrtx"]]></template>
 	<parameter name="RECORD_ID" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
+	<parameter name="LOCALE_CODE" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{REPORT_LOCALE}.toString()]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[select name, html
+		<![CDATA[select name, html,
+			lit_datetime_pattern($P{LOCALE_CODE}) AS datetimepattern,
+    lit_date_pattern($P{LOCALE_CODE}) AS datepattern,	
+    lit_time_pattern($P{LOCALE_CODE}) AS timepattern,
+	lit_adorg_header_portrait_image(c_order.ad_client_id, c_order.ad_org_id) as header_image,
+	lit_adorg_footer_portrait_image(c_order.ad_client_id, c_order.ad_org_id) as footer_image
 from lit_tables inner join 
 c_order on lit_tables.lit_tables_id = c_order.LIT_TermsAndConditions_ID
 where c_order.c_order_id = $P{RECORD_ID}]]>
@@ -31,17 +31,39 @@ where c_order.c_order_id = $P{RECORD_ID}]]>
 		<property name="com.jaspersoft.studio.field.label" value="html"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="lit_tables"/>
 	</field>
-	<title>
-		<band height="20" splitType="Stretch">
+	<field name="datetimepattern" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="datetimepattern"/>
+		<property name="com.jaspersoft.studio.field.label" value="datetimepattern"/>
+	</field>
+	<field name="datepattern" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="datepattern"/>
+		<property name="com.jaspersoft.studio.field.label" value="datepattern"/>
+	</field>
+	<field name="timepattern" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="timepattern"/>
+		<property name="com.jaspersoft.studio.field.label" value="timepattern"/>
+	</field>
+	<field name="header_image" class="byte[]">
+		<property name="com.jaspersoft.studio.field.name" value="header_image"/>
+		<property name="com.jaspersoft.studio.field.label" value="header_image"/>
+	</field>
+	<field name="footer_image" class="byte[]">
+		<property name="com.jaspersoft.studio.field.name" value="footer_image"/>
+		<property name="com.jaspersoft.studio.field.label" value="footer_image"/>
+	</field>
+	<pageHeader>
+		<band height="100">
 			<textField>
-				<reportElement x="0" y="0" width="555" height="20" uuid="0f35fd48-723b-4977-bfe8-d8658db7ef42"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font isBold="true"/>
-				</textElement>
+				<reportElement style="label" x="0" y="80" width="555" height="20" uuid="0f35fd48-723b-4977-bfe8-d8658db7ef42"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
 			</textField>
+			<image scaleImage="RetainShape" hAlign="Left" isUsingCache="true" onErrorType="Blank">
+				<reportElement x="-20" y="0" width="595" height="80" uuid="74c022e4-2e59-412e-b080-60f44ecc2a72"/>
+				<imageExpression><![CDATA[$F{header_image}]]></imageExpression>
+			</image>
 		</band>
-	</title>
+	</pageHeader>
 	<detail>
 		<band height="15" splitType="Stretch">
 			<textField textAdjust="StretchHeight">
@@ -56,4 +78,16 @@ where c_order.c_order_id = $P{RECORD_ID}]]>
 			</textField>
 		</band>
 	</detail>
+	<pageFooter>
+		<band height="80">
+			<image scaleImage="RetainShape" hAlign="Left" vAlign="Bottom" isUsingCache="true" onErrorType="Blank">
+				<reportElement positionType="FixRelativeToBottom" x="-20" y="0" width="595" height="80" isRemoveLineWhenBlank="true" uuid="c8ab4403-3382-4b73-bb57-b7b1ada0eb7d">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA[$F{footer_image}]]></imageExpression>
+			</image>
+		</band>
+	</pageFooter>
 </jasperReport>

@@ -5,11 +5,17 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="LaFornitrice Prod"/>
-	<style name="bg_gray" mode="Opaque" backcolor="#D9D9D9"/>
-	<style name="easy_read">
+	<template><![CDATA["styles/ms-style.jrtx"]]></template>
+	<style name="easy_read" style="easy_read_bg">
 		<conditionalStyle>
-			<conditionExpression><![CDATA[$V{REPORT_COUNT} % 2 == 0]]></conditionExpression>
-			<style mode="Opaque" backcolor="#EEEEEE"/>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT} % 2 == 1]]></conditionExpression>
+			<style mode="Opaque" backcolor="#FFFFFF"/>
+		</conditionalStyle>
+	</style>
+	<style name="easy_read_code" style="easy_read_code_bg">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT} % 2 == 1]]></conditionExpression>
+			<style mode="Opaque" backcolor="#FFFFFF"/>
 		</conditionalStyle>
 	</style>
 	<parameter name="RECORD_ID" class="java.lang.Integer">
@@ -41,36 +47,36 @@ GROUP BY
 	<columnHeader>
 		<band height="20">
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement style="bg_gray" positionType="Float" x="155" y="0" width="95" height="20" forecolor="#333333" uuid="1442cc90-552e-4eb1-961d-4071bc26d421">
+				<reportElement style="column_header" positionType="Float" x="115" y="0" width="135" height="20" forecolor="#333333" uuid="1442cc90-552e-4eb1-961d-4071bc26d421">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2">
 					<pen lineColor="#999999"/>
-					<topPen lineWidth="1.0" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineColor="#000000"/>
+					<topPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
-					<font fontName="Dialog" size="8" isBold="false"/>
+					<font isBold="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[str("WithholdingAmt")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement style="bg_gray" positionType="Float" x="0" y="0" width="155" height="20" forecolor="#333333" uuid="16cce8ce-46fa-4023-8080-903e03618527">
+				<reportElement style="column_header" positionType="Float" x="0" y="0" width="115" height="20" forecolor="#333333" uuid="16cce8ce-46fa-4023-8080-903e03618527">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2">
 					<pen lineColor="#000000"/>
-					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0" lineColor="#000000"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Middle" markup="none">
-					<font fontName="Dialog" size="8" isBold="false"/>
+					<font isBold="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[str("C_Withholding_ID")]]></textFieldExpression>
@@ -80,7 +86,7 @@ GROUP BY
 	<detail>
 		<band height="13" splitType="Stretch">
 			<textField textAdjust="StretchHeight" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement style="easy_read" positionType="Float" x="155" y="0" width="95" height="13" uuid="54a567aa-dca5-4858-a529-bb90debaab8c">
+				<reportElement style="easy_read_code" positionType="Float" x="115" y="0" width="135" height="13" uuid="54a567aa-dca5-4858-a529-bb90debaab8c">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -91,13 +97,12 @@ GROUP BY
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{sumlco_invoicewithholding_taxamt}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement style="easy_read" positionType="Float" x="0" y="0" width="155" height="13" uuid="3bc3d370-e56a-4f90-8a4b-8223335cf633">
+				<reportElement style="easy_read" positionType="Float" x="0" y="0" width="115" height="13" uuid="3bc3d370-e56a-4f90-8a4b-8223335cf633">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2">
@@ -106,7 +111,6 @@ GROUP BY
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="8"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{c_tax_name}]]></textFieldExpression>

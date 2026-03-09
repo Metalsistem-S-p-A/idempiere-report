@@ -6,32 +6,18 @@
 	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Cavallino"/>
-	<style name="table">
-		<box>
-			<pen lineWidth="1.0" lineColor="#000000"/>
-		</box>
-		<paragraph lineSpacing="Single"/>
+	<template><![CDATA["styles/ms-style.jrtx"]]></template>
+	<style name="easy_read" style="easy_read_bg">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT} % 2 == 1]]></conditionExpression>
+			<style mode="Opaque" backcolor="#FFFFFF"/>
+		</conditionalStyle>
 	</style>
-	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
-		<box>
-			<pen lineWidth="0.5" lineColor="#000000"/>
-		</box>
-		<paragraph lineSpacing="Single"/>
-	</style>
-	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
-		<box>
-			<pen lineWidth="0.5" lineColor="#000000"/>
-		</box>
-		<paragraph lineSpacing="Single"/>
-	</style>
-	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
-		<box>
-			<pen lineWidth="0.5" lineColor="#000000"/>
-		</box>
-		<paragraph lineSpacing="Single"/>
-	</style>
-	<style name="Crosstab Data Text" hTextAlign="Center" hImageAlign="Center">
-		<paragraph lineSpacing="Single"/>
+	<style name="easy_read_code" style="easy_read_code_bg">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT} % 2 == 1]]></conditionExpression>
+			<style mode="Opaque" backcolor="#FFFFFF"/>
+		</conditionalStyle>
 	</style>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
@@ -248,7 +234,7 @@ ORDER BY
 					<textFieldExpression><![CDATA[$F{lit_vat_journal_v_c_tax_name}]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="ScaleFont" evaluationTime="Group" evaluationGroup="tax_id" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement positionType="Float" x="402" y="0" width="100" height="13" printWhenGroupChanges="tax_id" uuid="82ee5550-f37c-41f7-9c51-972e452a2a1f">
+					<reportElement style="code" positionType="Float" x="402" y="0" width="100" height="13" printWhenGroupChanges="tax_id" uuid="82ee5550-f37c-41f7-9c51-972e452a2a1f">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
@@ -259,7 +245,7 @@ ORDER BY
 					<textFieldExpression><![CDATA[$V{lit_vat_journal_v_c_invoicetax_taxbaseamt_3}]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="ScaleFont" evaluationTime="Group" evaluationGroup="tax_id" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement positionType="Float" x="602" y="0" width="100" height="13" printWhenGroupChanges="tax_id" uuid="781e6adc-89cf-4436-b62a-425ab17cc31a">
+					<reportElement style="code" positionType="Float" x="602" y="0" width="100" height="13" printWhenGroupChanges="tax_id" uuid="781e6adc-89cf-4436-b62a-425ab17cc31a">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
@@ -270,7 +256,7 @@ ORDER BY
 					<textFieldExpression><![CDATA[$V{lit_vat_journal_v_c_invoicetax_taxamt_2}]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="ScaleFont" pattern="#,##0.00">
-					<reportElement x="702" y="0" width="100" height="13" uuid="60a1734e-5453-4a3c-bec6-28edddbce5a5"/>
+					<reportElement style="code" x="702" y="0" width="100" height="13" uuid="60a1734e-5453-4a3c-bec6-28edddbce5a5"/>
 					<box leftPadding="2" rightPadding="2"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="9"/>
@@ -278,7 +264,7 @@ ORDER BY
 					<textFieldExpression><![CDATA[$V{notaxamt1}]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="ScaleFont" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement x="502" y="0" width="100" height="13" uuid="e14482e6-7154-41d9-bcd3-d5ba1c503b6e">
+					<reportElement style="code" x="502" y="0" width="100" height="13" uuid="e14482e6-7154-41d9-bcd3-d5ba1c503b6e">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 					<box leftPadding="2" rightPadding="2"/>
@@ -293,10 +279,8 @@ ORDER BY
 	<pageHeader>
 		<band height="20">
 			<textField>
-				<reportElement x="0" y="0" width="802" height="20" uuid="b9e191c3-b090-4f48-a34b-953c8fcb7c09"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="14" isBold="true"/>
-				</textElement>
+				<reportElement style="title" x="0" y="0" width="802" height="20" uuid="b9e191c3-b090-4f48-a34b-953c8fcb7c09"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[str("Summary")]]></textFieldExpression>
 			</textField>
 		</band>
@@ -304,7 +288,7 @@ ORDER BY
 	<columnHeader>
 		<band height="13">
 			<textField textAdjust="ScaleFont">
-				<reportElement positionType="Float" x="0" y="0" width="402" height="13" printWhenGroupChanges="tax_id" uuid="aaa965ae-5b82-4bc8-b53b-bb234ecb5cd3"/>
+				<reportElement style="column_header" positionType="Float" x="0" y="0" width="402" height="13" printWhenGroupChanges="tax_id" uuid="aaa965ae-5b82-4bc8-b53b-bb234ecb5cd3"/>
 				<box leftPadding="2" rightPadding="2">
 					<bottomPen lineWidth="1.0"/>
 				</box>
@@ -314,7 +298,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[str("C_TaxDefinition_ID")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement positionType="Float" x="702" y="0" width="100" height="13" printWhenGroupChanges="tax_id" uuid="9f5e02da-85bc-4972-ab72-61ab4424cad0"/>
+				<reportElement style="column_header" positionType="Float" x="702" y="0" width="100" height="13" printWhenGroupChanges="tax_id" uuid="9f5e02da-85bc-4972-ab72-61ab4424cad0"/>
 				<box leftPadding="2" rightPadding="2">
 					<bottomPen lineWidth="1.0"/>
 				</box>
@@ -324,7 +308,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[str("LIT_REP_811_Excluded")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement positionType="Float" x="402" y="0" width="100" height="13" printWhenGroupChanges="tax_id" uuid="270dbc30-3fcc-495a-8032-ffc2597965f8">
+				<reportElement style="column_header" positionType="Float" x="402" y="0" width="100" height="13" printWhenGroupChanges="tax_id" uuid="270dbc30-3fcc-495a-8032-ffc2597965f8">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2">
@@ -336,7 +320,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[str("TaxBaseAmt")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement positionType="Float" x="502" y="0" width="100" height="13" printWhenGroupChanges="tax_id" uuid="a6a55326-f737-454c-80f8-39c3502b55a8">
+				<reportElement style="column_header" positionType="Float" x="502" y="0" width="100" height="13" printWhenGroupChanges="tax_id" uuid="a6a55326-f737-454c-80f8-39c3502b55a8">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2">
@@ -348,7 +332,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[str("LIT_REP_811_NonDeductible")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement positionType="Float" x="602" y="0" width="100" height="13" printWhenGroupChanges="tax_id" uuid="60ef7d58-c24a-4d0d-b483-61a306e3ab0c">
+				<reportElement style="column_header" positionType="Float" x="602" y="0" width="100" height="13" printWhenGroupChanges="tax_id" uuid="60ef7d58-c24a-4d0d-b483-61a306e3ab0c">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2">
@@ -364,66 +348,56 @@ ORDER BY
 	<columnFooter>
 		<band height="13">
 			<textField>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="342" height="13" printWhenGroupChanges="tax_id" uuid="97b1d000-f999-4194-a814-d827928aa53c"/>
+				<reportElement style="highlight" positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="342" height="13" printWhenGroupChanges="tax_id" uuid="97b1d000-f999-4194-a814-d827928aa53c"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="1.0"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[str("GrandTotal")]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="402" y="0" width="100" height="13" printWhenGroupChanges="tax_id" uuid="69b75e30-39b6-4280-8e40-ce8ac4d93c72">
+				<reportElement style="code_highlight" positionType="Float" stretchType="RelativeToTallestObject" x="402" y="0" width="100" height="13" printWhenGroupChanges="tax_id" uuid="69b75e30-39b6-4280-8e40-ce8ac4d93c72">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="1.0"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="9" isBold="true"/>
-				</textElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$V{lit_vat_journal_v_c_invoicetax_taxbaseamt_4}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,###.00">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="602" y="0" width="100" height="13" printWhenGroupChanges="tax_id" uuid="2eb97b56-2243-4191-a102-8f6e1bedd464">
+				<reportElement style="code_highlight" positionType="Float" stretchType="RelativeToTallestObject" x="602" y="0" width="100" height="13" printWhenGroupChanges="tax_id" uuid="2eb97b56-2243-4191-a102-8f6e1bedd464">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="1.0"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="9" isBold="true"/>
-				</textElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$V{lit_vat_journal_v_c_invoicetax_taxamt_3}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="702" y="0" width="100" height="13" uuid="6ec31447-1b4d-422d-b1c5-f89e203923f3"/>
+				<reportElement style="code_highlight" x="702" y="0" width="100" height="13" uuid="6ec31447-1b4d-422d-b1c5-f89e203923f3"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="1.0"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="9"/>
-				</textElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$V{notaxamt2}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="502" y="0" width="100" height="13" uuid="96567284-4d94-4dab-b9dd-8426a5bb0603"/>
+				<reportElement style="code_highlight" x="502" y="0" width="100" height="13" uuid="96567284-4d94-4dab-b9dd-8426a5bb0603"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="1.0"/>
 					<bottomPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="9"/>
-				</textElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$V{taxbaseamtnotax2}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" pattern="#,##0.00" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="342" y="0" width="60" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="7562de41-7272-41c0-b69c-c37ec22ac5a5">
+				<reportElement style="highlight" x="342" y="0" width="60" height="13" uuid="7562de41-7272-41c0-b69c-c37ec22ac5a5">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -432,7 +406,7 @@ ORDER BY
 					<bottomPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="SansSerif" size="9" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{iso_code}]]></textFieldExpression>

@@ -34,6 +34,14 @@
 	<parameter name="PRINT_EXTRA_COSTS" class="java.lang.String">
 		<defaultValueExpression><![CDATA['N']]></defaultValueExpression>
 	</parameter>
+	<parameter name="PORTRAIT_HEADER_IMAGE" class="java.io.InputStream"/>
+	<parameter name="DATE_FORMAT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["yyyy-MM-dd"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TIME_FORMAT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["HH:mm"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PORTRAIT_FOOTER_IMAGE" class="java.io.InputStream"/>
 	<queryString>
 		<![CDATA[SELECT CURRENT_DATE]]>
 	</queryString>
@@ -85,6 +93,18 @@
 				</subreportParameter>
 				<subreportParameter name="REPORT_RESOURCE_BUNDLE">
 					<subreportParameterExpression><![CDATA[$P{REPORT_RESOURCE_BUNDLE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="PORTRAIT_HEADER_IMAGE">
+					<subreportParameterExpression><![CDATA[$P{PORTRAIT_HEADER_IMAGE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="DATE_FORMAT">
+					<subreportParameterExpression><![CDATA[$P{DATE_FORMAT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="TIME_FORMAT">
+					<subreportParameterExpression><![CDATA[$P{TIME_FORMAT}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="PORTRAIT_FOOTER_IMAGE">
+					<subreportParameterExpression><![CDATA[$P{PORTRAIT_FOOTER_IMAGE}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "c_order421cMs.jasper"]]></subreportExpression>
 			</p:subreportPart>

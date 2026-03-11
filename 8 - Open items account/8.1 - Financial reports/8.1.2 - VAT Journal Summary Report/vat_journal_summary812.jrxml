@@ -32,15 +32,20 @@
 	<parameter name="LOCALE_CODE" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[$P{REPORT_LOCALE}.toString()]]></defaultValueExpression>
 	</parameter>
+	<parameter name="PORTRAIT_HEADER_IMAGE" class="java.io.InputStream"/>
+	<parameter name="DATE_FORMAT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["yyyy-MM-dd"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TIME_FORMAT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["HH:mm"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PORTRAIT_FOOTER_IMAGE" class="java.io.InputStream"/>
 	<queryString>
 		<![CDATA[SELECT
      ad_client.ad_client_id,
      lit_vat_period."name" AS lit_vat_period_name,
      lit_vat_period."lit_vat_period_id" AS lit_vat_period_lit_vat_period_id,
      ad_orginfo.LIT_Prorata/100 as lit_prorata,
- 	 lit_adorg_header_portrait_image($P{AD_CLIENT_ID}, $P{AD_Org_ID} ),
-	 lit_adorg_footer_portrait_image($P{AD_CLIENT_ID}, $P{AD_Org_ID} ),
-	lit_datetime_pattern($P{LOCALE_CODE}) AS datetimepattern,
 	 c_currency.iso_code
 FROM
      ad_client
@@ -73,18 +78,6 @@ WHERE
 		<property name="com.jaspersoft.studio.field.name" value="lit_prorata"/>
 		<property name="com.jaspersoft.studio.field.label" value="lit_prorata"/>
 	</field>
-	<field name="lit_adorg_header_portrait_image" class="byte[]">
-		<property name="com.jaspersoft.studio.field.name" value="lit_adorg_header_portrait_image"/>
-		<property name="com.jaspersoft.studio.field.label" value="lit_adorg_header_portrait_image"/>
-	</field>
-	<field name="lit_adorg_footer_portrait_image" class="byte[]">
-		<property name="com.jaspersoft.studio.field.name" value="lit_adorg_footer_portrait_image"/>
-		<property name="com.jaspersoft.studio.field.label" value="lit_adorg_footer_portrait_image"/>
-	</field>
-	<field name="datetimepattern" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="datetimepattern"/>
-		<property name="com.jaspersoft.studio.field.label" value="datetimepattern"/>
-	</field>
 	<field name="iso_code" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="iso_code"/>
 		<property name="com.jaspersoft.studio.field.label" value="iso_code"/>
@@ -109,7 +102,7 @@ WHERE
 				<reportElement x="-20" y="0" width="595" height="70" isRemoveLineWhenBlank="true" uuid="b0855581-a208-4561-9811-4db76c8af1a0">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<imageExpression><![CDATA[$F{lit_adorg_header_portrait_image}]]></imageExpression>
+				<imageExpression><![CDATA[$P{PORTRAIT_HEADER_IMAGE}]]></imageExpression>
 			</image>
 		</band>
 	</pageHeader>
@@ -366,11 +359,11 @@ WHERE
 				<reportElement x="-20" y="22" width="595" height="70" isRemoveLineWhenBlank="true" uuid="259b1e47-be5d-4e62-b79a-f321aeaacd15">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<imageExpression><![CDATA[$F{lit_adorg_footer_portrait_image}]]></imageExpression>
+				<imageExpression><![CDATA[$P{PORTRAIT_FOOTER_IMAGE}]]></imageExpression>
 			</image>
 			<textField>
 				<reportElement style="page_number" positionType="FixRelativeToBottom" x="0" y="10" width="280" height="12" uuid="a04e3b25-15c3-445a-9106-420a95245a00"/>
-				<textFieldExpression><![CDATA["RP.812 - " + str("DatePrinted") + ": " + DATEFORMAT(NOW( ),$F{datetimepattern})]]></textFieldExpression>
+				<textFieldExpression><![CDATA["RP.812 - " + str("DatePrinted") + ": " + DATEFORMAT(NOW( ),$P{DATE_FORMAT} + " " + $P{TIME_FORMAT})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement style="page_number" positionType="FixRelativeToBottom" x="280" y="10" width="275" height="12" uuid="2399912d-18a2-4bcc-b5c6-ad518e18338f">

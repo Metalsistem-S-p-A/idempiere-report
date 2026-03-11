@@ -4,7 +4,7 @@
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="39"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempieredb-report"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempiere - PRODUZIONE"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="91"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="904"/>
@@ -75,6 +75,14 @@ group by e.name,e.value, bp.name]]>
 	<parameter name="LOCALE_CODE" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[$P{REPORT_LOCALE}.toString()]]></defaultValueExpression>
 	</parameter>
+	<parameter name="PORTRAIT_HEADER_IMAGE" class="java.io.InputStream"/>
+	<parameter name="DATE_FORMAT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["yyyy-MM-dd"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TIME_FORMAT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["HH:mm"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PORTRAIT_FOOTER_IMAGE" class="java.io.InputStream"/>
 	<queryString>
 		<![CDATA[SELECT
 (select  coalesce (sum(amtacctdr-amtacctcr), 0) as Openamt from fact_acct fa where      fact_acct.ad_client_id = $P{AD_CLIENT_ID} 
@@ -117,10 +125,7 @@ case
 	else ' '
 	END as documentno,
 (select coalesce(b.name, a.name) from ad_table a left join ad_table_trl b on a.ad_table_id = b.ad_table_id and b.ad_language = $P{LOCALE_CODE} where a.ad_table_id = fact_acct.ad_table_id) as TipoDoc,
- 	 lit_adorg_header_portrait_image($P{AD_CLIENT_ID}, $P{AD_Org_ID} ),
-	 lit_adorg_footer_portrait_image($P{AD_CLIENT_ID}, $P{AD_Org_ID} ),
-	 lit_date_pattern($P{LOCALE_CODE}) AS datepattern,
-	lit_datetime_pattern($P{LOCALE_CODE}) AS datetimepattern,
+
 	 c_currency.iso_code
     
 FROM
@@ -236,22 +241,6 @@ AND 	CASE
 	<field name="tipodoc" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="tipodoc"/>
 		<property name="com.jaspersoft.studio.field.label" value="tipodoc"/>
-	</field>
-	<field name="lit_adorg_header_portrait_image" class="byte[]">
-		<property name="com.jaspersoft.studio.field.name" value="lit_adorg_header_portrait_image"/>
-		<property name="com.jaspersoft.studio.field.label" value="lit_adorg_header_portrait_image"/>
-	</field>
-	<field name="lit_adorg_footer_portrait_image" class="byte[]">
-		<property name="com.jaspersoft.studio.field.name" value="lit_adorg_footer_portrait_image"/>
-		<property name="com.jaspersoft.studio.field.label" value="lit_adorg_footer_portrait_image"/>
-	</field>
-	<field name="datepattern" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="datepattern"/>
-		<property name="com.jaspersoft.studio.field.label" value="datepattern"/>
-	</field>
-	<field name="datetimepattern" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="datetimepattern"/>
-		<property name="com.jaspersoft.studio.field.label" value="datetimepattern"/>
 	</field>
 	<field name="iso_code" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="iso_code"/>
@@ -540,13 +529,13 @@ $V{fact_acct_amtacctcr1}.add($F{openamt}) :$V{fact_acct_amtacctcr1}]]></textFiel
 					<rightPen lineWidth="0.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($P{DateAcctFrom}) + " - " + new SimpleDateFormat("dd/MM/yyyy").format($P{DateAcctTo})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[DATEFORMAT($P{DateAcctFrom},$P{DATE_FORMAT}) + " - " + DATEFORMAT($P{DateAcctTo},$P{DATE_FORMAT})]]></textFieldExpression>
 			</textField>
 			<image onErrorType="Blank">
 				<reportElement x="-30" y="0" width="595" height="70" isRemoveLineWhenBlank="true" uuid="6801dadc-4137-4ed3-b49d-1b4922844f00">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<imageExpression><![CDATA[$F{lit_adorg_header_portrait_image}]]></imageExpression>
+				<imageExpression><![CDATA[$P{PORTRAIT_HEADER_IMAGE}]]></imageExpression>
 			</image>
 		</band>
 	</pageHeader>
@@ -595,7 +584,7 @@ $V{fact_acct_amtacctcr1}.add($F{openamt}) :$V{fact_acct_amtacctcr1}]]></textFiel
 				</box>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{fact_acct_dateacct}]]></textFieldExpression>
-				<patternExpression><![CDATA[$F{datepattern}]]></patternExpression>
+				<patternExpression><![CDATA[$P{DATE_FORMAT}]]></patternExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 				<reportElement style="easy_read" positionType="Float" x="130" y="0" width="80" height="15" uuid="11445c44-1f72-41ac-9623-2b850cfc04b6">
@@ -705,11 +694,11 @@ $F{value}]]></textFieldExpression>
 				<reportElement x="-30" y="22" width="595" height="70" isRemoveLineWhenBlank="true" uuid="28df17e3-2542-4fe2-afd4-b89f4097f4d7">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<imageExpression><![CDATA[$F{lit_adorg_footer_portrait_image}]]></imageExpression>
+				<imageExpression><![CDATA[$P{PORTRAIT_FOOTER_IMAGE}]]></imageExpression>
 			</image>
 			<textField>
 				<reportElement style="page_number" positionType="FixRelativeToBottom" x="0" y="10" width="280" height="12" uuid="a518e484-8b68-4407-82f7-e4137ade5a34"/>
-				<textFieldExpression><![CDATA["RP.824 - " + str("DatePrinted") + ": " + DATEFORMAT(NOW( ),$F{datetimepattern})]]></textFieldExpression>
+				<textFieldExpression><![CDATA["RP.824 - " + str("DatePrinted") + ": " + DATEFORMAT(NOW( ),$P{DATE_FORMAT} + " " + $P{TIME_FORMAT})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement style="page_number" positionType="FixRelativeToBottom" x="280" y="10" width="255" height="12" uuid="23a1b39e-6814-4686-b63c-89a9f40280b7">

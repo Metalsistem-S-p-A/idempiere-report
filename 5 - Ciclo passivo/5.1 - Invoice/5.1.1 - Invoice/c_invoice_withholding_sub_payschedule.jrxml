@@ -37,6 +37,9 @@
 	<parameter name="LOCALE_CODE" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[$P{REPORT_LOCALE}.toString()]]></defaultValueExpression>
 	</parameter>
+	<parameter name="DATE_FORMAT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["yyyy-MM-dd"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT
      c_invoicepayschedule."dueamt" AS c_invoicepayschedule_dueamt,
@@ -123,7 +126,7 @@ order by  c_invoicepayschedule."duedate"]]>
 				<textElement verticalAlignment="Middle">
 					<paragraph lineSpacing="Single" leftIndent="4"/>
 				</textElement>
-				<textFieldExpression><![CDATA[T(new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($F{c_invoicepayschedule_duedate}))]]></textFieldExpression>
+				<textFieldExpression><![CDATA[T(DATEFORMAT($F{c_invoicepayschedule_duedate}, $P{DATE_FORMAT}))]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement style="easy_read_code" positionType="Float" x="115" y="0" width="135" height="12" uuid="c27120cc-da36-4c16-b05e-d845b2f7a393">

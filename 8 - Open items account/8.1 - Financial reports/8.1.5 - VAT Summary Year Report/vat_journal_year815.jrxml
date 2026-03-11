@@ -29,6 +29,14 @@
 	<parameter name="LOCALE_CODE" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[$P{REPORT_LOCALE}.toString()]]></defaultValueExpression>
 	</parameter>
+	<parameter name="PORTRAIT_HEADER_IMAGE" class="java.io.InputStream"/>
+	<parameter name="DATE_FORMAT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["yyyy-MM-dd"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TIME_FORMAT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["HH:mm"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PORTRAIT_FOOTER_IMAGE" class="java.io.InputStream"/>
 	<queryString>
 		<![CDATA[select 
 Case when LIT_YearVATBaseSO is  not null and issotrx = 'Y' then LIT_YearVATBaseSO 
@@ -53,10 +61,6 @@ vatcodename,
 lit_vatjournal_accountsign,
 taxindicator,
  ad_orginfo.LIT_Prorata/100 as lit_prorata,
- lit_adorg_header_portrait_image($P{AD_CLIENT_ID}, $P{AD_Org_ID} ),
- lit_adorg_footer_portrait_image($P{AD_CLIENT_ID}, $P{AD_Org_ID} ),
-lit_datetime_pattern($P{LOCALE_CODE}) AS datetimepattern,
-lit_date_pattern($P{LOCALE_CODE}) AS datepattern,
  c_currency.iso_code
  from lit_vat_journal_v
  inner join ad_orginfo on lit_vat_journal_v.ad_client_id=ad_orginfo.ad_client_id
@@ -127,22 +131,6 @@ order by lit_vatjournal_accountsign, taxcode, vatcodename, dateinvoiced]]>
 	<field name="lit_prorata" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="lit_prorata"/>
 		<property name="com.jaspersoft.studio.field.label" value="lit_prorata"/>
-	</field>
-	<field name="lit_adorg_header_portrait_image" class="byte[]">
-		<property name="com.jaspersoft.studio.field.name" value="lit_adorg_header_portrait_image"/>
-		<property name="com.jaspersoft.studio.field.label" value="lit_adorg_header_portrait_image"/>
-	</field>
-	<field name="lit_adorg_footer_portrait_image" class="byte[]">
-		<property name="com.jaspersoft.studio.field.name" value="lit_adorg_footer_portrait_image"/>
-		<property name="com.jaspersoft.studio.field.label" value="lit_adorg_footer_portrait_image"/>
-	</field>
-	<field name="datetimepattern" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="datetimepattern"/>
-		<property name="com.jaspersoft.studio.field.label" value="datetimepattern"/>
-	</field>
-	<field name="datepattern" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="datepattern"/>
-		<property name="com.jaspersoft.studio.field.label" value="datepattern"/>
 	</field>
 	<field name="iso_code" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="iso_code"/>
@@ -402,7 +390,7 @@ order by lit_vatjournal_accountsign, taxcode, vatcodename, dateinvoiced]]>
 				<reportElement x="-20" y="0" width="595" height="70" isRemoveLineWhenBlank="true" uuid="f45fce43-5dc8-44d0-8de9-b97a1f37dd2d">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<imageExpression><![CDATA[$F{lit_adorg_header_portrait_image}]]></imageExpression>
+				<imageExpression><![CDATA[$P{PORTRAIT_HEADER_IMAGE}]]></imageExpression>
 			</image>
 		</band>
 	</pageHeader>
@@ -464,7 +452,7 @@ order by lit_vatjournal_accountsign, taxcode, vatcodename, dateinvoiced]]>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2"/>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[new java.text.SimpleDateFormat($F{datepattern}).format($F{dateinvoiced})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[DATEFORMAT($F{dateinvoiced}, $P{DATE_FORMAT})]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
 				<reportElement style="easy_read" x="0" y="0" width="65" height="14" uuid="84913c24-7f65-4563-9200-80a3031a23a2">
@@ -491,11 +479,11 @@ order by lit_vatjournal_accountsign, taxcode, vatcodename, dateinvoiced]]>
 				<reportElement x="-20" y="22" width="595" height="70" isRemoveLineWhenBlank="true" uuid="849acdfc-c7a4-423e-914e-7287671e7e2f">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<imageExpression><![CDATA[$F{lit_adorg_footer_portrait_image}]]></imageExpression>
+				<imageExpression><![CDATA[$P{PORTRAIT_FOOTER_IMAGE}]]></imageExpression>
 			</image>
 			<textField>
 				<reportElement style="page_number" positionType="FixRelativeToBottom" x="0" y="10" width="280" height="12" uuid="ac885444-5897-4397-b646-8676039ee9ca"/>
-				<textFieldExpression><![CDATA["RP.815 - " + str("DatePrinted") + ": " + DATEFORMAT(NOW( ),$F{datetimepattern})]]></textFieldExpression>
+				<textFieldExpression><![CDATA["RP.815 - " + str("DatePrinted") + ": " + DATEFORMAT(NOW( ),$P{DATE_FORMAT} + " " + $P{TIME_FORMAT})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement style="page_number" positionType="FixRelativeToBottom" x="280" y="10" width="275" height="12" uuid="cafc8fd3-66e1-4125-96c0-9f139a9199ac">

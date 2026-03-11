@@ -34,10 +34,16 @@
 	<parameter name="LOCALE_CODE" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[$P{REPORT_LOCALE}.toString()]]></defaultValueExpression>
 	</parameter>
+	<parameter name="PORTRAIT_HEADER_IMAGE" class="java.io.InputStream"/>
+	<parameter name="DATE_FORMAT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["yyyy-MM-dd"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TIME_FORMAT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["HH:mm"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PORTRAIT_FOOTER_IMAGE" class="java.io.InputStream"/>
 	<queryString>
 		<![CDATA[SELECT COALESCE(c_invoice.withholdingamt, 0::numeric) AS c_invoice_withholdingamt,
-	lit_adorg_header_portrait_image(c_invoice.ad_client_id, c_invoice.ad_org_id) AS header_image,
-	lit_adorg_footer_portrait_image(c_invoice.ad_client_id, c_invoice.ad_org_id) AS footer_image,
     get_sysconfig('LIT_REP_INVOICESO', 'N', c_invoice.ad_client_id, c_invoice.ad_org_id) AS ad_sysconfig_help,
     ad_orginfo.taxid AS ad_orginfo_taxid,
     get_sysconfig('LIT_REP_411_PrintDescription', 'N', c_invoice.ad_client_id, c_invoice.ad_org_id) as ad_sysconfig_printdescription,
@@ -162,8 +168,7 @@
     c_order2.documentno AS c_order2_documentno,
     c_order2.poreference AS c_order2_poreference,
     c_bp_partner_letterintent.bp_letterintentnrletter,
-    c_bp_partner_letterintent.bp_letterintentdateletter,
-    (select COALESCE(datepattern, 'yyyy-MM-dd') from ad_language where ad_language = $P{LOCALE_CODE})AS datepattern
+    c_bp_partner_letterintent.bp_letterintentdateletter
      FROM c_invoice c_invoice
      LEFT JOIN c_invoiceline c_invoiceline ON c_invoice.c_invoice_id = c_invoiceline.c_invoice_id
   	 LEFT JOIN c_project c_project ON c_invoice.c_project_id = c_project.c_project_id
@@ -220,14 +225,6 @@
 		<property name="com.jaspersoft.studio.field.name" value="c_invoice_withholdingamt"/>
 		<property name="com.jaspersoft.studio.field.label" value="c_invoice_withholdingamt"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="lit_rep_c_invoice_v"/>
-	</field>
-	<field name="header_image" class="byte[]">
-		<property name="com.jaspersoft.studio.field.name" value="header_image"/>
-		<property name="com.jaspersoft.studio.field.label" value="header_image"/>
-	</field>
-	<field name="footer_image" class="byte[]">
-		<property name="com.jaspersoft.studio.field.name" value="footer_image"/>
-		<property name="com.jaspersoft.studio.field.label" value="footer_image"/>
 	</field>
 	<field name="ad_sysconfig_help" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="ad_sysconfig_help"/>
@@ -836,11 +833,6 @@
 		<property name="com.jaspersoft.studio.field.label" value="bp_letterintentdateletter"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="c_bp_partner_letterintent"/>
 	</field>
-	<field name="datepattern" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="datepattern"/>
-		<property name="com.jaspersoft.studio.field.label" value="datepattern"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="ad_language"/>
-	</field>
 	<variable name="v1" class="java.math.BigDecimal">
 		<variableExpression><![CDATA[new BigDecimal(1)]]></variableExpression>
 	</variable>
@@ -880,7 +872,7 @@
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<image scaleImage="RetainShape" hAlign="Left" isUsingCache="true" onErrorType="Blank">
 				<reportElement x="-20" y="0" width="595" height="80" uuid="71abee3f-38d4-4438-921d-f46db5667e9c"/>
-				<imageExpression><![CDATA[$F{header_image}]]></imageExpression>
+				<imageExpression><![CDATA[$P{PORTRAIT_HEADER_IMAGE}]]></imageExpression>
 			</image>
 			<textField isBlankWhenNull="true">
 				<reportElement style="highlight" positionType="Float" x="0" y="85" width="125" height="30" uuid="aab99871-231d-4ac4-a405-e4585ba0bd33">
@@ -1012,7 +1004,7 @@
 					<font size="9" isBold="false"/>
 					<paragraph lineSpacing="Single" firstLineIndent="0" leftIndent="4"/>
 				</textElement>
-				<textFieldExpression><![CDATA["<b>" + str("DateInvoiced") + "</b>: "+T(new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($F{c_invoice_dateinvoiced}))]]></textFieldExpression>
+				<textFieldExpression><![CDATA["<b>" + str("DateInvoiced") + "</b>: "+T(DATEFORMAT($F{c_invoice_dateinvoiced}, $P{DATE_FORMAT}))]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 				<reportElement positionType="Float" x="0" y="145" width="250" height="15" uuid="7ab79443-945e-4506-af91-f2042f5726ee">
@@ -1367,7 +1359,7 @@
 		</band>
 		<band height="9">
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement style="default" isPrintRepeatedValues="false" x="0" y="0" width="85" height="9" isRemoveLineWhenBlank="true" forecolor="#000000" uuid="7f0e1e72-bffe-4577-9843-2e74b5edb209">
+				<reportElement style="easy_read" isPrintRepeatedValues="false" x="0" y="0" width="85" height="9" isRemoveLineWhenBlank="true" forecolor="#000000" uuid="7f0e1e72-bffe-4577-9843-2e74b5edb209">
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -1378,13 +1370,13 @@
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false"/>
+					<font size="7"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{lit_intrastat_value}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement style="default" positionType="Float" isPrintRepeatedValues="false" x="85" y="0" width="470" height="9" isRemoveLineWhenBlank="true" forecolor="#000000" uuid="97dfe0be-e292-4638-b8a3-6b155297ba2f">
+				<reportElement style="easy_read" positionType="Float" isPrintRepeatedValues="false" x="85" y="0" width="470" height="9" isRemoveLineWhenBlank="true" forecolor="#000000" uuid="97dfe0be-e292-4638-b8a3-6b155297ba2f">
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -1395,7 +1387,7 @@
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false"/>
+					<font size="7"/>
 					<paragraph lineSpacing="Single" leftIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[str("Lot") + ": " +T($F{lit_attribute_v_lot})]]></textFieldExpression>
@@ -1410,7 +1402,7 @@
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<imageExpression><![CDATA[$F{footer_image}]]></imageExpression>
+				<imageExpression><![CDATA[$P{PORTRAIT_FOOTER_IMAGE}]]></imageExpression>
 			</image>
 			<textField>
 				<reportElement style="page_number" positionType="FixRelativeToBottom" x="280" y="0" width="275" height="12" uuid="b1f80967-b19d-4420-9d14-a6d8fc2581e8">
@@ -1423,7 +1415,7 @@
 			</textField>
 			<textField>
 				<reportElement style="page_number" positionType="FixRelativeToBottom" x="0" y="0" width="280" height="12" uuid="5639b1eb-aeb9-4d6c-b676-116fa2db06a4"/>
-				<textFieldExpression><![CDATA["RP.511 - " + str("DatePrinted") + ": " + DATEFORMAT(NOW( ),$F{datetimepattern})]]></textFieldExpression>
+				<textFieldExpression><![CDATA["RP.511 - " + str("DatePrinted") + ": " + DATEFORMAT(NOW( ), $P{DATE_FORMAT} + " " + $P{TIME_FORMAT})]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>
@@ -1453,6 +1445,9 @@
 				</subreportParameter>
 				<subreportParameter name="REPORT_RESOURCE_BUNDLE">
 					<subreportParameterExpression><![CDATA[$P{REPORT_RESOURCE_BUNDLE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="DATE_FORMAT">
+					<subreportParameterExpression><![CDATA[$P{DATE_FORMAT}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "c_invoice_withholding_sub_payschedule.jasper"]]></subreportExpression>
@@ -1501,7 +1496,7 @@
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{bp_letterintentnrletter} != null ? (str("C_BP_Partner_LetterIntent_ID") + " " + $F{bp_letterintentnrletter} + " - "+ new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($F{bp_letterintentdateletter})) : ""]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{bp_letterintentnrletter} != null ? (str("C_BP_Partner_LetterIntent_ID") + " " + $F{bp_letterintentnrletter} + " - "+ DATEFORMAT($F{bp_letterintentdateletter}, $P{DATE_FORMAT})) : ""]]></textFieldExpression>
 			</textField>
 			<subreport isUsingCache="true">
 				<reportElement positionType="Float" x="305" y="25" width="250" height="32" uuid="21d8824d-3851-46ce-9b07-dc29778f0dc4">
@@ -1523,7 +1518,7 @@
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<imageExpression><![CDATA[$F{footer_image}]]></imageExpression>
+				<imageExpression><![CDATA[$P{PORTRAIT_FOOTER_IMAGE}]]></imageExpression>
 			</image>
 			<textField isBlankWhenNull="true">
 				<reportElement style="highlight" positionType="Float" x="420" y="93" width="47" height="16" uuid="325626e8-3c46-41d5-9816-a20a377a31cf"/>
@@ -1548,7 +1543,7 @@
 			</textField>
 			<textField>
 				<reportElement style="page_number" positionType="FixRelativeToBottom" x="0" y="113" width="280" height="12" uuid="affc2ea9-0c8f-45e0-8c74-150256a515ac"/>
-				<textFieldExpression><![CDATA["RP.511 - " + str("DatePrinted") + ": " + DATEFORMAT(NOW( ),$F{datetimepattern})]]></textFieldExpression>
+				<textFieldExpression><![CDATA["RP.511 - " + str("DatePrinted") + ": " + DATEFORMAT(NOW( ), $P{DATE_FORMAT} + " " + $P{TIME_FORMAT})]]></textFieldExpression>
 			</textField>
 		</band>
 	</lastPageFooter>

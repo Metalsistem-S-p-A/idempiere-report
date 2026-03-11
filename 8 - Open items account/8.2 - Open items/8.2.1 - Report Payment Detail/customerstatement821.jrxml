@@ -45,13 +45,16 @@
 	<parameter name="LOCALE_CODE" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[$P{REPORT_LOCALE}.toString()]]></defaultValueExpression>
 	</parameter>
+	<parameter name="PORTRAIT_HEADER_IMAGE" class="java.io.InputStream"/>
+	<parameter name="DATE_FORMAT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["yyyy-MM-dd"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TIME_FORMAT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["HH:mm"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PORTRAIT_FOOTER_IMAGE" class="java.io.InputStream"/>
 	<queryString>
-		<![CDATA[select x.*,
-	lit_adorg_header_portrait_image($P{AD_CLIENT_ID}, $P{AD_Org_ID}) as header_image,
-	lit_adorg_footer_portrait_image($P{AD_CLIENT_ID}, $P{AD_Org_ID}) as footer_image,
-		lit_datetime_pattern($P{LOCALE_CODE}) AS datetimepattern,
-    lit_date_pattern($P{LOCALE_CODE}) AS datepattern,	
-    lit_time_pattern($P{LOCALE_CODE}) AS timepattern
+		<![CDATA[select x.*
 from (
 select 
 (select (
@@ -488,26 +491,6 @@ order by "BPARTNER",datetrx,documentno
 		<property name="com.jaspersoft.studio.field.name" value="c_currency_iso_code"/>
 		<property name="com.jaspersoft.studio.field.label" value="c_currency_iso_code"/>
 	</field>
-	<field name="header_image" class="byte[]">
-		<property name="com.jaspersoft.studio.field.name" value="header_image"/>
-		<property name="com.jaspersoft.studio.field.label" value="header_image"/>
-	</field>
-	<field name="footer_image" class="byte[]">
-		<property name="com.jaspersoft.studio.field.name" value="footer_image"/>
-		<property name="com.jaspersoft.studio.field.label" value="footer_image"/>
-	</field>
-	<field name="datetimepattern" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="datetimepattern"/>
-		<property name="com.jaspersoft.studio.field.label" value="datetimepattern"/>
-	</field>
-	<field name="datepattern" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="datepattern"/>
-		<property name="com.jaspersoft.studio.field.label" value="datepattern"/>
-	</field>
-	<field name="timepattern" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="timepattern"/>
-		<property name="com.jaspersoft.studio.field.label" value="timepattern"/>
-	</field>
 	<sortField name="datetrx"/>
 	<sortField name="documentno"/>
 	<sortField name="paymentdate"/>
@@ -814,7 +797,7 @@ order by "BPARTNER",datetrx,documentno
 					</box>
 					<textElement verticalAlignment="Middle"/>
 					<textFieldExpression><![CDATA[$F{datetrx}]]></textFieldExpression>
-					<patternExpression><![CDATA[$F{datepattern}]]></patternExpression>
+					<patternExpression><![CDATA[$P{DATE_FORMAT}]]></patternExpression>
 				</textField>
 				<textField textAdjust="ScaleFont" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
 					<reportElement key="textField" style="code" positionType="Float" stretchType="RelativeToTallestObject" x="487" y="0" width="68" height="16" uuid="f73cb0d4-0760-4eee-bbb7-b1ea3b9f82df">
@@ -871,7 +854,7 @@ order by "BPARTNER",datetrx,documentno
 		<band height="132">
 			<image scaleImage="RetainShape" hAlign="Left" isUsingCache="true" onErrorType="Blank">
 				<reportElement x="-20" y="0" width="595" height="80" uuid="f68e9f5c-fec2-453e-b71e-41ec3cf6ff4c"/>
-				<imageExpression><![CDATA[$F{header_image}]]></imageExpression>
+				<imageExpression><![CDATA[$P{PORTRAIT_HEADER_IMAGE}]]></imageExpression>
 			</image>
 			<textField>
 				<reportElement style="title" positionType="Float" x="0" y="90" width="555" height="18" uuid="cbf159fa-4ac4-4728-bf35-a4ec3a1be1de"/>
@@ -887,7 +870,7 @@ order by "BPARTNER",datetrx,documentno
 					<rightPen lineWidth="0.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[new SimpleDateFormat($F{datepattern}).format($P{DateAcctFrom}) + "  - " + new SimpleDateFormat($F{datepattern}).format($P{DateAcctTo})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[DATEFORMAT($P{DateAcctFrom}, $P{DATE_FORMAT}) + "  - " + DATEFORMAT($P{DateAcctTo}, $P{DATE_FORMAT})]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -924,7 +907,7 @@ order by "BPARTNER",datetrx,documentno
 				<textFieldExpression><![CDATA[$F{paymentdoc}== null ? "ABBINAMENTO" : 
 "PAGAMENTO"]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="ScaleFont" pattern="dd-MM-yyyy" isBlankWhenNull="true">
+			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 				<reportElement key="textField" style="easy_read" positionType="Float" x="0" y="0" width="70" height="16" uuid="189afc3b-f8c6-4fde-8ea0-d7c6a2042b92">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -937,6 +920,7 @@ order by "BPARTNER",datetrx,documentno
 				</box>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{paymentdate}]]></textFieldExpression>
+				<patternExpression><![CDATA[$P{DATE_FORMAT}]]></patternExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 				<reportElement style="easy_read" positionType="Float" x="161" y="0" width="254" height="16" uuid="402a05ac-5567-4a00-a72c-84d94875305d">
@@ -974,11 +958,11 @@ order by "BPARTNER",datetrx,documentno
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<imageExpression><![CDATA[$F{footer_image}]]></imageExpression>
+				<imageExpression><![CDATA[$P{PORTRAIT_FOOTER_IMAGE}]]></imageExpression>
 			</image>
 			<textField>
 				<reportElement style="page_number" positionType="FixRelativeToBottom" x="0" y="4" width="280" height="12" uuid="eed10243-31b0-4c47-b4ed-f7beaf4b1504"/>
-				<textFieldExpression><![CDATA["RP.821 - " + str("DatePrinted") + ": " + DATEFORMAT(NOW( ),$F{datetimepattern})]]></textFieldExpression>
+				<textFieldExpression><![CDATA["RP.821 - " + str("DatePrinted") + ": " + DATEFORMAT(NOW( ),$P{DATE_FORMAT} + " " + $P{TIME_FORMAT})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement style="page_number" positionType="FixRelativeToBottom" x="280" y="4" width="275" height="12" uuid="e9302cc7-4d17-459c-9944-542f4d7ca2e3">

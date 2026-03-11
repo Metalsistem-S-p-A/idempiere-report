@@ -5,7 +5,7 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempieredb-report"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempiere - PRODUZIONE"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="497"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="493"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="211"/>
@@ -53,25 +53,24 @@
 	<parameter name="LOCALE_CODE" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[$P{REPORT_LOCALE}.toString()]]></defaultValueExpression>
 	</parameter>
+	<parameter name="LANDSCAPE_HEADER_IMAGE" class="java.io.InputStream"/>
+	<parameter name="DATE_FORMAT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["yyyy-MM-dd"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TIME_FORMAT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["HH:mm"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="LANDSCAPE_FOOTER_IMAGE" class="java.io.InputStream"/>
 	<queryString>
 		<![CDATA[SELECT
-     *,
-     	lit_adorg_header_landscape_image($P{AD_CLIENT_ID}, $P{AD_Org_ID} ),
-	 lit_adorg_footer_landscape_image($P{AD_CLIENT_ID}, $P{AD_Org_ID} ),
-	 	 lit_date_pattern($P{LOCALE_CODE}) as datepattern,
-	 lit_datetime_pattern($P{LOCALE_CODE}) as datetimepattern,
-(
-	select
-		c_currency.iso_code
-	from
-		c_acctschema
-	inner join c_currency on
-		c_acctschema.c_currency_id = c_currency.c_currency_id
-	where
-		c_acctschema.ad_client_id = $P{AD_CLIENT_ID}
-		and c_acctschema.ad_org_id in (0, $P{AD_Org_ID}))
+    lit_vat_journal_v.*,
+    c_currency.iso_code
 FROM
      "adempiere"."lit_vat_journal_v" lit_vat_journal_v
+inner join c_tax on c_tax.c_tax_id=lit_vat_journal_v.c_tax_id
+inner join c_tax_acct ON c_tax_acct.c_tax_id = c_tax.c_tax_id
+inner join c_acctschema ON c_acctschema.c_acctschema_id = c_tax_acct.c_acctschema_id
+inner join c_currency ON c_currency.c_currency_id = c_acctschema.c_currency_id
 WHERE
  lit_vat_journal_v."ad_client_id"=$P{AD_CLIENT_ID} AND
  lit_vat_journal_v."ad_org_id"=   $P{AD_Org_ID}  AND
@@ -378,25 +377,20 @@ ORDER BY
 		<property name="com.jaspersoft.studio.field.label" value="vat_period_dateto"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="lit_vat_journal_v"/>
 	</field>
-	<field name="lit_adorg_header_landscape_image" class="byte[]">
-		<property name="com.jaspersoft.studio.field.name" value="lit_adorg_header_landscape_image"/>
-		<property name="com.jaspersoft.studio.field.label" value="lit_adorg_header_landscape_image"/>
+	<field name="issotrx" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="issotrx"/>
+		<property name="com.jaspersoft.studio.field.label" value="issotrx"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="lit_vat_journal_v"/>
 	</field>
-	<field name="lit_adorg_footer_landscape_image" class="byte[]">
-		<property name="com.jaspersoft.studio.field.name" value="lit_adorg_footer_landscape_image"/>
-		<property name="com.jaspersoft.studio.field.label" value="lit_adorg_footer_landscape_image"/>
-	</field>
-	<field name="datepattern" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="datepattern"/>
-		<property name="com.jaspersoft.studio.field.label" value="datepattern"/>
-	</field>
-	<field name="datetimepattern" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="datetimepattern"/>
-		<property name="com.jaspersoft.studio.field.label" value="datetimepattern"/>
+	<field name="c_bpartner_id" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="c_bpartner_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="c_bpartner_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="lit_vat_journal_v"/>
 	</field>
 	<field name="iso_code" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="iso_code"/>
 		<property name="com.jaspersoft.studio.field.label" value="iso_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="c_currency"/>
 	</field>
 	<variable name="SUM_IMPONIBILE" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{taxbaseamt}]]></variableExpression>
@@ -460,7 +454,7 @@ ORDER BY
 		<groupHeader>
 			<band height="53">
 				<textField>
-					<reportElement key="" style="title" x="0" y="20" width="802" height="20" uuid="e554d50b-3aac-40e5-bc76-1c89c425e717">
+					<reportElement key="" style="label" x="0" y="20" width="802" height="20" uuid="e554d50b-3aac-40e5-bc76-1c89c425e717">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<box>
@@ -470,9 +464,9 @@ ORDER BY
 						<rightPen lineWidth="0.0" lineStyle="Solid"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($F{vat_period_datefrom})
+					<textFieldExpression><![CDATA[DATEFORMAT($F{vat_period_datefrom}, $P{DATE_FORMAT})
 + " - " +
-new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($F{vat_period_dateto})]]></textFieldExpression>
+DATEFORMAT($F{vat_period_dateto}, $P{DATE_FORMAT})]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement key="" style="title" x="0" y="0" width="802" height="20" uuid="d8edf81c-0850-4aea-85f6-04ef8dfbf821">
@@ -805,7 +799,7 @@ new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($F{vat_period_da
 						<font size="7"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{dateacct}]]></textFieldExpression>
-					<patternExpression><![CDATA[$F{datepattern}]]></patternExpression>
+					<patternExpression><![CDATA[$P{DATE_FORMAT}]]></patternExpression>
 				</textField>
 				<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 					<reportElement positionType="Float" mode="Opaque" x="57" y="0" width="50" height="12" uuid="440b06cc-9224-42b3-a8ab-3a802412fdd3">
@@ -841,7 +835,7 @@ new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($F{vat_period_da
 						<font size="7"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{dateinvoiced}]]></textFieldExpression>
-					<patternExpression><![CDATA[$F{datepattern}]]></patternExpression>
+					<patternExpression><![CDATA[$P{DATE_FORMAT}]]></patternExpression>
 				</textField>
 				<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 					<reportElement positionType="Float" mode="Opaque" x="206" y="0" width="47" height="12" uuid="2992d9f4-9e6b-4719-adcc-7eff2a5e5b2e">
@@ -933,7 +927,7 @@ new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($F{vat_period_da
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<imageExpression><![CDATA[$F{lit_adorg_header_landscape_image}]]></imageExpression>
+				<imageExpression><![CDATA[$P{LANDSCAPE_HEADER_IMAGE}]]></imageExpression>
 			</image>
 		</band>
 	</pageHeader>
@@ -1037,11 +1031,11 @@ new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($F{vat_period_da
 				<reportElement positionType="FixRelativeToBottom" x="-19" y="22" width="841" height="70" isRemoveLineWhenBlank="true" uuid="2a5071cb-3586-4259-9985-d98ccd65247d">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<imageExpression><![CDATA[$F{lit_adorg_footer_landscape_image}]]></imageExpression>
+				<imageExpression><![CDATA[$P{LANDSCAPE_FOOTER_IMAGE}]]></imageExpression>
 			</image>
 			<textField>
 				<reportElement style="page_number" positionType="FixRelativeToBottom" x="0" y="0" width="280" height="12" uuid="9e722a44-6fee-411b-8c63-96c353f1200c"/>
-				<textFieldExpression><![CDATA["RP.811 - " + str("DatePrinted") + ": " + DATEFORMAT(NOW( ),$F{datetimepattern})]]></textFieldExpression>
+				<textFieldExpression><![CDATA["RP.811 - " + str("DatePrinted") + ": " + DATEFORMAT(NOW( ),$P{DATE_FORMAT} + " " + $P{TIME_FORMAT})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement style="page_number" positionType="FixRelativeToBottom" x="280" y="0" width="522" height="12" uuid="80462116-e305-4386-82a1-8fdde1ffc1e9">

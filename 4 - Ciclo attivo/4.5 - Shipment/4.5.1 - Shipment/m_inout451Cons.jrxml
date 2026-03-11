@@ -51,13 +51,16 @@
 	<parameter name="LOCALE_CODE" class="java.lang.String">
 		<defaultValueExpression><![CDATA[$P{REPORT_LOCALE}.toString()]]></defaultValueExpression>
 	</parameter>
+	<parameter name="PORTRAIT_HEADER_IMAGE" class="java.io.InputStream"/>
+	<parameter name="DATE_FORMAT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["yyyy-MM-dd"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TIME_FORMAT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["HH:mm"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PORTRAIT_FOOTER_IMAGE" class="java.io.InputStream"/>
 	<queryString>
 		<![CDATA[select
-lit_datetime_pattern($P{LOCALE_CODE}) AS datetimepattern,
-    lit_date_pattern($P{LOCALE_CODE}) AS datepattern,	
-    lit_time_pattern($P{LOCALE_CODE}) AS timepattern,
-	lit_adorg_header_portrait_image(ad_orginfo.ad_client_id, ad_orginfo.ad_org_id) as header_image,
-	lit_adorg_footer_portrait_image(ad_orginfo.ad_client_id, ad_orginfo.ad_org_id) as footer_image,
     c_currency.iso_code AS c_currency_iso_code,
 	ad_sysconfig.help as ad_sysconfig_help,
 	ad_orginfo.lit_report_param as ad_orginfo_lit_report_param,
@@ -275,26 +278,6 @@ where
 		or ad_sysconfig.name is null)
 	and io.m_inout_id = $P{RECORD_ID}]]>
 	</queryString>
-	<field name="datetimepattern" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="datetimepattern"/>
-		<property name="com.jaspersoft.studio.field.label" value="datetimepattern"/>
-	</field>
-	<field name="datepattern" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="datepattern"/>
-		<property name="com.jaspersoft.studio.field.label" value="datepattern"/>
-	</field>
-	<field name="timepattern" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="timepattern"/>
-		<property name="com.jaspersoft.studio.field.label" value="timepattern"/>
-	</field>
-	<field name="header_image" class="byte[]">
-		<property name="com.jaspersoft.studio.field.name" value="header_image"/>
-		<property name="com.jaspersoft.studio.field.label" value="header_image"/>
-	</field>
-	<field name="footer_image" class="byte[]">
-		<property name="com.jaspersoft.studio.field.name" value="footer_image"/>
-		<property name="com.jaspersoft.studio.field.label" value="footer_image"/>
-	</field>
 	<field name="c_currency_iso_code" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="c_currency_iso_code"/>
 		<property name="com.jaspersoft.studio.field.label" value="c_currency_iso_code"/>
@@ -820,7 +803,7 @@ where
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<imageExpression><![CDATA[$F{header_image}]]></imageExpression>
+				<imageExpression><![CDATA[$P{PORTRAIT_HEADER_IMAGE}]]></imageExpression>
 			</image>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement style="highlight" positionType="Float" x="0" y="90" width="100" height="30" uuid="e9673fbf-ad22-4cfa-930e-de52175b1270">
@@ -892,7 +875,7 @@ where
 				<textElement textAlignment="Left" verticalAlignment="Middle" markup="html">
 					<paragraph lineSpacing="Single" firstLineIndent="0" leftIndent="4"/>
 				</textElement>
-				<textFieldExpression><![CDATA["<b>" + str("DateAcct")  + ": </b>" + T(new SimpleDateFormat($F{datepattern}).format($F{m_inout_dateacct}))]]></textFieldExpression>
+				<textFieldExpression><![CDATA["<b>" + str("DateAcct")  + ": </b>" + T(DATEFORMAT($F{m_inout_dateacct}, $P{DATE_FORMAT}))]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement positionType="Float" mode="Transparent" x="0" y="150" width="260" height="15" backcolor="#DFDFDF" uuid="ab52806e-43bb-41ab-9df9-ed09e4f86052">
@@ -1341,7 +1324,7 @@ where
 					<font size="7"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{m_product_value} + 
+				<textFieldExpression><![CDATA[T($F{m_product_value}) + 
 (!T($F{lit_mslegacycode}).isEmpty() && !$F{lit_mslegacycode}.equals($F{m_product_value}) ? 
 ("\n[" + $F{lit_mslegacycode} + "]")
 	: ""
@@ -1453,27 +1436,6 @@ where
 				<textFieldExpression><![CDATA[$F{m_inoutline_name}!=null?$F{m_inoutline_name}:$F{m_product_name}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement style="easy_read_code" stretchType="ContainerHeight" mode="Opaque" x="0" y="0" width="80" height="11" isPrintInFirstWholeBand="true" uuid="6969e323-2eb3-4aef-a04f-e4189f0c57b8">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<printWhenExpression><![CDATA[!T($P{IsPrintPrice}).equals("Y")]]></printWhenExpression>
-				</reportElement>
-				<box topPadding="1" leftPadding="2" bottomPadding="1" rightPadding="2">
-					<topPen lineWidth="0.0" lineStyle="Solid"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid"/>
-				</box>
-				<textElement verticalAlignment="Top">
-					<font size="7"/>
-					<paragraph lineSpacing="Single"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{m_product_value} + 
-(!T($F{lit_mslegacycode}).isEmpty() && !$F{lit_mslegacycode}.equals($F{m_product_value}) ? 
-("\n[" + $F{lit_mslegacycode} + "]")
-	: ""
-)]]></textFieldExpression>
-			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement style="easy_read" stretchType="ContainerHeight" mode="Opaque" x="80" y="0" width="80" height="11" uuid="243c6d50-d02b-4348-86d8-4f082cb2c485">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -1512,11 +1474,32 @@ where
 				</textElement>
 				<textFieldExpression><![CDATA[$F{m_inoutline_movementqty}]]></textFieldExpression>
 			</textField>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement style="easy_read_code" stretchType="ContainerHeight" mode="Opaque" x="0" y="0" width="80" height="11" isPrintInFirstWholeBand="true" uuid="6969e323-2eb3-4aef-a04f-e4189f0c57b8">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<printWhenExpression><![CDATA[!T($P{IsPrintPrice}).equals("Y")]]></printWhenExpression>
+				</reportElement>
+				<box topPadding="1" leftPadding="2" bottomPadding="1" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font size="7"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[T($F{m_product_value}) + 
+(!T($F{lit_mslegacycode}).isEmpty() && !$F{lit_mslegacycode}.equals($F{m_product_value}) ? 
+("\n[" + $F{lit_mslegacycode} + "]")
+	: ""
+)]]></textFieldExpression>
+			</textField>
 		</band>
 		<band height="10">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement style="small" positionType="Float" stretchType="ContainerHeight" mode="Transparent" x="0" y="0" width="555" height="10" isRemoveLineWhenBlank="true" uuid="a696e17a-39c7-4994-a222-71196c3d8aa3">
+				<reportElement style="easy_read" positionType="Float" stretchType="ContainerHeight" x="0" y="0" width="555" height="10" isRemoveLineWhenBlank="true" uuid="a696e17a-39c7-4994-a222-71196c3d8aa3">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
@@ -1531,7 +1514,7 @@ where
 					<rightPen lineWidth="0.0" lineStyle="Solid"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font isBold="false"/>
+					<font size="7" isBold="false"/>
 					<paragraph lineSpacing="Single" leftIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{m_inoutline_description}!=null?$F{m_inoutline_description}:$F{m_product_description}]]></textFieldExpression>
@@ -1539,7 +1522,7 @@ where
 		</band>
 		<band height="10">
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement style="small" positionType="Float" stretchType="ContainerHeight" mode="Transparent" x="0" y="0" width="555" height="10" isRemoveLineWhenBlank="true" uuid="b25e7915-561d-41d0-af51-33b0b9d187d6">
+				<reportElement style="easy_read" positionType="Float" stretchType="ContainerHeight" x="0" y="0" width="555" height="10" isRemoveLineWhenBlank="true" uuid="b25e7915-561d-41d0-af51-33b0b9d187d6">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
@@ -1554,7 +1537,7 @@ where
 					<rightPen lineWidth="0.0" lineStyle="Solid"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font isBold="false"/>
+					<font size="7" isBold="false"/>
 					<paragraph lineSpacing="Single" leftIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{m_inoutline_help}!=null?$F{m_inoutline_help}:$F{m_product_help}]]></textFieldExpression>
@@ -1562,7 +1545,7 @@ where
 		</band>
 		<band height="10">
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement key="" style="small" positionType="Float" stretchType="ContainerHeight" mode="Transparent" x="0" y="0" width="555" height="10" isRemoveLineWhenBlank="true" uuid="2d2d5495-64a2-43c9-9b6c-02f4ab1bb2ed">
+				<reportElement key="" style="easy_read" positionType="Float" stretchType="ContainerHeight" x="0" y="0" width="555" height="10" isRemoveLineWhenBlank="true" uuid="2d2d5495-64a2-43c9-9b6c-02f4ab1bb2ed">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
@@ -1578,6 +1561,7 @@ where
 					<rightPen lineWidth="0.0" lineStyle="Solid"/>
 				</box>
 				<textElement verticalAlignment="Middle">
+					<font size="7"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[str("Lot") + ": "+T($F{lit_attribute_v_lot})]]></textFieldExpression>
@@ -1767,7 +1751,7 @@ where
 					<font isBold="false"/>
 					<paragraph lineSpacing="Single" firstLineIndent="4" leftIndent="1"/>
 				</textElement>
-				<textFieldExpression><![CDATA[DATEFORMAT($F{m_inout_shipdate},$F{datetimepattern})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[DATEFORMAT($F{m_inout_shipdate},$P{DATE_FORMAT})]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 				<reportElement style="label" positionType="Float" mode="Transparent" x="320" y="98" width="235" height="25" backcolor="#DFDFDF" uuid="dde5025a-0e01-45d6-bdbd-d3ad34928495">
@@ -1937,7 +1921,7 @@ where
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<imageExpression><![CDATA[$F{footer_image}]]></imageExpression>
+				<imageExpression><![CDATA[$P{PORTRAIT_FOOTER_IMAGE}]]></imageExpression>
 			</image>
 			<textField>
 				<reportElement style="page_number" positionType="FixRelativeToBottom" x="280" y="0" width="275" height="12" uuid="a5d160e4-e85a-4b42-b507-9bb51a07bd54">
@@ -1950,7 +1934,7 @@ where
 			</textField>
 			<textField>
 				<reportElement style="page_number" positionType="FixRelativeToBottom" x="0" y="0" width="280" height="12" uuid="1f05c047-2711-49ea-8260-3bf1e84a2ee4"/>
-				<textFieldExpression><![CDATA["RP.451 - " + str("DatePrinted") + ": " + DATEFORMAT(NOW( ),$F{datetimepattern})]]></textFieldExpression>
+				<textFieldExpression><![CDATA["RP.451 - " + str("DatePrinted") + ": " + DATEFORMAT(NOW( ),$P{DATE_FORMAT} + " " + $P{TIME_FORMAT})]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>

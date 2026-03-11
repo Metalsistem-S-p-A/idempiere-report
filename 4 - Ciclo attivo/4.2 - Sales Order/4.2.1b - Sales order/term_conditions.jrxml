@@ -10,13 +10,10 @@
 	<parameter name="LOCALE_CODE" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[$P{REPORT_LOCALE}.toString()]]></defaultValueExpression>
 	</parameter>
+	<parameter name="PORTRAIT_HEADER_IMAGE" class="java.io.InputStream"/>
+	<parameter name="PORTRAIT_FOOTER_IMAGE" class="java.io.InputStream"/>
 	<queryString>
-		<![CDATA[select name, html,
-			lit_datetime_pattern($P{LOCALE_CODE}) AS datetimepattern,
-    lit_date_pattern($P{LOCALE_CODE}) AS datepattern,	
-    lit_time_pattern($P{LOCALE_CODE}) AS timepattern,
-	lit_adorg_header_portrait_image(c_order.ad_client_id, c_order.ad_org_id) as header_image,
-	lit_adorg_footer_portrait_image(c_order.ad_client_id, c_order.ad_org_id) as footer_image
+		<![CDATA[select name, html		
 from lit_tables inner join 
 c_order on lit_tables.lit_tables_id = c_order.LIT_TermsAndConditions_ID
 where c_order.c_order_id = $P{RECORD_ID}]]>
@@ -60,7 +57,7 @@ where c_order.c_order_id = $P{RECORD_ID}]]>
 			</textField>
 			<image scaleImage="RetainShape" hAlign="Left" isUsingCache="true" onErrorType="Blank">
 				<reportElement x="-20" y="0" width="595" height="80" uuid="74c022e4-2e59-412e-b080-60f44ecc2a72"/>
-				<imageExpression><![CDATA[$F{header_image}]]></imageExpression>
+				<imageExpression><![CDATA[$P{PORTRAIT_HEADER_IMAGE}]]></imageExpression>
 			</image>
 		</band>
 	</pageHeader>
@@ -86,7 +83,7 @@ where c_order.c_order_id = $P{RECORD_ID}]]>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<imageExpression><![CDATA[$F{footer_image}]]></imageExpression>
+				<imageExpression><![CDATA[$P{PORTRAIT_FOOTER_IMAGE}]]></imageExpression>
 			</image>
 		</band>
 	</pageFooter>

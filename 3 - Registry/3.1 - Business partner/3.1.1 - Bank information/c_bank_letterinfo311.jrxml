@@ -16,11 +16,19 @@
 	<parameter name="LOCALE_CODE" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[$P{REPORT_LOCALE}.toString()]]></defaultValueExpression>
 	</parameter>
+	<parameter name="PRINT_EXTRA_COSTS" class="java.lang.String">
+		<defaultValueExpression><![CDATA['N']]></defaultValueExpression>
+	</parameter>
+	<parameter name="PORTRAIT_HEADER_IMAGE" class="java.io.InputStream"/>
+	<parameter name="DATE_FORMAT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["yyyy-MM-dd"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TIME_FORMAT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["HH:mm"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PORTRAIT_FOOTER_IMAGE" class="java.io.InputStream"/>
 	<queryString>
 		<![CDATA[select
-lit_adorg_header_portrait_image(ad_org.ad_client_id, ad_org.ad_org_id),
-	 lit_adorg_footer_portrait_image(ad_org.ad_client_id, ad_org.ad_org_id),
-	lit_datetime_pattern($P{LOCALE_CODE}) AS datetimepattern,
 	c_greeting.greeting,
      c_bank."swiftcode" AS c_bank_swiftcode,
      c_bank."name" AS c_bank_name,
@@ -81,18 +89,6 @@ and c_bankaccount."isdefault" = 'Y'
 AND c_bank."isdefault" = 'Y'
 AND c_bpartner_location."isbillto" = 'Y']]>
 	</queryString>
-	<field name="lit_adorg_header_portrait_image" class="byte[]">
-		<property name="com.jaspersoft.studio.field.name" value="lit_adorg_header_portrait_image"/>
-		<property name="com.jaspersoft.studio.field.label" value="lit_adorg_header_portrait_image"/>
-	</field>
-	<field name="lit_adorg_footer_portrait_image" class="byte[]">
-		<property name="com.jaspersoft.studio.field.name" value="lit_adorg_footer_portrait_image"/>
-		<property name="com.jaspersoft.studio.field.label" value="lit_adorg_footer_portrait_image"/>
-	</field>
-	<field name="datetimepattern" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="datetimepattern"/>
-		<property name="com.jaspersoft.studio.field.label" value="datetimepattern"/>
-	</field>
 	<field name="greeting" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="greeting"/>
 		<property name="com.jaspersoft.studio.field.label" value="greeting"/>
@@ -295,7 +291,7 @@ AND c_bpartner_location."isbillto" = 'Y']]>
 		<band height="80">
 			<image scaleImage="RetainShape" hAlign="Left" isUsingCache="true" onErrorType="Blank">
 				<reportElement x="-20" y="0" width="595" height="80" uuid="c66fda84-9304-4652-a419-3684b1b8f10c"/>
-				<imageExpression><![CDATA[$F{lit_adorg_header_portrait_image}]]></imageExpression>
+				<imageExpression><![CDATA[$P{PORTRAIT_HEADER_IMAGE}]]></imageExpression>
 			</image>
 		</band>
 	</pageHeader>
@@ -540,11 +536,11 @@ AND c_bpartner_location."isbillto" = 'Y']]>
 				<reportElement x="-20" y="22" width="595" height="70" isRemoveLineWhenBlank="true" uuid="8002b122-16d7-4113-a803-3ad3a6bb8089">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<imageExpression><![CDATA[$F{lit_adorg_footer_portrait_image}]]></imageExpression>
+				<imageExpression><![CDATA[$P{PORTRAIT_FOOTER_IMAGE}]]></imageExpression>
 			</image>
 			<textField>
 				<reportElement style="page_number" positionType="FixRelativeToBottom" x="0" y="4" width="280" height="12" uuid="cf3d9064-26a1-4683-bf40-301759639a52"/>
-				<textFieldExpression><![CDATA["RP.311 - " + str("DatePrinted") + ": " + DATEFORMAT(NOW( ),$F{datetimepattern})]]></textFieldExpression>
+				<textFieldExpression><![CDATA["RP.311 - " + str("DatePrinted") + ": " + DATEFORMAT(NOW( ),$P{DATE_FORMAT} + " " + $P{TIME_FORMAT})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement style="page_number" positionType="FixRelativeToBottom" x="280" y="4" width="275" height="12" uuid="14d44248-51ab-4ce2-93bf-4047cedf7b43">

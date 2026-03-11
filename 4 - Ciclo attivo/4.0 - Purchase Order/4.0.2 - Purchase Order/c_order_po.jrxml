@@ -72,13 +72,16 @@ where
 	<parameter name="LOCALE_CODE" class="java.lang.String">
 		<defaultValueExpression><![CDATA[$P{REPORT_LOCALE}.toString()]]></defaultValueExpression>
 	</parameter>
+	<parameter name="PORTRAIT_HEADER_IMAGE" class="java.io.InputStream"/>
+	<parameter name="DATE_FORMAT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["yyyy-MM-dd"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TIME_FORMAT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["HH:mm"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PORTRAIT_FOOTER_IMAGE" class="java.io.InputStream"/>
 	<queryString>
 		<![CDATA[select
-	lit_adorg_header_portrait_image(ad_orginfo.ad_client_id, ad_orginfo.ad_org_id) as header_image,
-	lit_adorg_footer_portrait_image(ad_orginfo.ad_client_id, ad_orginfo.ad_org_id) as footer_image,
-	lit_datetime_pattern($P{LOCALE_CODE}) AS datetimepattern,
-    lit_date_pattern($P{LOCALE_CODE}) AS datepattern,	
-    lit_time_pattern($P{LOCALE_CODE}) AS timepattern,
 	c_bpartner.name as c_bpartner_name,
 	c_currency.iso_code as c_currency_iso_code,
 	m_product.name as m_product_name,
@@ -184,26 +187,6 @@ where
 order by
 	c_orderline.line asc]]>
 	</queryString>
-	<field name="header_image" class="byte[]">
-		<property name="com.jaspersoft.studio.field.name" value="header_image"/>
-		<property name="com.jaspersoft.studio.field.label" value="header_image"/>
-	</field>
-	<field name="footer_image" class="byte[]">
-		<property name="com.jaspersoft.studio.field.name" value="footer_image"/>
-		<property name="com.jaspersoft.studio.field.label" value="footer_image"/>
-	</field>
-	<field name="datetimepattern" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="datetimepattern"/>
-		<property name="com.jaspersoft.studio.field.label" value="datetimepattern"/>
-	</field>
-	<field name="datepattern" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="datepattern"/>
-		<property name="com.jaspersoft.studio.field.label" value="datepattern"/>
-	</field>
-	<field name="timepattern" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="timepattern"/>
-		<property name="com.jaspersoft.studio.field.label" value="timepattern"/>
-	</field>
 	<field name="c_bpartner_name" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="c_bpartner_name"/>
 		<property name="com.jaspersoft.studio.field.label" value="c_bpartner_name"/>
@@ -495,7 +478,7 @@ order by
 		<band height="274">
 			<image scaleImage="RetainShape" hAlign="Left" isUsingCache="true" onErrorType="Blank">
 				<reportElement x="-20" y="0" width="595" height="80" uuid="c7f13ab5-398a-4dcf-b842-b71eb83ca5ef"/>
-				<imageExpression><![CDATA[$F{header_image}]]></imageExpression>
+				<imageExpression><![CDATA[$P{PORTRAIT_HEADER_IMAGE}]]></imageExpression>
 			</image>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 				<reportElement style="highlight" positionType="Float" x="390" y="175" width="93" height="20" forecolor="#333333" uuid="2d8d842d-412d-46c2-853d-64a66e25a5ea"/>
@@ -545,13 +528,13 @@ order by
 				</textElement>
 				<textFieldExpression><![CDATA[$F{c_location_address1}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="ScaleFont" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 				<reportElement style="highlight" positionType="Float" x="483" y="175" width="72" height="20" uuid="747bf242-8990-4109-a52b-c6825d833799"/>
 				<box leftPadding="2" rightPadding="2"/>
 				<textElement verticalAlignment="Middle">
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{c_order_dateordered}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[DATEFORMAT($F{c_order_dateordered}, $P{DATE_FORMAT})]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 				<reportElement style="highlight" positionType="Float" x="248" y="175" width="142" height="20" uuid="6353f2b5-1e67-4a29-befe-b52a61768fd8"/>
@@ -709,13 +692,13 @@ order by
 				</textElement>
 				<textFieldExpression><![CDATA[str("C_PaymentTerm_ID")]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="ScaleFont" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 				<reportElement positionType="Float" x="0" y="217" width="100" height="12" uuid="7540ae68-da97-4b1d-a21a-f041d04ad34d"/>
 				<box leftPadding="10" rightPadding="2"/>
 				<textElement verticalAlignment="Middle">
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{c_order_datepromised}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[DATEFORMAT($F{c_order_datepromised}, $P{DATE_FORMAT})]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 				<reportElement positionType="Float" x="100" y="217" width="115" height="12" uuid="12b2333a-55f8-4fd4-834a-a3512708b8f5"/>
@@ -1045,11 +1028,11 @@ new DecimalFormat("#,##0.00000").format($F{c_orderline_pricelist})]]></textField
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<imageExpression><![CDATA[$F{footer_image}]]></imageExpression>
+				<imageExpression><![CDATA[$P{PORTRAIT_FOOTER_IMAGE}]]></imageExpression>
 			</image>
 			<textField>
 				<reportElement style="page_number" positionType="FixRelativeToBottom" x="0" y="4" width="280" height="12" uuid="44909456-f506-4024-baf3-7645293c10f2"/>
-				<textFieldExpression><![CDATA["RP.402 - " + str("DatePrinted") + ": " + DATEFORMAT(NOW( ),$F{datetimepattern})]]></textFieldExpression>
+				<textFieldExpression><![CDATA["RP.402 - " + str("DatePrinted") + ": " + DATEFORMAT(NOW( ),$P{DATE_FORMAT} + " " + $P{TIME_FORMAT})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement style="page_number" positionType="FixRelativeToBottom" x="280" y="4" width="275" height="12" uuid="215a5bdc-fc2a-41e4-95aa-72cbb5b0954e">
@@ -1101,7 +1084,7 @@ new DecimalFormat("#,##0.00000").format($F{c_orderline_pricelist})]]></textField
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<imageExpression><![CDATA[$F{footer_image}]]></imageExpression>
+				<imageExpression><![CDATA[$P{PORTRAIT_FOOTER_IMAGE}]]></imageExpression>
 			</image>
 			<componentElement>
 				<reportElement x="15" y="7" width="200" height="20" uuid="ac9a771c-5cdb-4c16-97fe-388903482dfd">
@@ -1212,7 +1195,7 @@ new DecimalFormat("#,##0.00000").format($F{c_orderline_pricelist})]]></textField
 			</componentElement>
 			<textField>
 				<reportElement style="page_number" positionType="FixRelativeToBottom" x="0" y="58" width="280" height="12" uuid="adb3010d-4379-4e8a-a281-2de74b7f2500"/>
-				<textFieldExpression><![CDATA["RP.402 - " + str("DatePrinted") + ": " + DATEFORMAT(NOW( ),$F{datetimepattern})]]></textFieldExpression>
+				<textFieldExpression><![CDATA["RP.402 - " + str("DatePrinted") + ": " + DATEFORMAT(NOW( ),$P{DATE_FORMAT} + " " + $P{TIME_FORMAT})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement style="page_number" positionType="FixRelativeToBottom" x="280" y="58" width="275" height="12" uuid="b7e960d0-e18b-42fa-bb39-009b3a263326">
@@ -1226,7 +1209,7 @@ new DecimalFormat("#,##0.00000").format($F{c_orderline_pricelist})]]></textField
 		</band>
 	</lastPageFooter>
 	<summary>
-		<band height="115">
+		<band height="115" splitType="Prevent">
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement positionType="Float" x="0" y="0" width="555" height="15" isRemoveLineWhenBlank="true" uuid="634e6013-d4f9-4044-81c5-c4fb64d2b236">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>

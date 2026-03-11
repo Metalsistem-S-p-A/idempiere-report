@@ -13,7 +13,7 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempieredb-report"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempiere - PRODUZIONE"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<template><![CDATA["styles/ms-style.jrtx"]]></template>
 	<style name="easy_read" style="easy_read_bg">
@@ -38,13 +38,15 @@
 	<parameter name="LOCALE_CODE" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[$P{REPORT_LOCALE}.toString()]]></defaultValueExpression>
 	</parameter>
+	<parameter name="DATE_FORMAT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["yyyy-MM-dd"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT
      c_invoicepayschedule."dueamt" AS c_invoicepayschedule_dueamt,
      c_invoicepayschedule."duedate" AS c_invoicepayschedule_duedate,
      c_invoicepayschedule."c_invoice_id" AS c_invoicepayschedule_c_invoice_id,
-     c_invoice."ispaid" AS c_invoice_ispaid,
-	 (select COALESCE(datepattern, 'yyyy-MM-dd') from ad_language where ad_language = $P{LOCALE_CODE}) AS datepattern
+     c_invoice."ispaid" AS c_invoice_ispaid
 FROM
      c_invoice 
 	 INNER JOIN c_invoicepayschedule ON c_invoice."c_invoice_id" = c_invoicepayschedule."c_invoice_id"
@@ -72,10 +74,6 @@ order by  c_invoicepayschedule."duedate"]]>
 		<property name="com.jaspersoft.studio.field.name" value="c_invoice_ispaid"/>
 		<property name="com.jaspersoft.studio.field.label" value="c_invoice_ispaid"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="c_invoice"/>
-	</field>
-	<field name="datepattern" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="datepattern"/>
-		<property name="com.jaspersoft.studio.field.label" value="datepattern"/>
 	</field>
 	<columnHeader>
 		<band height="20" splitType="Stretch">
@@ -133,7 +131,7 @@ order by  c_invoicepayschedule."duedate"]]>
 					<font size="8"/>
 					<paragraph lineSpacing="Single" leftIndent="4"/>
 				</textElement>
-				<textFieldExpression><![CDATA[T(new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($F{c_invoicepayschedule_duedate}))]]></textFieldExpression>
+				<textFieldExpression><![CDATA[T(DATEFORMAT($F{c_invoicepayschedule_duedate}, $P{DATE_FORMAT}))]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement style="easy_read_code" positionType="Float" x="115" y="0" width="135" height="12" uuid="c27120cc-da36-4c16-b05e-d845b2f7a393">

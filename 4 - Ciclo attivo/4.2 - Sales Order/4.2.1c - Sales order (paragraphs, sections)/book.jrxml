@@ -124,6 +124,12 @@
 				<subreportParameter name="REPORT_RESOURCE_BUNDLE">
 					<subreportParameterExpression><![CDATA[$P{REPORT_RESOURCE_BUNDLE}]]></subreportParameterExpression>
 				</subreportParameter>
+				<subreportParameter name="PORTRAIT_HEADER_IMAGE">
+					<subreportParameterExpression><![CDATA[$P{PORTRAIT_HEADER_IMAGE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="PORTRAIT_FOOTER_IMAGE">
+					<subreportParameterExpression><![CDATA[$P{PORTRAIT_FOOTER_IMAGE}]]></subreportParameterExpression>
+				</subreportParameter>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "term_conditions.jasper"]]></subreportExpression>
 			</p:subreportPart>
 		</part>

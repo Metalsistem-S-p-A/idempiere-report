@@ -34,13 +34,16 @@
 	<parameter name="LOCALE_CODE" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[$P{REPORT_LOCALE}.toString()]]></defaultValueExpression>
 	</parameter>
+	<parameter name="PORTRAIT_HEADER_IMAGE" class="java.io.InputStream"/>
+	<parameter name="DATE_FORMAT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["yyyy-MM-dd"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TIME_FORMAT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["HH:mm"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PORTRAIT_FOOTER_IMAGE" class="java.io.InputStream"/>
 	<queryString>
 		<![CDATA[SELECT COALESCE(c_invoice.withholdingamt, 0::numeric) AS c_invoice_withholdingamt,
-	lit_adorg_header_portrait_image(c_invoice.ad_client_id, c_invoice.ad_org_id) AS header_image,
-	lit_adorg_footer_portrait_image(c_invoice.ad_client_id, c_invoice.ad_org_id) AS footer_image,
-		lit_datetime_pattern($P{LOCALE_CODE}) AS datetimepattern,
-    lit_date_pattern($P{LOCALE_CODE}) AS datepattern,	
-    lit_time_pattern($P{LOCALE_CODE}) AS timepattern,
     get_sysconfig('LIT_REP_INVOICESO', 'N', c_invoice.ad_client_id, c_invoice.ad_org_id) AS ad_sysconfig_help,
     ad_orginfo.taxid AS ad_orginfo_taxid,
     get_sysconfig('LIT_REP_411_PrintDescription', 'N', c_invoice.ad_client_id, c_invoice.ad_org_id) as ad_sysconfig_printdescription,
@@ -223,27 +226,6 @@
 		<property name="com.jaspersoft.studio.field.name" value="c_invoice_withholdingamt"/>
 		<property name="com.jaspersoft.studio.field.label" value="c_invoice_withholdingamt"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="lit_rep_c_invoice_v"/>
-	</field>
-	<field name="header_image" class="byte[]">
-		<property name="com.jaspersoft.studio.field.name" value="header_image"/>
-		<property name="com.jaspersoft.studio.field.label" value="header_image"/>
-	</field>
-	<field name="footer_image" class="byte[]">
-		<property name="com.jaspersoft.studio.field.name" value="footer_image"/>
-		<property name="com.jaspersoft.studio.field.label" value="footer_image"/>
-	</field>
-	<field name="datetimepattern" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="datetimepattern"/>
-		<property name="com.jaspersoft.studio.field.label" value="datetimepattern"/>
-	</field>
-	<field name="datepattern" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="datepattern"/>
-		<property name="com.jaspersoft.studio.field.label" value="datepattern"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="ad_language"/>
-	</field>
-	<field name="timepattern" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="timepattern"/>
-		<property name="com.jaspersoft.studio.field.label" value="timepattern"/>
 	</field>
 	<field name="ad_sysconfig_help" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="ad_sysconfig_help"/>
@@ -897,7 +879,7 @@
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<image scaleImage="RetainShape" hAlign="Left" isUsingCache="true" onErrorType="Blank">
 				<reportElement x="-20" y="0" width="595" height="80" uuid="71abee3f-38d4-4438-921d-f46db5667e9c"/>
-				<imageExpression><![CDATA[$F{header_image}]]></imageExpression>
+				<imageExpression><![CDATA[$P{PORTRAIT_HEADER_IMAGE}]]></imageExpression>
 			</image>
 			<textField isBlankWhenNull="true">
 				<reportElement key="" style="highlight" positionType="Float" x="0" y="85" width="125" height="30" forecolor="#000000" uuid="aab99871-231d-4ac4-a405-e4585ba0bd33">
@@ -1023,7 +1005,7 @@
 				<textElement textAlignment="Left" verticalAlignment="Middle" markup="html">
 					<paragraph lineSpacing="Single" firstLineIndent="0" leftIndent="4"/>
 				</textElement>
-				<textFieldExpression><![CDATA["<b>" + str("DateInvoiced") + "</b>: "+T(new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($F{c_invoice_dateinvoiced}))]]></textFieldExpression>
+				<textFieldExpression><![CDATA["<b>" + str("DateInvoiced") + "</b>: "+T(DATEFORMAT($F{c_invoice_dateinvoiced}, $P{DATE_FORMAT}))]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 				<reportElement key="" positionType="Float" x="0" y="145" width="250" height="15" uuid="7ab79443-945e-4506-af91-f2042f5726ee">
@@ -1404,7 +1386,7 @@
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<imageExpression><![CDATA[$F{footer_image}]]></imageExpression>
+				<imageExpression><![CDATA[$P{PORTRAIT_FOOTER_IMAGE}]]></imageExpression>
 			</image>
 			<textField>
 				<reportElement style="small" positionType="Float" x="0" y="0" width="554" height="10" uuid="69e2be4b-5653-4e19-8790-69fa47ba54d1">
@@ -1420,7 +1402,7 @@
 				<reportElement style="page_number" positionType="FixRelativeToBottom" x="0" y="18" width="280" height="12" uuid="44d4432a-961d-488a-bfe0-3ea83230d1e9">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<textFieldExpression><![CDATA["RP.411 - " + str("DatePrinted") + ": " + DATEFORMAT(NOW( ),$F{datetimepattern})]]></textFieldExpression>
+				<textFieldExpression><![CDATA["RP.411 - " + str("DatePrinted") + ": " + DATEFORMAT(NOW( ),$P{DATE_FORMAT} + " " + $P{TIME_FORMAT})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement style="page_number" positionType="FixRelativeToBottom" x="280" y="18" width="275" height="12" uuid="e79202c2-7718-458b-bc3e-817628ba52a1">
@@ -1459,6 +1441,9 @@
 				</subreportParameter>
 				<subreportParameter name="REPORT_RESOURCE_BUNDLE">
 					<subreportParameterExpression><![CDATA[$P{REPORT_RESOURCE_BUNDLE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="DATE_FORMAT">
+					<subreportParameterExpression><![CDATA[$P{DATE_FORMAT}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "c_invoice_withholding_sub_payschedule.jasper"]]></subreportExpression>
@@ -1505,7 +1490,7 @@
 				</reportElement>
 				<box leftPadding="2" rightPadding="2"/>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{bp_letterintentnrletter} != null ? (str("C_BP_Partner_LetterIntent_ID") + " " + $F{bp_letterintentnrletter} + " - "+ new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($F{bp_letterintentdateletter})) : ""]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{bp_letterintentnrletter} != null ? (str("C_BP_Partner_LetterIntent_ID") + " " + $F{bp_letterintentnrletter} + " - "+ DATEFORMAT($F{bp_letterintentdateletter}, $P{DATE_FORMAT})) : ""]]></textFieldExpression>
 			</textField>
 			<subreport isUsingCache="true">
 				<reportElement positionType="Float" x="305" y="25" width="250" height="32" uuid="21d8824d-3851-46ce-9b07-dc29778f0dc4">

@@ -6,7 +6,7 @@
 	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="362"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempieredb-report"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempiere - PRODUZIONE"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="123"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="872"/>
@@ -54,6 +54,14 @@
 	<parameter name="LOCALE_CODE" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[$P{REPORT_LOCALE}.toString()]]></defaultValueExpression>
 	</parameter>
+	<parameter name="LANDSCAPE_HEADER_IMAGE" class="java.io.InputStream"/>
+	<parameter name="DATE_FORMAT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["yyyy-MM-dd"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TIME_FORMAT" class="java.lang.String">
+		<defaultValueExpression><![CDATA["HH:mm"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="LANDSCAPE_FOOTER_IMAGE" class="java.io.InputStream"/>
 	<queryString>
 		<![CDATA[SELECT 
 DtReg,
@@ -65,10 +73,6 @@ SUM(Avere) as Avere,
 Conto,
 Descrizione,
 BPARTNER, NrRiga, GLDESCR ,vatdocumentno , isexclude,
- 	 lit_adorg_header_landscape_image($P{AD_CLIENT_ID}, $P{AD_Org_ID} ),
-	 lit_adorg_footer_landscape_image($P{AD_CLIENT_ID}, $P{AD_Org_ID} ),
-	 	lit_date_pattern($P{LOCALE_CODE}) AS datepattern,
-	lit_datetime_pattern($P{LOCALE_CODE}) AS datetimepattern,
 	iso_code
 FROM
 (
@@ -219,22 +223,6 @@ ORDER BY NrRiga,DTREG,isexclude, AD_TABLE_ID, CAUSALE,DTDOC,NRDOC,CONTO,DESCRIZI
 		<property name="com.jaspersoft.studio.field.label" value="isexclude"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="gl_journal"/>
 	</field>
-	<field name="lit_adorg_header_landscape_image" class="byte[]">
-		<property name="com.jaspersoft.studio.field.name" value="lit_adorg_header_landscape_image"/>
-		<property name="com.jaspersoft.studio.field.label" value="lit_adorg_header_landscape_image"/>
-	</field>
-	<field name="lit_adorg_footer_landscape_image" class="byte[]">
-		<property name="com.jaspersoft.studio.field.name" value="lit_adorg_footer_landscape_image"/>
-		<property name="com.jaspersoft.studio.field.label" value="lit_adorg_footer_landscape_image"/>
-	</field>
-	<field name="datepattern" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="datepattern"/>
-		<property name="com.jaspersoft.studio.field.label" value="datepattern"/>
-	</field>
-	<field name="datetimepattern" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="datetimepattern"/>
-		<property name="com.jaspersoft.studio.field.label" value="datetimepattern"/>
-	</field>
 	<field name="iso_code" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="iso_code"/>
 		<property name="com.jaspersoft.studio.field.label" value="iso_code"/>
@@ -343,7 +331,7 @@ ORDER BY NrRiga,DTREG,isexclude, AD_TABLE_ID, CAUSALE,DTDOC,NRDOC,CONTO,DESCRIZI
 				<reportElement mode="Opaque" x="-30" y="0" width="842" height="70" isRemoveLineWhenBlank="true" backcolor="#FFFFFF" uuid="d2d35de8-d143-4713-a4b3-e4ca9b786a25">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<imageExpression><![CDATA[$F{lit_adorg_header_landscape_image}]]></imageExpression>
+				<imageExpression><![CDATA[$P{LANDSCAPE_HEADER_IMAGE}]]></imageExpression>
 			</image>
 			<textField>
 				<reportElement key="staticText-1" style="title" mode="Opaque" x="0" y="70" width="782" height="24" uuid="0382f956-7c67-4ce9-93f9-050b6e488070">
@@ -365,9 +353,9 @@ ORDER BY NrRiga,DTREG,isexclude, AD_TABLE_ID, CAUSALE,DTDOC,NRDOC,CONTO,DESCRIZI
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA[new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($P{DateAcct1})
+				<textFieldExpression><![CDATA[DATEFORMAT($P{DateAcct1}, $P{DATE_FORMAT})
  + " - " +
- new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($P{DateAcct2})]]></textFieldExpression>
+DATEFORMAT($P{DateAcct2}, $P{DATE_FORMAT})]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -537,7 +525,7 @@ ORDER BY NrRiga,DTREG,isexclude, AD_TABLE_ID, CAUSALE,DTDOC,NRDOC,CONTO,DESCRIZI
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{dtreg}]]></textFieldExpression>
-				<patternExpression><![CDATA[$F{datepattern}]]></patternExpression>
+				<patternExpression><![CDATA[$P{DATE_FORMAT}]]></patternExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 				<reportElement key="textField" style="easy_read" positionType="Float" stretchType="RelativeToBandHeight" x="126" y="0" width="50" height="16" uuid="9b3305ec-9e70-474a-866a-c6c57c21c221"/>
@@ -551,7 +539,7 @@ ORDER BY NrRiga,DTREG,isexclude, AD_TABLE_ID, CAUSALE,DTDOC,NRDOC,CONTO,DESCRIZI
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{dtdoc}]]></textFieldExpression>
-				<patternExpression><![CDATA[$F{datepattern}]]></patternExpression>
+				<patternExpression><![CDATA[$P{DATE_FORMAT}]]></patternExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 				<reportElement key="textField" style="easy_read" positionType="Float" stretchType="RelativeToBandHeight" x="176" y="0" width="108" height="16" uuid="9c3c0db4-e3d5-4caa-b38d-14578b9270a1"/>
@@ -721,12 +709,6 @@ ORDER BY NrRiga,DTREG,isexclude, AD_TABLE_ID, CAUSALE,DTDOC,NRDOC,CONTO,DESCRIZI
 				</textElement>
 				<textFieldExpression><![CDATA[$V{SUM_PAG_AVERE}]]></textFieldExpression>
 			</textField>
-			<image onErrorType="Blank">
-				<reportElement mode="Opaque" x="-30" y="26" width="842" height="70" isRemoveLineWhenBlank="true" backcolor="#FFFFFF" uuid="b15e5192-33e2-471e-bea3-da4ef59e8921">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<imageExpression><![CDATA[$F{lit_adorg_footer_landscape_image}]]></imageExpression>
-			</image>
 			<textField>
 				<reportElement key="staticText-12" positionType="Float" mode="Opaque" x="600" y="0" width="58" height="13" uuid="28a942e7-f1f0-4350-b2c9-e6540579360e"/>
 				<box leftPadding="2" rightPadding="2">
@@ -743,7 +725,7 @@ ORDER BY NrRiga,DTREG,isexclude, AD_TABLE_ID, CAUSALE,DTDOC,NRDOC,CONTO,DESCRIZI
 			</textField>
 			<textField>
 				<reportElement style="page_number" positionType="FixRelativeToBottom" mode="Opaque" x="0" y="13" width="280" height="12" uuid="9f86d912-3b9d-4a7a-b442-f3d012f7ad25"/>
-				<textFieldExpression><![CDATA["RP.402 - " + str("DatePrinted") + ": " + DATEFORMAT(NOW( ),$F{datetimepattern})]]></textFieldExpression>
+				<textFieldExpression><![CDATA["RP.842 - " + str("DatePrinted") + ": " + DATEFORMAT(NOW( ),$P{DATE_FORMAT} + " " +$P{TIME_FORMAT})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement style="page_number" positionType="FixRelativeToBottom" mode="Opaque" x="280" y="13" width="502" height="12" uuid="fc6ec12b-f37e-45f1-b76c-76cb52133274">
@@ -754,6 +736,12 @@ ORDER BY NrRiga,DTREG,isexclude, AD_TABLE_ID, CAUSALE,DTDOC,NRDOC,CONTO,DESCRIZI
 				</textElement>
 				<textFieldExpression><![CDATA[str("Page") +" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
+			<image onErrorType="Blank">
+				<reportElement positionType="FixRelativeToBottom" mode="Opaque" x="-30" y="26" width="842" height="70" backcolor="#FFFFFF" uuid="b15e5192-33e2-471e-bea3-da4ef59e8921">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA[$P{LANDSCAPE_FOOTER_IMAGE}]]></imageExpression>
+			</image>
 		</band>
 	</pageFooter>
 </jasperReport>

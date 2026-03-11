@@ -1804,7 +1804,7 @@ where
 					<font isBold="false"/>
 					<paragraph lineSpacing="Single" firstLineIndent="4" leftIndent="1"/>
 				</textElement>
-				<textFieldExpression><![CDATA["D".equals($F{m_inout_deliveryviarule_key}) ? $F{m_inout_lit_fob_notes} : T($F{m_shipper_name}) + "-"+T($F{c_location_b_address1})+"-"+T($F{c_location_b_city})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[("D".equals($F{m_inout_deliveryviarule_key}) || "P".equals($F{m_inout_deliveryviarule_key})) ? $F{m_inout_lit_fob_notes} : T($F{m_shipper_name}) + "-"+T($F{c_location_b_address1})+"-"+T($F{c_location_b_city})]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 				<reportElement positionType="Float" x="0" y="108" width="150" height="15" uuid="21ed0410-0219-4d08-a7a3-c41803f22ba0">

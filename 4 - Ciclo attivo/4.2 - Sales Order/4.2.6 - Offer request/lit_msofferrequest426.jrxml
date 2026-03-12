@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.17.0.final utlizzo versione della libreria JasperReports6.17.0-6d93193241dd8cc42629e188b94f9e0bc5722efd  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="426orderrequest" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="fdbebdd4-91d6-4955-999e-d5858dce3733">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="426orderrequest" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" uuid="fdbebdd4-91d6-4955-999e-d5858dce3733">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempiereDb (dev)"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<template><![CDATA["styles/ms-style.jrtx"]]></template>
 	<style name="easy_read" style="easy_read_bg">
 		<conditionalStyle>
@@ -244,15 +253,15 @@ ORDER BY l.line]]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="230">
+		<band height="248">
 			<image isUsingCache="true" onErrorType="Blank">
-				<reportElement x="-20" y="-18" width="595" height="80" uuid="9935a36f-8ec9-4e24-9830-1cb9cecbb8b6">
+				<reportElement x="-20" y="2" width="595" height="80" uuid="9935a36f-8ec9-4e24-9830-1cb9cecbb8b6">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<imageExpression><![CDATA[$P{PORTRAIT_HEADER_IMAGE}]]></imageExpression>
 			</image>
 			<textField isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="107" width="120" height="15" uuid="d241e170-0114-47c7-8efa-45e03bf4641f">
+				<reportElement positionType="Float" x="0" y="127" width="120" height="15" uuid="d241e170-0114-47c7-8efa-45e03bf4641f">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -271,7 +280,7 @@ ORDER BY l.line]]>
 				<textFieldExpression><![CDATA[$F{request_no}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement style="label" positionType="Float" x="0" y="92" width="120" height="15" uuid="a066d9d1-2ff1-4d86-8ffe-49211fcf646a">
+				<reportElement style="label" positionType="Float" x="0" y="112" width="120" height="15" uuid="a066d9d1-2ff1-4d86-8ffe-49211fcf646a">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -290,7 +299,7 @@ ORDER BY l.line]]>
 				<textFieldExpression><![CDATA[str("DocumentNo")]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement style="highlight" positionType="Float" mode="Opaque" x="0" y="67" width="555" height="20" backcolor="#CCE9F7" uuid="20cef73c-d66e-43a4-b8b0-40ca174a0680">
+				<reportElement style="highlight" positionType="Float" mode="Opaque" x="0" y="87" width="555" height="20" backcolor="#CCE9F7" uuid="20cef73c-d66e-43a4-b8b0-40ca174a0680">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
@@ -310,7 +319,7 @@ ORDER BY l.line]]>
 				<textFieldExpression><![CDATA[str("LIT_RP_426_Title")]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement style="label" positionType="Float" x="130" y="92" width="110" height="15" uuid="93dd1547-1f05-4733-b78d-a071ea00bbe3">
+				<reportElement style="label" positionType="Float" x="130" y="112" width="110" height="15" uuid="93dd1547-1f05-4733-b78d-a071ea00bbe3">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -329,7 +338,7 @@ ORDER BY l.line]]>
 				<textFieldExpression><![CDATA[str("LIT_RP_426_RequestDate")]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement positionType="Float" x="130" y="107" width="110" height="15" uuid="794a5a05-2ce5-484f-bacc-968957263fb8">
+				<reportElement positionType="Float" x="130" y="127" width="110" height="15" uuid="794a5a05-2ce5-484f-bacc-968957263fb8">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -348,7 +357,7 @@ ORDER BY l.line]]>
 				<textFieldExpression><![CDATA[DATEFORMAT($F{created}, $P{DATE_FORMAT})]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement positionType="Float" x="250" y="107" width="120" height="15" uuid="2fd410d8-ce4a-41a1-99f0-21cdf881facb">
+				<reportElement positionType="Float" x="250" y="127" width="120" height="15" uuid="2fd410d8-ce4a-41a1-99f0-21cdf881facb">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -367,7 +376,7 @@ ORDER BY l.line]]>
 				<textFieldExpression><![CDATA[DATEFORMAT($F{delivery_date}, $P{DATE_FORMAT})]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement style="label" positionType="Float" x="250" y="92" width="120" height="15" uuid="fa0c45c7-87dc-4160-9e37-cc026a75b815">
+				<reportElement style="label" positionType="Float" x="250" y="112" width="120" height="15" uuid="fa0c45c7-87dc-4160-9e37-cc026a75b815">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -386,7 +395,7 @@ ORDER BY l.line]]>
 				<textFieldExpression><![CDATA[str("LIT_RP_426_DeliveryDate")]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement style="label" positionType="Float" x="380" y="92" width="175" height="15" uuid="0e6e7efa-3620-471a-9e79-d234c85cb968">
+				<reportElement style="label" positionType="Float" x="380" y="112" width="175" height="15" uuid="0e6e7efa-3620-471a-9e79-d234c85cb968">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -405,7 +414,7 @@ ORDER BY l.line]]>
 				<textFieldExpression><![CDATA[str("C_BPartner_ID")]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement positionType="Float" x="380" y="107" width="175" height="15" uuid="7f689d4d-284c-4338-8bba-94d652a23964">
+				<reportElement positionType="Float" x="380" y="127" width="175" height="15" uuid="7f689d4d-284c-4338-8bba-94d652a23964">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -424,7 +433,7 @@ ORDER BY l.line]]>
 				<textFieldExpression><![CDATA[$F{bpartner}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement style="label" positionType="Float" x="0" y="130" width="240" height="15" uuid="d9947a07-68fc-49f5-ab26-444750a56595">
+				<reportElement style="label" positionType="Float" x="0" y="150" width="240" height="15" uuid="d9947a07-68fc-49f5-ab26-444750a56595">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -443,7 +452,7 @@ ORDER BY l.line]]>
 				<textFieldExpression><![CDATA[str("LIT_RP_426_ShipTo")]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="160" width="240" height="15" uuid="a6581df3-ac66-453f-a87a-a1f024d2d0ce">
+				<reportElement positionType="Float" x="0" y="180" width="240" height="15" uuid="a6581df3-ac66-453f-a87a-a1f024d2d0ce">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -462,7 +471,7 @@ ORDER BY l.line]]>
 				<textFieldExpression><![CDATA[$F{address}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="175" width="240" height="15" uuid="6a83f009-a671-4831-acb7-86db72a4418c">
+				<reportElement positionType="Float" x="0" y="195" width="240" height="15" uuid="6a83f009-a671-4831-acb7-86db72a4418c">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -481,7 +490,7 @@ ORDER BY l.line]]>
 				<textFieldExpression><![CDATA[$F{city} + ($F{province} != null && !$F{province}.isBlank() ? " (" + $F{province} + ")" : "")]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="145" width="240" height="15" uuid="123e60a4-52bb-4920-b680-f1308cf0ceea">
+				<reportElement positionType="Float" x="0" y="165" width="240" height="15" uuid="123e60a4-52bb-4920-b680-f1308cf0ceea">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -500,7 +509,7 @@ ORDER BY l.line]]>
 				<textFieldExpression><![CDATA[$F{details}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="190" width="240" height="15" uuid="11b57997-be2c-4c9c-9aea-22b72056d1b8">
+				<reportElement positionType="Float" x="0" y="210" width="240" height="15" uuid="11b57997-be2c-4c9c-9aea-22b72056d1b8">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -519,7 +528,7 @@ ORDER BY l.line]]>
 				<textFieldExpression><![CDATA[$F{zip}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="205" width="240" height="15" uuid="73df65d6-b7fa-4d0e-b2c6-3e4e65b0ad4a">
+				<reportElement positionType="Float" x="0" y="225" width="240" height="15" uuid="73df65d6-b7fa-4d0e-b2c6-3e4e65b0ad4a">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -538,7 +547,7 @@ ORDER BY l.line]]>
 				<textFieldExpression><![CDATA[$F{country}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement style="label" positionType="Float" x="250" y="130" width="305" height="15" uuid="92ccec3a-e2a2-4c02-97ee-d61782cab550">
+				<reportElement style="label" positionType="Float" x="250" y="150" width="305" height="15" uuid="92ccec3a-e2a2-4c02-97ee-d61782cab550">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -557,7 +566,7 @@ ORDER BY l.line]]>
 				<textFieldExpression><![CDATA[str("LIT_RP_426_CustomerNotes")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="250" y="145" width="305" height="15" uuid="7cfcebc7-a813-4d0e-ab88-dc90e0d13205">
+				<reportElement positionType="Float" x="250" y="165" width="305" height="15" uuid="7cfcebc7-a813-4d0e-ab88-dc90e0d13205">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -576,7 +585,7 @@ ORDER BY l.line]]>
 				<textFieldExpression><![CDATA[$F{customer_notes}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement style="label" positionType="Float" x="250" y="170" width="305" height="15" uuid="34d0f77a-868f-4c77-bde6-60f7d5a26234">
+				<reportElement style="label" positionType="Float" x="250" y="190" width="305" height="15" uuid="34d0f77a-868f-4c77-bde6-60f7d5a26234">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -595,7 +604,7 @@ ORDER BY l.line]]>
 				<textFieldExpression><![CDATA[str("LIT_RP_426_CommercialNotes")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="250" y="185" width="305" height="15" uuid="d83be879-d655-4dbb-ba4f-06b3445fcf5c">
+				<reportElement positionType="Float" x="250" y="205" width="305" height="15" uuid="d83be879-d655-4dbb-ba4f-06b3445fcf5c">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -778,7 +787,7 @@ ORDER BY l.line]]>
 	<detail>
 		<band height="13" splitType="Prevent">
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement style="easy_read" stretchType="ContainerHeight" isPrintRepeatedValues="false" x="0" y="0" width="33" height="13" isPrintInFirstWholeBand="true" uuid="babbad55-72d9-451a-b173-341a0954eec3">
+				<reportElement style="easy_read" stretchType="ContainerHeight" x="0" y="0" width="33" height="13" isPrintInFirstWholeBand="true" uuid="babbad55-72d9-451a-b173-341a0954eec3">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -920,7 +929,7 @@ ORDER BY l.line]]>
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="104">
+		<band height="106">
 			<textField>
 				<reportElement style="page_number" positionType="FixRelativeToBottom" x="0" y="10" width="280" height="12" uuid="94516ebd-fde2-4219-8a7e-91851e34ae7b"/>
 				<box topPadding="1" leftPadding="2" bottomPadding="1" rightPadding="2">
@@ -931,6 +940,7 @@ ORDER BY l.line]]>
 			<image isUsingCache="true" onErrorType="Blank">
 				<reportElement x="-20" y="24" width="595" height="80" uuid="ce72fd87-84e7-4e77-b955-da969b1363f5">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<imageExpression><![CDATA[$P{PORTRAIT_FOOTER_IMAGE}]]></imageExpression>
 			</image>

@@ -1751,7 +1751,7 @@ where
 					<font isBold="false"/>
 					<paragraph lineSpacing="Single" firstLineIndent="4" leftIndent="1"/>
 				</textElement>
-				<textFieldExpression><![CDATA[DATEFORMAT($F{m_inout_shipdate},$P{DATE_FORMAT})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[DATEFORMAT($F{m_inout_shipdate},$P{DATE_FORMAT} +" " + $P{TIME_FORMAT})]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 				<reportElement style="label" positionType="Float" mode="Transparent" x="320" y="98" width="235" height="25" backcolor="#DFDFDF" uuid="dde5025a-0e01-45d6-bdbd-d3ad34928495">

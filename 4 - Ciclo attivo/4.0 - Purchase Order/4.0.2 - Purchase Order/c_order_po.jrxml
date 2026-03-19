@@ -106,7 +106,7 @@ where
 	c_location_warehouse.postal as c_location_warehouse_postal,
 	c_location_warehouse.regionname as c_location_warehouse_regionname,
 	coalesce(c_country_trl_warehouse.name, c_country_warehouse.name) as c_country_warehouse_name,
-	ad_user.name as ad_user_name,
+	c_order.poreference as c_order_poreference,
 	coalesce(c_paymentterm_trl.name, c_paymentterm.name) as c_paymentterm_name,
 	coalesce(ad_ref_list_trl_deliveryviarule.name, ad_ref_list_deliveryviarule.name) as c_order_deliveryviarule,
 	coalesce(ad_ref_list_trl_fob."name", ad_ref_list_fob.name) as c_order_fob,
@@ -137,8 +137,7 @@ where
 	c_orderline.datepromised as c_orderline_datepromised,
 	m_product_po.vendorproductno as m_product_po_vendorproductno,
 	ad_orginfo.lit_report_param as ad_orginfo_lit_report_param,
-	lit_tables.name as c_order_lit_termsandconditions_name,
-	lit_tables.description as c_order_lit_termsandconditions_description,
+	lit_tables.HTML as c_order_lit_termsandconditions_html,
 	lit_tables_exclusions.name as c_order_lit_exclusion_name,
 	lit_tables_exclusions.description as c_order_lit_exclusion_description	
 from
@@ -157,7 +156,6 @@ left join m_warehouse on c_order.m_warehouse_id = m_warehouse.m_warehouse_id
 left join c_location c_location_warehouse on m_warehouse.c_location_id = c_location_warehouse.c_location_id
 left join c_country c_country_warehouse on c_location_warehouse.c_country_id = c_country_warehouse.c_country_id
 left join c_country_trl c_country_trl_warehouse on c_country_warehouse.c_country_id = c_country_trl_warehouse.c_country_id and c_country_trl_warehouse.ad_language = $P{LOCALE_CODE}
-left join ad_user on c_order.ad_user_id = ad_user.ad_user_id
 left join c_paymentterm on c_order.c_paymentterm_id = c_paymentterm.c_paymentterm_id
 left join c_paymentterm_trl on c_paymentterm.c_paymentterm_id = c_paymentterm_trl.c_paymentterm_id and c_paymentterm_trl.ad_language = $P{LOCALE_CODE} 
 left join ad_ref_list ad_ref_list_deliveryviarule on c_order.deliveryviarule = ad_ref_list_deliveryviarule.value and ad_ref_list_deliveryviarule.ad_reference_id = 152
@@ -305,10 +303,10 @@ order by
 		<property name="com.jaspersoft.studio.field.name" value="c_country_warehouse_name"/>
 		<property name="com.jaspersoft.studio.field.label" value="c_country_warehouse_name"/>
 	</field>
-	<field name="ad_user_name" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="ad_user_name"/>
-		<property name="com.jaspersoft.studio.field.label" value="ad_user_name"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="ad_user"/>
+	<field name="c_order_poreference" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="c_order_poreference"/>
+		<property name="com.jaspersoft.studio.field.label" value="c_order_poreference"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="c_order"/>
 	</field>
 	<field name="c_paymentterm_name" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="c_paymentterm_name"/>
@@ -454,14 +452,9 @@ order by
 		<property name="com.jaspersoft.studio.field.label" value="ad_orginfo_lit_report_param"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="ad_orginfo"/>
 	</field>
-	<field name="c_order_lit_termsandconditions_name" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="c_order_lit_termsandconditions_name"/>
-		<property name="com.jaspersoft.studio.field.label" value="c_order_lit_termsandconditions_name"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="lit_tables"/>
-	</field>
-	<field name="c_order_lit_termsandconditions_description" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="c_order_lit_termsandconditions_description"/>
-		<property name="com.jaspersoft.studio.field.label" value="c_order_lit_termsandconditions_description"/>
+	<field name="c_order_lit_termsandconditions_html" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="c_order_lit_termsandconditions_html"/>
+		<property name="com.jaspersoft.studio.field.label" value="c_order_lit_termsandconditions_html"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="lit_tables"/>
 	</field>
 	<field name="c_order_lit_exclusion_name" class="java.lang.String">
@@ -706,7 +699,7 @@ order by
 				<textElement verticalAlignment="Middle">
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{ad_user_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{c_order_poreference}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 				<reportElement positionType="Float" x="100" y="242" width="115" height="12" isRemoveLineWhenBlank="true" uuid="7f377f5a-d641-4884-b7ed-826deeced5da"/>
@@ -1221,26 +1214,6 @@ new DecimalFormat("#,##0.00000").format($F{c_orderline_pricelist})]]></textField
 				<textFieldExpression><![CDATA[$F{c_order_note}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="35" width="555" height="15" isRemoveLineWhenBlank="true" uuid="c740ccc1-a5ea-469d-ae57-5ca703c7e390">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
-				<textElement>
-					<paragraph lineSpacing="Single"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{c_order_lit_termsandconditions_name}]]></textFieldExpression>
-			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="50" width="555" height="15" isRemoveLineWhenBlank="true" uuid="f5d2387c-d917-4051-b130-c57a72fdec90">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
-				<textElement>
-					<paragraph lineSpacing="Single"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{c_order_lit_termsandconditions_description}]]></textFieldExpression>
-			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement positionType="Float" x="0" y="85" width="555" height="15" isRemoveLineWhenBlank="true" uuid="e4479e40-3ccc-4af3-a29a-d21db3837153">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -1260,16 +1233,16 @@ new DecimalFormat("#,##0.00000").format($F{c_orderline_pricelist})]]></textField
 				</textElement>
 				<textFieldExpression><![CDATA[$F{c_order_lit_exclusion_description}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="20" width="555" height="15" forecolor="#333333" uuid="8d634a8a-b411-4c36-802a-c7744fa78867">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement style="small" positionType="Float" x="0" y="20" width="555" height="30" forecolor="#333333" uuid="8d634a8a-b411-4c36-802a-c7744fa78867">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+				<textElement textAlignment="Left" verticalAlignment="Top" markup="html">
 					<font isBold="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA[T($F{c_order_lit_termsandconditions_name}).isEmpty() ? "" : str("LIT_TermsAndConditions_ID")]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{c_order_lit_termsandconditions_html}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 				<reportElement positionType="Float" x="0" y="70" width="555" height="15" forecolor="#333333" uuid="7a992fc4-227f-454e-ae55-65762334faf1">

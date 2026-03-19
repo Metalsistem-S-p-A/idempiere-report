@@ -140,16 +140,16 @@ where
 	lit_tables.name as c_order_lit_termsandconditions_name,
 	lit_tables.description as c_order_lit_termsandconditions_description,
 	lit_tables_exclusions.name as c_order_lit_exclusion_name,
-	lit_tables_exclusions.description as c_order_lit_exclusion_description
+	lit_tables_exclusions.description as c_order_lit_exclusion_description	
 from
 	c_order
 inner join ad_org on c_order.ad_org_id = ad_org.ad_org_id
 inner join ad_orginfo on ad_org.ad_org_id = ad_orginfo.ad_org_id
 inner join c_bpartner on c_order.c_bpartner_id = c_bpartner.c_bpartner_id
 inner join c_currency on c_order.c_currency_id = c_currency.c_currency_id
-left join c_orderline on c_order.c_order_id = c_orderline.c_order_id
+inner join c_orderline on c_order.c_order_id = c_orderline.c_order_id
 left join m_product on c_orderline.m_product_id = m_product.m_product_id
-left join c_bpartner_location on	c_bpartner.c_bpartner_id = c_bpartner_location.c_bpartner_id
+left join c_bpartner_location on c_bpartner_location.c_bpartner_location_id = c_order.c_bpartner_location_id 
 left join c_location on	c_bpartner_location.c_location_id = c_location.c_location_id
 left join c_country on c_location.c_country_id = c_country.c_country_id
 left join c_country_trl on c_country.c_country_id = c_country_trl.c_country_id and c_country_trl.ad_language = $P{LOCALE_CODE}

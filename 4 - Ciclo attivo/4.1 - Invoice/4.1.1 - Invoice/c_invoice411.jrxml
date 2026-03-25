@@ -156,6 +156,7 @@
     m_product.description AS m_product_description,
     m_product.help AS m_product_help,
     m_product.value AS m_product_value,
+    m_attributesetinstance.LIT_MsLegacyCode,
     c_tax.name AS c_tax_name,
     c_tax.taxindicator AS c_tax_taxindicator,
     c_location.address2 AS c_location_address2,
@@ -209,6 +210,7 @@
      left join c_country c_country_a on c_location_a.c_country_id = c_country_a.c_country_id
      LEFT JOIN c_country_trl c_country_trl_a ON c_country_trl_a.c_country_id = c_country_a.c_country_id AND c_country_trl_a.ad_language::text = $P{LOCALE_CODE}
      LEFT JOIN m_product m_product ON c_invoiceline.m_product_id = m_product.m_product_id
+     left join M_AttributeSetInstance on	M_AttributeSetInstance.M_AttributeSetInstance_ID = c_invoiceline.M_AttributeSetInstance_ID
      LEFT JOIN m_parttype m_parttype ON m_product.m_parttype_id = m_parttype.m_parttype_id
      LEFT JOIN c_uom c_uom ON c_invoiceline.c_uom_id = c_uom.c_uom_id
      LEFT JOIN c_uom_trl c_uom_trl ON c_uom.c_uom_id = c_uom_trl.c_uom_id AND c_uom_trl.ad_language::text = $P{LOCALE_CODE}
@@ -769,6 +771,11 @@
 		<property name="com.jaspersoft.studio.field.label" value="m_product_value"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="m_product"/>
 	</field>
+	<field name="lit_mslegacycode" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="lit_mslegacycode"/>
+		<property name="com.jaspersoft.studio.field.label" value="lit_mslegacycode"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="m_attributesetinstance"/>
+	</field>
 	<field name="c_tax_name" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="c_tax_name"/>
 		<property name="com.jaspersoft.studio.field.label" value="c_tax_name"/>
@@ -1223,13 +1230,13 @@
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+				<box topPadding="2" leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid"/>
 					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
+				<textElement textAlignment="Right" verticalAlignment="Top">
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[!($F{c_invoiceline_isdescription}.equals("Y")) ? $F{c_invoiceline_qtyentered} : ""]]></textFieldExpression>
@@ -1241,13 +1248,13 @@
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+				<box topPadding="2" leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid"/>
 					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
+				<textElement textAlignment="Right" verticalAlignment="Top">
 					<paragraph lineSpacing="Single" leftIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[!($F{c_invoiceline_isdescription}.equals("Y")) ? $F{c_invoiceline_linenetamt} : ""]]></textFieldExpression>
@@ -1258,17 +1265,21 @@
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+				<box topPadding="2" leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid"/>
 					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
-				<textElement verticalAlignment="Middle" rotation="None" markup="none">
+				<textElement verticalAlignment="Top" rotation="None" markup="none">
 					<font isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single" leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{m_product_value}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[T($F{m_product_value}) + 
+(!T($F{lit_mslegacycode}).isEmpty() && !$F{lit_mslegacycode}.equals($F{m_product_value}) ? 
+("\n[" + $F{lit_mslegacycode} + "]")
+	: ""
+)]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement key="" style="easy_read" positionType="Float" stretchType="ContainerHeight" mode="Opaque" x="509" y="0" width="46" height="13" uuid="f7848357-8544-4bab-8efc-776c70979856">
@@ -1276,13 +1287,13 @@
 					<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
 					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
-				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+				<box topPadding="2" leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid"/>
 					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Center" verticalAlignment="Top">
 					<paragraph lineSpacing="Single" rightIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[!($F{c_invoiceline_isdescription}.equals("Y")) ? $F{c_tax_taxindicator} : ""]]></textFieldExpression>
@@ -1292,13 +1303,13 @@
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+				<box topPadding="2" leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid"/>
 					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Center" verticalAlignment="Top">
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{c_uom_trl_uomsymbol}]]></textFieldExpression>
@@ -1309,13 +1320,13 @@
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+				<box topPadding="2" leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid"/>
 					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
+				<textElement textAlignment="Right" verticalAlignment="Top">
 					<paragraph lineSpacing="Single" leftIndent="2" rightIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[!($F{c_invoiceline_isdescription}.equals("Y")) ? $F{ad_sysconfig_printpricelist}.equals("Y") ?$F{c_invoiceline_pricelist}:$F{c_invoiceline_priceactual} : ""]]></textFieldExpression>
@@ -1326,13 +1337,13 @@
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+				<box topPadding="2" leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid"/>
 					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
-				<textElement verticalAlignment="Middle" rotation="None" markup="none">
+				<textElement verticalAlignment="Top" rotation="None" markup="none">
 					<font isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single" leftIndent="2"/>
 				</textElement>

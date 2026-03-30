@@ -104,10 +104,8 @@ END AS "grandtotal",
 pay.payamt as payamt,
 CASE 
 WHEN doc.docbasetype IN ('ARI') and inv.isselfservice='Y' THEN inv.GRANDTOTAL * -1
-WHEN doc.docbasetype IN ('ARC','API') THEN
-  abb.Amount * -1
 ELSE
-  abb.Amount * -1
+  (abb.Amount + abb.writeoffamt) * -1
 END as AllocationAmt,
 CASE WHEN doc.docbasetype IN ('ARC','API') THEN
   abb.overunderamt 
@@ -204,10 +202,9 @@ p.description,
 0 as grandtotal,
 p.payamt as payamt,
 CASE 
-when i.c_invoice_id is  not null  then (al.amount)*-1
 WHEN al.amount*-1 IS NULL  THEN p.payamt *-1
 ELSE
-(al.amount)*-1
+(al.amount+al.writeoffamt)*-1
 END 
 as AllocationAmt,
 0 as overunderAmt,
@@ -290,11 +287,10 @@ p.description,
 0 as grandtotal,
 p.payamt as payamt,
 CASE 
-when i.c_invoice_id is  not null  then (al.amount)*-1
 WHEN al.amount*-1 IS NULL  THEN p.payamt *-1
 ELSE
-(al.amount)*-1
-END 
+(al.amount+al.writeoffamt)*-1
+END
 as AllocationAmt,
 0 as overunderAmt,
 p.datetrx as PaymentDate,

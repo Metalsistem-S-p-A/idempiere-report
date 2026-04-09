@@ -7,9 +7,9 @@
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="231"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="764"/>
-	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="662"/>
-	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="331"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempiere - PRODUZIONE"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="812"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="179"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempieredb"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
@@ -276,7 +276,8 @@ where
 		or ad_ref_list_b.ad_reference_id is null)
 	and (ad_sysconfig.name::text = 'LIT_REP_DDTSO'::text
 		or ad_sysconfig.name is null)
-	and io.m_inout_id = $P{RECORD_ID}]]>
+	and io.m_inout_id = $P{RECORD_ID}
+	and coalesce(iol.m_product_id ,0)not in (1374713, 1374714)]]>
 	</queryString>
 	<field name="c_currency_iso_code" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="c_currency_iso_code"/>
@@ -1020,8 +1021,7 @@ where
 				<textElement verticalAlignment="Middle" markup="html">
 					<paragraph lineSpacing="Single" firstLineIndent="0" leftIndent="4"/>
 				</textElement>
-				<textFieldExpression><![CDATA[($F{c_bpartner_location_ispreservecustomname}.equals("Y") ? $F{c_bpartner_name}+"<br>"+
-	$F{c_bpartner_location_a_name} : $F{c_bpartner_name}
+				<textFieldExpression><![CDATA[($F{c_bpartner_location_ispreservecustomname}.equals("Y") ?	$F{c_bpartner_location_a_name} : $F{c_bpartner_name}
 )]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">

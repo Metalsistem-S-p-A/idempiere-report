@@ -371,7 +371,7 @@ DATEFORMAT($P{DateAcct2}, $P{DATE_FORMAT})]]></textFieldExpression>
 				</graphicElement>
 			</rectangle>
 			<textField>
-				<reportElement key="staticText-2" style="column_header" positionType="Float" x="0" y="4" width="47" height="13" uuid="f616a3b1-59bf-4fb0-95cc-83f11c1ce84a"/>
+				<reportElement key="staticText-2" style="column_header" positionType="Float" x="37" y="4" width="47" height="13" uuid="f616a3b1-59bf-4fb0-95cc-83f11c1ce84a"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -384,7 +384,9 @@ DATEFORMAT($P{DateAcct2}, $P{DATE_FORMAT})]]></textFieldExpression>
 				<textFieldExpression><![CDATA[str("Dt. reg.")]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement key="staticText-3" style="column_header" positionType="Float" x="47" y="4" width="79" height="13" uuid="f85803f4-fe44-4e39-ae14-b81195e47cff"/>
+				<reportElement key="staticText-3" style="column_header" positionType="Float" x="84" y="4" width="70" height="13" uuid="f85803f4-fe44-4e39-ae14-b81195e47cff">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -397,7 +399,7 @@ DATEFORMAT($P{DateAcct2}, $P{DATE_FORMAT})]]></textFieldExpression>
 				<textFieldExpression><![CDATA[str("DocumentType")]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement key="staticText-4" style="column_header" positionType="Float" x="126" y="4" width="50" height="13" uuid="5c4509f5-09eb-4689-ba69-f1c0e62b017d"/>
+				<reportElement key="staticText-4" style="column_header" positionType="Float" x="154" y="4" width="50" height="13" uuid="5c4509f5-09eb-4689-ba69-f1c0e62b017d"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -410,7 +412,9 @@ DATEFORMAT($P{DateAcct2}, $P{DATE_FORMAT})]]></textFieldExpression>
 				<textFieldExpression><![CDATA[str("LIT_REP_842_DocDate")]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement key="staticText-5" style="column_header" positionType="Float" x="176" y="4" width="108" height="13" uuid="28abce4b-c05d-40b8-9b2c-93e32472a219"/>
+				<reportElement key="staticText-5" style="column_header" positionType="Float" x="204" y="4" width="80" height="13" uuid="28abce4b-c05d-40b8-9b2c-93e32472a219">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -500,6 +504,19 @@ DATEFORMAT($P{DateAcct2}, $P{DATE_FORMAT})]]></textFieldExpression>
 				</textElement>
 				<textFieldExpression><![CDATA[str("BPartner")]]></textFieldExpression>
 			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement key="staticText-2" style="column_header" positionType="Float" x="0" y="4" width="37" height="13" uuid="4e421686-0525-4868-9e26-f5eb3c43bed7"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[str("SeqNo")]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>
@@ -514,7 +531,7 @@ DATEFORMAT($P{DateAcct2}, $P{DATE_FORMAT})]]></textFieldExpression>
 				</graphicElement>
 			</rectangle>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement key="textField" style="easy_read" positionType="Float" stretchType="RelativeToBandHeight" x="0" y="0" width="47" height="16" uuid="7e640b64-02e4-498f-95a8-e9252892fdca"/>
+				<reportElement key="textField" style="easy_read" positionType="Float" stretchType="RelativeToBandHeight" x="37" y="0" width="47" height="16" uuid="7e640b64-02e4-498f-95a8-e9252892fdca"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -528,7 +545,7 @@ DATEFORMAT($P{DateAcct2}, $P{DATE_FORMAT})]]></textFieldExpression>
 				<patternExpression><![CDATA[$P{DATE_FORMAT}]]></patternExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement key="textField" style="easy_read" positionType="Float" stretchType="RelativeToBandHeight" x="126" y="0" width="50" height="16" uuid="9b3305ec-9e70-474a-866a-c6c57c21c221"/>
+				<reportElement key="textField" style="easy_read" positionType="Float" stretchType="RelativeToBandHeight" x="154" y="0" width="50" height="16" uuid="9b3305ec-9e70-474a-866a-c6c57c21c221"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -542,7 +559,9 @@ DATEFORMAT($P{DateAcct2}, $P{DATE_FORMAT})]]></textFieldExpression>
 				<patternExpression><![CDATA[$P{DATE_FORMAT}]]></patternExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement key="textField" style="easy_read" positionType="Float" stretchType="RelativeToBandHeight" x="176" y="0" width="108" height="16" uuid="9c3c0db4-e3d5-4caa-b38d-14578b9270a1"/>
+				<reportElement key="textField" style="easy_read" positionType="Float" stretchType="RelativeToBandHeight" x="204" y="0" width="80" height="16" uuid="9c3c0db4-e3d5-4caa-b38d-14578b9270a1">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -649,7 +668,9 @@ DATEFORMAT($P{DateAcct2}, $P{DATE_FORMAT})]]></textFieldExpression>
 				<textFieldExpression><![CDATA[$F{vatdocumentno}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement key="textField" style="easy_read" positionType="Float" stretchType="RelativeToBandHeight" x="47" y="0" width="79" height="16" isPrintWhenDetailOverflows="true" uuid="b5fcfa1f-4eda-4264-97df-99046e15196d"/>
+				<reportElement key="textField" style="easy_read" positionType="Float" stretchType="RelativeToBandHeight" x="84" y="0" width="70" height="16" isPrintWhenDetailOverflows="true" uuid="b5fcfa1f-4eda-4264-97df-99046e15196d">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -660,6 +681,19 @@ DATEFORMAT($P{DateAcct2}, $P{DATE_FORMAT})]]></textFieldExpression>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{causale}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
+				<reportElement key="textField" style="easy_read_code" positionType="Float" stretchType="RelativeToBandHeight" x="0" y="0" width="37" height="16" uuid="659d9914-5e7f-43bc-a2d4-82202ac7e41a"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nrriga}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -734,7 +768,7 @@ DATEFORMAT($P{DateAcct2}, $P{DATE_FORMAT})]]></textFieldExpression>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[str("Page") +" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[str("Page") +" " + YEAR($F{dtreg}) + "/" + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<image onErrorType="Blank">
 				<reportElement positionType="FixRelativeToBottom" mode="Opaque" x="-30" y="26" width="842" height="70" backcolor="#FFFFFF" uuid="b15e5192-33e2-471e-bea3-da4ef59e8921">

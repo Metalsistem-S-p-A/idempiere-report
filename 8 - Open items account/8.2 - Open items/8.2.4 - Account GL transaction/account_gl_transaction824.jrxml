@@ -119,7 +119,7 @@ AND 	CASE
 	else 1=1 END
 	
 	AND fact_acct.postingtype = 'A'
-   order by  ev.value,   fact_acct."dateacct" ,  fact_acct."seqno"]]>
+   order by  string_to_array(ev.value, '.')::int[],  fact_acct."seqno",  fact_acct."dateacct"]]>
 	</queryString>
 	<field name="beginningbalance" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="beginningbalance"/>
@@ -219,7 +219,7 @@ AND 	CASE
 	<variable name="fact_acct_amtacctcr1" class="java.math.BigDecimal" resetType="Group" resetGroup="Gruppo1" calculation="Sum">
 		<variableExpression><![CDATA[$F{fact_acct_amtacctcr}]]></variableExpression>
 	</variable>
-	<group name="Gruppo1" isReprintHeaderOnEachPage="true">
+	<group name="Gruppo1" isReprintHeaderOnEachPage="true" keepTogether="true" preventOrphanFooter="true">
 		<groupExpression><![CDATA[$F{fact_acct_account_id}]]></groupExpression>
 		<groupHeader>
 			<band height="15">

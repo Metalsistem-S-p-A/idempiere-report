@@ -62,9 +62,6 @@
 	<queryString>
 		<![CDATA[select
     c_currency.iso_code AS c_currency_iso_code,
-	ad_sysconfig.help as ad_sysconfig_help,
-	ad_orginfo.lit_report_param as ad_orginfo_lit_report_param,
-	ad_orginfo.lit_report_param1 as ad_orginfo_lit_report_param1,
 	io.m_inout_id,
 	io.created as m_inout_created,
 	io.documentno as m_inout_documentno,
@@ -180,25 +177,14 @@ left join c_uom iol_uom on
 left join c_uom_trl iol_uom_trl on
 	iol_product.c_uom_id = iol_uom_trl.c_uom_id
 	and iol_uom_trl.ad_language::text = $P{LOCALE_CODE}
-left join ad_sysconfig ad_sysconfig on
-	io.ad_client_id = ad_sysconfig.ad_client_id
-	and io.ad_org_id = ad_sysconfig.ad_org_id
 left join ad_user ad_user on
 	io.salesrep_id = ad_user.ad_user_id
 left join ad_client ad_client on
 	io.ad_client_id = ad_client.ad_client_id
 left join c_order c_order on
 	c_order.c_order_id = io.c_order_id
-left join ad_orginfo ad_orginfo on
-	io.ad_org_id = ad_orginfo.ad_org_id
 left join lit_attribute_v lit_attribute_v on
 	iol.m_inoutline_id = lit_attribute_v.m_inoutline_id
-left join ad_image ad_image on
-	ad_orginfo.lit_banner_id = ad_image.ad_image_id
-left join ad_image ad_image_a on
-	ad_orginfo.logo_id = ad_image_a.ad_image_id
-left join ad_image ad_image_b on
-	ad_orginfo.lit_banner2_id = ad_image_b.ad_image_id
 left join m_shipper m_shipper on
 	io.m_shipper_id = m_shipper.m_shipper_id
 left join lit_m_movementtype lit_m_movementtype on
@@ -274,30 +260,14 @@ where
 		or ad_ref_list_a.ad_reference_id is null)
 	and (ad_ref_list_b.ad_reference_id = 200030::numeric
 		or ad_ref_list_b.ad_reference_id is null)
-	and (ad_sysconfig.name::text = 'LIT_REP_DDTSO'::text
-		or ad_sysconfig.name is null)
 	and io.m_inout_id = $P{RECORD_ID}
-	and coalesce(iol.m_product_id ,0)not in (1374713, 1374714)]]>
+	and coalesce(iol.m_product_id ,0)not in (1374713, 1374714)
+	and iol.c_charge_id is null]]>
 	</queryString>
 	<field name="c_currency_iso_code" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="c_currency_iso_code"/>
 		<property name="com.jaspersoft.studio.field.label" value="c_currency_iso_code"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="c_currency"/>
-	</field>
-	<field name="ad_sysconfig_help" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="ad_sysconfig_help"/>
-		<property name="com.jaspersoft.studio.field.label" value="ad_sysconfig_help"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="ad_sysconfig"/>
-	</field>
-	<field name="ad_orginfo_lit_report_param" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="ad_orginfo_lit_report_param"/>
-		<property name="com.jaspersoft.studio.field.label" value="ad_orginfo_lit_report_param"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="ad_orginfo"/>
-	</field>
-	<field name="ad_orginfo_lit_report_param1" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="ad_orginfo_lit_report_param1"/>
-		<property name="com.jaspersoft.studio.field.label" value="ad_orginfo_lit_report_param1"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="ad_orginfo"/>
 	</field>
 	<field name="m_inout_id" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="m_inout_id"/>
@@ -1505,7 +1475,6 @@ where
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<printWhenExpression><![CDATA[(($F{ad_orginfo_lit_report_param}.charAt(6)) == 'Y')]]></printWhenExpression>
 				</reportElement>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid"/>
@@ -1528,7 +1497,6 @@ where
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<printWhenExpression><![CDATA[(($F{ad_orginfo_lit_report_param}.charAt(7)) == 'Y')]]></printWhenExpression>
 				</reportElement>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid"/>
@@ -1924,7 +1892,7 @@ where
 				<imageExpression><![CDATA[$P{PORTRAIT_FOOTER_IMAGE}]]></imageExpression>
 			</image>
 			<textField>
-				<reportElement style="page_number" positionType="FixRelativeToBottom" x="280" y="0" width="275" height="12" uuid="a5d160e4-e85a-4b42-b507-9bb51a07bd54">
+				<reportElement style="page_number" positionType="FixRelativeToBottom" x="280" y="1" width="275" height="12" uuid="a5d160e4-e85a-4b42-b507-9bb51a07bd54">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
@@ -1933,7 +1901,7 @@ where
 				<textFieldExpression><![CDATA[str("Page") +" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="page_number" positionType="FixRelativeToBottom" x="0" y="0" width="280" height="12" uuid="1f05c047-2711-49ea-8260-3bf1e84a2ee4"/>
+				<reportElement style="page_number" positionType="FixRelativeToBottom" x="0" y="1" width="280" height="12" uuid="1f05c047-2711-49ea-8260-3bf1e84a2ee4"/>
 				<textFieldExpression><![CDATA["RP.451 - " + str("DatePrinted") + ": " + DATEFORMAT(NOW( ),$P{DATE_FORMAT} + " " + $P{TIME_FORMAT})]]></textFieldExpression>
 			</textField>
 		</band>

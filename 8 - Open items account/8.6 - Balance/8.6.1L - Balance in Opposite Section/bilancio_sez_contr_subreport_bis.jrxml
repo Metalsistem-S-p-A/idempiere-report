@@ -10,7 +10,7 @@
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="876"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="806"/>
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="185"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempieredb-report"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempiere - PRODUZIONE"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
@@ -289,7 +289,7 @@ ce.c_elementvalue_id, lv0_value, lv0_name, lv1_value, lv1_name, lv2_value, lv2_n
 lv3_value, lv3_name, lv4_value, lv4_name, lv5_value, lv5_name,
 lv6_value, lv6_name, ce.value, ce.name, ce.accounttype, ce.accountsign
 order by
-	lv0_value, lv1_value, lv2_value, lv3_value, lv4_value, lv5_value, lv6_value, ce.value]]>
+array_remove(string_to_array(regexp_replace(ce.value, '[^0-9.]', '', 'g'), '.'), '')::int[]]]>
 	</queryString>
 	<field name="c_elementvalue_id" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="c_elementvalue_id"/>
@@ -397,7 +397,7 @@ order by
 	<group name="lv0">
 		<groupExpression><![CDATA[$F{lv0_value}]]></groupExpression>
 		<groupHeader>
-			<band height="14">
+			<band height="14" splitType="Prevent">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				<printWhenExpression><![CDATA[$F{lv0_value} != null]]></printWhenExpression>
 				<textField textAdjust="StretchHeight">
@@ -426,7 +426,7 @@ order by
 	<group name="lv1">
 		<groupExpression><![CDATA[$F{lv1_value}]]></groupExpression>
 		<groupHeader>
-			<band height="12" splitType="Stretch">
+			<band height="12" splitType="Prevent">
 				<printWhenExpression><![CDATA[$F{lv1_value} != null]]></printWhenExpression>
 				<textField textAdjust="StretchHeight" evaluationTime="Group" evaluationGroup="lv1" pattern=" #,##0.00" isBlankWhenNull="true">
 					<reportElement style="code" stretchType="ContainerHeight" x="305" y="0" width="90" height="12" uuid="4e6454da-0c85-4423-8461-049ff6d3d08e"/>
@@ -455,7 +455,7 @@ order by
 	<group name="lv2">
 		<groupExpression><![CDATA[$F{lv2_value}]]></groupExpression>
 		<groupHeader>
-			<band height="11" splitType="Stretch">
+			<band height="11" splitType="Prevent">
 				<printWhenExpression><![CDATA[$F{lv2_value} != null]]></printWhenExpression>
 				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 					<reportElement key="textField" x="0" y="0" width="305" height="11" forecolor="#000000" uuid="d141525d-609b-4d09-be46-80941cd88742"/>
@@ -484,7 +484,7 @@ order by
 	<group name="lv3">
 		<groupExpression><![CDATA[$F{lv3_value}]]></groupExpression>
 		<groupHeader>
-			<band height="11">
+			<band height="11" splitType="Prevent">
 				<printWhenExpression><![CDATA[$F{lv3_value} != null]]></printWhenExpression>
 				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 					<reportElement key="textField" x="0" y="0" width="305" height="11" forecolor="#000000" uuid="5181c5a5-8394-4209-b664-e0cb436d0f25"/>
@@ -513,7 +513,7 @@ order by
 	<group name="lv4">
 		<groupExpression><![CDATA[$F{lv4_value}]]></groupExpression>
 		<groupHeader>
-			<band height="11">
+			<band height="11" splitType="Prevent">
 				<printWhenExpression><![CDATA[$F{lv4_value} != null]]></printWhenExpression>
 				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 					<reportElement key="textField" x="0" y="0" width="305" height="11" forecolor="#000000" uuid="dc2c208b-43b9-490b-960a-2829ad88411f"/>
@@ -542,7 +542,7 @@ order by
 	<group name="lv5">
 		<groupExpression><![CDATA[$F{lv5_value}]]></groupExpression>
 		<groupHeader>
-			<band height="11">
+			<band height="11" splitType="Prevent">
 				<printWhenExpression><![CDATA[$F{lv5_value} != null]]></printWhenExpression>
 				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 					<reportElement key="textField" x="0" y="0" width="305" height="11" forecolor="#000000" uuid="cf0330da-d3ca-4993-9ff2-4e86ff8cb882"/>
@@ -571,7 +571,7 @@ order by
 	<group name="lv6">
 		<groupExpression><![CDATA[$F{lv6_value}]]></groupExpression>
 		<groupHeader>
-			<band height="11">
+			<band height="11" splitType="Prevent">
 				<printWhenExpression><![CDATA[$F{lv6_value} != null]]></printWhenExpression>
 				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 					<reportElement key="textField" x="0" y="0" width="305" height="11" forecolor="#000000" uuid="b48874f4-4462-47b5-a023-f02622a95815"/>

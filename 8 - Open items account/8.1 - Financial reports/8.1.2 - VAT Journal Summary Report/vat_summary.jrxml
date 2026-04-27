@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.17.0.final utlizzo versione della libreria JasperReports6.17.0-6d93193241dd8cc42629e188b94f9e0bc5722efd  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vat_summary_debit" pageWidth="555" pageHeight="595" orientation="Landscape" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="2362cb52-50cd-42c8-9c34-1d300881dece">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempieredb-report"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempiere - PRODUZIONE"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -34,7 +34,6 @@
 	<parameter name="RESOURCE" class="java.util.PropertyResourceBundle" isForPrompting="false"/>
 	<parameter name="AD_Org_ID" class="java.lang.Integer"/>
 	<parameter name="LIT_VAT_PERIOD_ID" class="java.lang.Integer"/>
-	<parameter name="LIT_IsExcludeLIPE" class="java.lang.String"/>
 	<parameter name="LIT_IsDetail" class="java.lang.String">
 		<defaultValueExpression><![CDATA["N"]]></defaultValueExpression>
 	</parameter>
@@ -53,18 +52,18 @@
      vat."taxindicator" AS vat_c_tax_taxindicator,
      vat."c_tax_name" AS vat_c_tax_name,
      vat."c_tax_description" AS vat_c_tax_description,
-     coalesce(vat."taxbaseamtfull", 0) AS vat_c_invoicetax_taxbaseamtfull,
      coalesce(vat."taxbaseamt", 0) AS vat_c_invoicetax_taxbaseamt,
      coalesce(vat."taxamt", 0) AS vat_c_invoicetax_taxamt,
      coalesce(vat.taxbaseamtnotax, 0) as vat_c_invoicetax_taxbaseamtnotax,
-	 coalesce(vat.notaxamt, 0) as vat_cinvoicetax_notaxamt,
+     coalesce(vat.notaxamt, 0) as vat_cinvoicetax_notaxamt,
      vat."c_bpartner_name" AS vat_c_bpartner_name,
      vat."taxid" AS vatnumber,
      vat."c_tax_id" AS vat_c_tax_id,
      vat."lit_vatjournal_id" AS vat_lit_vatjournal_id,
      vat."value" AS vat_vatjournalvalue,
-          vat.documenttype,
-          vat.iso_code
+     vat.documenttype,
+     vat.iso_code,
+     vat.c_tax_excludelipe AS vat_c_tax_excludelipe
 FROM(
  select
  (select iso_code
@@ -135,37 +134,10 @@ and c_acctschema.ad_org_id in (0, $P{AD_Org_ID})) as iso_code,
     c_tax.name AS c_tax_name,
     c_tax.issalestax AS c_tax_issalestax,
     c_tax.description AS c_tax_description,
-    c_tax.lit_isexcludelipe AS c_tax_isexcludedlipe,
-    c_tax.lit_excludelipe AS c_tax_excludedlipe,
+    c_tax.lit_excludelipe AS c_tax_excludelipe,
+        -- taxbaseamt: imponibile che concorre alla liquidazione (0 se escluso)
         CASE
-            WHEN c_tax.lit_excludelipe::text = 'EA'::text THEN 0::numeric
-            WHEN (c_doctype.docbasetype = ANY (ARRAY['ARC'::bpchar, 'APC'::bpchar])) AND c_invoicetax.taxamt < 0::numeric AND c_tax.lit_vatjournal_id IS NULL THEN 0::numeric
-            WHEN c_invoice.c_currency_id <> COALESCE(accs.c_currency_id, 102::numeric) AND (c_doctype.docbasetype = ANY (ARRAY['ARC'::bpchar, 'APC'::bpchar])) THEN round((( SELECT currencyconvertinvoice(c_invoice.c_invoice_id, COALESCE(accs.c_currency_id, 102::numeric), c_invoicetax.taxbaseamt, (( SELECT
-                            CASE
-                                WHEN ((( SELECT ad_sysconfig.value
-                                   FROM ad_sysconfig
-                                  WHERE ad_sysconfig.name::text = 'LIT_CURRENCYONDATEDOC'::text
-                                  ORDER BY ad_sysconfig.ad_client_id DESC
-                                 LIMIT 1))::text) = 'Y'::text THEN c_invoice.dateinvoiced
-                                ELSE c_invoice.dateacct
-                            END AS dateacct))::timestamp with time zone) AS currencyconvertinvoice)) * c_tax.percent / 100::numeric * '-1'::integer::numeric, 2)
-            WHEN c_invoice.c_currency_id = COALESCE(accs.c_currency_id, 102::numeric) AND (c_doctype.docbasetype = ANY (ARRAY['ARC'::bpchar, 'APC'::bpchar])) THEN round(c_invoicetax.taxbaseamt * c_tax.percent / 100::numeric * '-1'::integer::numeric, 2)
-            WHEN c_invoicetax.taxamt < 0::numeric AND c_tax.lit_vatjournal_id IS NULL THEN 0::numeric
-            WHEN c_invoice.c_currency_id <> COALESCE(accs.c_currency_id, 102::numeric) THEN round((( SELECT currencyconvertinvoice(c_invoice.c_invoice_id, COALESCE(accs.c_currency_id, 102::numeric), c_invoicetax.taxbaseamt, (( SELECT
-                            CASE
-                                WHEN ((( SELECT ad_sysconfig.value
-                                   FROM ad_sysconfig
-                                  WHERE ad_sysconfig.name::text = 'LIT_CURRENCYONDATEDOC'::text
-                                  ORDER BY ad_sysconfig.ad_client_id DESC
-                                 LIMIT 1))::text) = 'Y'::text THEN c_invoice.dateinvoiced
-                                ELSE c_invoice.dateacct
-                            END AS dateacct))::timestamp with time zone) AS currencyconvertinvoice)) * c_tax.percent / 100::numeric, 2)
-            WHEN c_tax.issalestax = 'Y'::bpchar THEN 0::numeric
-            WHEN c_tax.lit_excludelipe::text <> 'N'::text THEN round(c_invoicetax.taxbaseamt * c_tax.percent / 100::numeric * 1::numeric, 2)
-            ELSE round(c_invoicetax.taxbaseamt * c_tax.percent / 100::numeric, 2)
-        END AS taxbaseamtfull,
-        CASE
-            WHEN c_tax.lit_excludelipe::text = 'SB'::text OR c_tax.lit_excludelipe::text = 'EX'::text OR c_tax.lit_excludelipe::text = 'EA'::text THEN 0::numeric
+            WHEN c_tax.lit_excludelipe::text IN ('SB', 'EX', 'EA') THEN 0::numeric
             WHEN c_invoice.c_currency_id <> COALESCE(accs.c_currency_id, 102::numeric) AND (c_doctype.docbasetype = ANY (ARRAY['ARC'::bpchar, 'APC'::bpchar])) THEN round((( SELECT currencyconvertinvoice(c_invoice.c_invoice_id, COALESCE(accs.c_currency_id, 102::numeric), c_invoicetax.taxbaseamt, (( SELECT
                             CASE
                                 WHEN ((( SELECT ad_sysconfig.value
@@ -186,15 +158,14 @@ and c_acctschema.ad_org_id in (0, $P{AD_Org_ID})) as iso_code,
                                  LIMIT 1))::text) = 'Y'::text THEN c_invoice.dateinvoiced
                                 ELSE c_invoice.dateacct
                             END AS dateacct))::timestamp with time zone) AS currencyconvertinvoice)
-            WHEN c_tax.issalestax = 'Y'::bpchar THEN 0::numeric
-            WHEN c_tax.lit_excludelipe::text <> 'N'::text THEN round(c_invoicetax.taxbaseamt * c_tax.percent / 100::numeric * '-1'::integer::numeric, 2)
             ELSE round(c_invoicetax.taxbaseamt * c_tax.percent / 100::numeric, 2)
         END AS taxbaseamt,
+        -- taxamt: IVA che concorre alla liquidazione (0 se escluso)
         CASE
-            WHEN c_tax.lit_excludelipe::text = 'EX'::text THEN 0::numeric
+            WHEN c_tax.lit_excludelipe::text IN ('EX', 'EA') THEN 0::numeric
             WHEN c_tax.lit_excludelipe::text = 'SB'::text AND c_doctype.docbasetype = 'API'::bpchar THEN c_invoicetax.taxamt * '-1'::integer::numeric
             WHEN c_tax.lit_excludelipe::text = 'SB'::text AND c_doctype.docbasetype = 'APC'::bpchar THEN c_invoicetax.taxamt
-            WHEN c_tax.issalestax = 'Y'::bpchar THEN c_invoicetax.taxamt * 0::numeric
+            WHEN c_tax.issalestax = 'Y'::bpchar THEN 0::numeric
             WHEN c_invoice.c_currency_id <> COALESCE(accs.c_currency_id, 102::numeric) AND (c_doctype.docbasetype = ANY (ARRAY['ARC'::bpchar, 'APC'::bpchar])) THEN (( SELECT currencyconvertinvoice(c_invoice.c_invoice_id, COALESCE(accs.c_currency_id, 102::numeric), c_invoicetax.taxamt, (( SELECT
                             CASE
                                 WHEN ((( SELECT ad_sysconfig.value
@@ -205,7 +176,6 @@ and c_acctschema.ad_org_id in (0, $P{AD_Org_ID})) as iso_code,
                                 ELSE c_invoice.dateacct
                             END AS dateacct))::timestamp with time zone) AS currencyconvertinvoice)) * '-1'::integer::numeric
             WHEN c_invoice.c_currency_id = COALESCE(accs.c_currency_id, 102::numeric) AND (c_doctype.docbasetype = ANY (ARRAY['ARC'::bpchar, 'APC'::bpchar])) THEN c_invoicetax.taxamt * '-1'::integer::numeric
-            WHEN c_tax.issalestax = 'Y'::bpchar THEN c_invoicetax.taxamt * 0::numeric
             WHEN c_invoice.c_currency_id <> COALESCE(accs.c_currency_id, 102::numeric) THEN ( SELECT currencyconvertinvoice(c_invoice.c_invoice_id, COALESCE(accs.c_currency_id, 102::numeric), c_invoicetax.taxamt, (( SELECT
                             CASE
                                 WHEN ((( SELECT ad_sysconfig.value
@@ -218,12 +188,61 @@ and c_acctschema.ad_org_id in (0, $P{AD_Org_ID})) as iso_code,
             WHEN c_tax.lit_excludelipe::text <> 'N'::text AND c_tax.lit_vatjournal_id IS NOT NULL AND lvj2.lit_iscreatenegativemovement = 'Y'::bpchar THEN c_invoicetax.taxamt * '-1'::integer::numeric
             ELSE c_invoicetax.taxamt
         END AS taxamt,
+        -- taxbaseamtnotax: imponibile fuori campo (popolato quando escluso)
         CASE
+            WHEN c_tax.lit_excludelipe::text IN ('SB', 'EX', 'EA') THEN
+                CASE
+                    WHEN c_invoice.c_currency_id = COALESCE(accs.c_currency_id, 102::numeric) AND (c_doctype.docbasetype = ANY (ARRAY['ARC'::bpchar, 'APC'::bpchar])) THEN round(c_invoicetax.taxbaseamt * c_tax.percent / 100::numeric * '-1'::integer::numeric, 2)
+                    WHEN c_invoice.c_currency_id <> COALESCE(accs.c_currency_id, 102::numeric) THEN round((( SELECT currencyconvertinvoice(c_invoice.c_invoice_id, COALESCE(accs.c_currency_id, 102::numeric), c_invoicetax.taxbaseamt, (( SELECT
+                                    CASE
+                                        WHEN ((( SELECT ad_sysconfig.value
+                                           FROM ad_sysconfig
+                                          WHERE ad_sysconfig.name::text = 'LIT_CURRENCYONDATEDOC'::text
+                                          ORDER BY ad_sysconfig.ad_client_id DESC
+                                         LIMIT 1))::text) = 'Y'::text THEN c_invoice.dateinvoiced
+                                        ELSE c_invoice.dateacct
+                                    END AS dateacct))::timestamp with time zone) AS currencyconvertinvoice)) * c_tax.percent / 100::numeric, 2)
+                    ELSE round(c_invoicetax.taxbaseamt * c_tax.percent / 100::numeric, 2)
+                end
             WHEN c_tax.issalestax = 'Y'::bpchar THEN
-            CASE
-                WHEN c_invoice.c_currency_id = COALESCE(accs.c_currency_id, 102::numeric) AND (c_doctype.docbasetype = ANY (ARRAY['ARC'::bpchar, 'APC'::bpchar])) THEN c_invoicetax.taxamt * '-1'::integer::numeric
-                ELSE c_invoicetax.taxamt
-            END
+                CASE
+                    WHEN c_invoice.c_currency_id = COALESCE(accs.c_currency_id, 102::numeric) AND (c_doctype.docbasetype = ANY (ARRAY['ARC'::bpchar, 'APC'::bpchar])) THEN round(c_invoicetax.taxbaseamt * c_tax.percent / 100::numeric * '-1'::integer::numeric, 2)
+                    WHEN c_invoice.c_currency_id <> COALESCE(accs.c_currency_id, 102::numeric) THEN round((( SELECT currencyconvertinvoice(c_invoice.c_invoice_id, COALESCE(accs.c_currency_id, 102::numeric), c_invoicetax.taxbaseamt, (( SELECT
+                                    CASE
+                                        WHEN ((( SELECT ad_sysconfig.value
+                                           FROM ad_sysconfig
+                                          WHERE ad_sysconfig.name::text = 'LIT_CURRENCYONDATEDOC'::text
+                                          ORDER BY ad_sysconfig.ad_client_id DESC
+                                         LIMIT 1))::text) = 'Y'::text THEN c_invoice.dateinvoiced
+                                        ELSE c_invoice.dateacct
+                                    END AS dateacct))::timestamp with time zone) AS currencyconvertinvoice)) * c_tax.percent / 100::numeric, 2)
+                    ELSE round(c_invoicetax.taxbaseamt * c_tax.percent / 100::numeric, 2)
+                END  
+            ELSE 0::numeric
+        END AS taxbaseamtnotax,
+        -- notaxamt: IVA fuori campo (popolato quando escluso)
+        CASE
+            WHEN c_tax.lit_excludelipe::text IN ('SB', 'EX', 'EA') THEN
+                CASE
+                    WHEN c_invoice.c_currency_id = COALESCE(accs.c_currency_id, 102::numeric) AND (c_doctype.docbasetype = ANY (ARRAY['ARC'::bpchar, 'APC'::bpchar])) THEN c_invoicetax.taxamt * '-1'::integer::numeric
+                    WHEN c_invoice.c_currency_id <> COALESCE(accs.c_currency_id, 102::numeric) THEN ( SELECT currencyconvertinvoice(c_invoice.c_invoice_id, COALESCE(accs.c_currency_id, 102::numeric), c_invoicetax.taxamt, (( SELECT
+                                    CASE
+                                        WHEN ((( SELECT ad_sysconfig.value
+                                           FROM ad_sysconfig
+                                          WHERE ad_sysconfig.name::text = 'LIT_CURRENCYONDATEDOC'::text
+                                          ORDER BY ad_sysconfig.ad_client_id DESC
+                                         LIMIT 1))::text) = 'Y'::text THEN c_invoice.dateinvoiced
+                                        ELSE c_invoice.dateacct
+                                    END AS dateacct))::timestamp with time zone) AS currencyconvertinvoice)
+                    ELSE c_invoicetax.taxamt
+                end
+            	WHEN c_tax.issalestax = 'Y'::bpchar THEN   -- aggiungi questo blocco
+		        CASE
+		            WHEN c_invoice.c_currency_id = COALESCE(accs.c_currency_id, 102) 
+		                 AND c_doctype.docbasetype = ANY (ARRAY['ARC','APC']) 
+		                 THEN c_invoicetax.taxamt * -1
+		            ELSE c_invoicetax.taxamt
+		        END
             ELSE 0::numeric
         END AS notaxamt,
     c_bpartner.name AS c_bpartner_name,
@@ -231,14 +250,6 @@ and c_acctschema.ad_org_id in (0, $P{AD_Org_ID})) as iso_code,
     c_bpartner.taxid,
     c_doctype.docbasetype,
     f.name AS vat_period_name,
-        CASE
-            WHEN c_tax.issalestax = 'Y'::bpchar THEN
-            CASE
-                WHEN c_invoice.c_currency_id = COALESCE(accs.c_currency_id, 102::numeric) AND (c_doctype.docbasetype = ANY (ARRAY['ARC'::bpchar, 'APC'::bpchar])) THEN c_invoicetax.taxbaseamt * c_tax.percent / 100::numeric * '-1'::integer::numeric
-                ELSE round(c_invoicetax.taxbaseamt * c_tax.percent / 100::numeric, 2)
-            END
-            ELSE 0::numeric
-        END AS taxbaseamtnotax,
     c_doctype_trl.name AS documenttype,
     c_invoice.a_effective_date,
     lit_vatjournal.accountsign,
@@ -277,8 +288,7 @@ WHERE
 vat."ad_org_id" = $P{AD_Org_ID} AND
 vat."lit_vat_period_id" = $P{LIT_VAT_PERIOD_ID} AND
 vat."lit_vatjournal_accountsign"=$P{LIT_AccountSign}
-order by   vat.lit_vatjournal_id ,  vat.c_tax_id,
-dateacct,vatdocumentno]]>
+order by vat.lit_vatjournal_id, vat.c_tax_id, dateacct, vatdocumentno]]>
 	</queryString>
 	<field name="vat_ad_client_id" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="vat_ad_client_id"/>
@@ -335,11 +345,6 @@ dateacct,vatdocumentno]]>
 		<property name="com.jaspersoft.studio.field.label" value="vat_c_tax_description"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="c_tax"/>
 	</field>
-	<field name="vat_c_invoicetax_taxbaseamtfull" class="java.math.BigDecimal">
-		<property name="com.jaspersoft.studio.field.name" value="vat_c_invoicetax_taxbaseamtfull"/>
-		<property name="com.jaspersoft.studio.field.label" value="vat_c_invoicetax_taxbaseamtfull"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="lit_vat_journal_v"/>
-	</field>
 	<field name="vat_c_invoicetax_taxbaseamt" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="vat_c_invoicetax_taxbaseamt"/>
 		<property name="com.jaspersoft.studio.field.label" value="vat_c_invoicetax_taxbaseamt"/>
@@ -392,6 +397,11 @@ dateacct,vatdocumentno]]>
 		<property name="com.jaspersoft.studio.field.name" value="iso_code"/>
 		<property name="com.jaspersoft.studio.field.label" value="iso_code"/>
 	</field>
+	<field name="vat_c_tax_excludelipe" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="vat_c_tax_excludelipe"/>
+		<property name="com.jaspersoft.studio.field.label" value="vat_c_tax_excludelipe"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="c_tax"/>
+	</field>
 	<variable name="baseamt_ctax" class="java.math.BigDecimal" resetType="Group" resetGroup="ctax" calculation="Sum">
 		<variableExpression><![CDATA[$F{vat_c_invoicetax_taxbaseamt}]]></variableExpression>
 	</variable>
@@ -409,15 +419,6 @@ dateacct,vatdocumentno]]>
 	</variable>
 	<variable name="amt_total" class="java.math.BigDecimal" resetType="Master" calculation="Sum">
 		<variableExpression><![CDATA[$F{vat_c_invoicetax_taxamt}]]></variableExpression>
-	</variable>
-	<variable name="baseamtfull_ctax" class="java.math.BigDecimal" resetType="Group" resetGroup="ctax" calculation="Sum">
-		<variableExpression><![CDATA[$F{vat_c_invoicetax_taxbaseamtfull}]]></variableExpression>
-	</variable>
-	<variable name="baseamtfull_journal" class="java.math.BigDecimal" resetType="Group" resetGroup="journal" calculation="Sum">
-		<variableExpression><![CDATA[$F{vat_c_invoicetax_taxbaseamtfull}]]></variableExpression>
-	</variable>
-	<variable name="baseamtfull_total" class="java.math.BigDecimal" resetType="Master" calculation="Sum">
-		<variableExpression><![CDATA[$F{vat_c_invoicetax_taxbaseamtfull}]]></variableExpression>
 	</variable>
 	<variable name="baseamtnotax_ctax" class="java.math.BigDecimal" resetType="Group" resetGroup="ctax" calculation="Sum">
 		<variableExpression><![CDATA[$F{vat_c_invoicetax_taxbaseamtnotax}]]></variableExpression>
@@ -442,7 +443,7 @@ dateacct,vatdocumentno]]>
 		<groupFooter>
 			<band height="13">
 				<textField textAdjust="StretchHeight" pattern="#,##0.00">
-					<reportElement style="code" x="390" y="0" width="165" height="13" uuid="978f0658-c660-434a-b39c-c7abd6a1eab4"/>
+					<reportElement style="code" x="465" y="0" width="90" height="13" uuid="978f0658-c660-434a-b39c-c7abd6a1eab4"/>
 					<box leftPadding="2" rightPadding="2">
 						<topPen lineStyle="Solid"/>
 						<leftPen lineStyle="Solid"/>
@@ -452,10 +453,10 @@ dateacct,vatdocumentno]]>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[SUM($V{amt_journal}, $V{notaxamt_journal})]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{notaxamt_journal}]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="StretchHeight" pattern="#,##0.00">
-					<reportElement style="code" x="294" y="0" width="96" height="13" uuid="fd8694d8-573b-4d93-9037-7a9e05f31fd6"/>
+					<reportElement style="code" x="240" y="0" width="75" height="13" uuid="fd8694d8-573b-4d93-9037-7a9e05f31fd6"/>
 					<box leftPadding="2" rightPadding="2">
 						<topPen lineStyle="Solid"/>
 						<leftPen lineStyle="Solid"/>
@@ -465,10 +466,10 @@ dateacct,vatdocumentno]]>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[SUM($P{LIT_IsExcludeLIPE}.equals("Y")?$V{baseamt_journal}:$V{baseamtfull_journal}, $V{baseamtnotax_journal})]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{baseamt_journal}]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="StretchHeight">
-					<reportElement x="0" y="0" width="236" height="13" uuid="d946fee4-4407-4760-8dc6-1ea5ea6b0bb3">
+					<reportElement x="0" y="0" width="194" height="13" uuid="d946fee4-4407-4760-8dc6-1ea5ea6b0bb3">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
 					<box leftPadding="2" rightPadding="2">
@@ -483,7 +484,7 @@ dateacct,vatdocumentno]]>
 					<textFieldExpression><![CDATA[$F{lit_vatjournal_name}]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="StretchHeight">
-					<reportElement x="236" y="0" width="58" height="13" uuid="8fe5264c-cbb1-4cb9-adfd-46b848c3a105"/>
+					<reportElement x="194" y="0" width="46" height="13" uuid="8fe5264c-cbb1-4cb9-adfd-46b848c3a105"/>
 					<box leftPadding="2" rightPadding="2">
 						<topPen lineStyle="Solid"/>
 						<leftPen lineStyle="Solid"/>
@@ -495,10 +496,36 @@ dateacct,vatdocumentno]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{iso_code}]]></textFieldExpression>
 				</textField>
+				<textField textAdjust="StretchHeight" pattern="#,##0.00">
+					<reportElement style="code" x="315" y="0" width="75" height="13" uuid="c0506d0e-70b1-44b2-99e6-fada745cff78"/>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineStyle="Solid"/>
+						<leftPen lineStyle="Solid"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+						<rightPen lineStyle="Solid"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{baseamtnotax_journal}]]></textFieldExpression>
+				</textField>
+				<textField textAdjust="StretchHeight" pattern="#,##0.00">
+					<reportElement style="code" x="390" y="0" width="75" height="13" uuid="87ba70ce-be9a-4046-b83d-e8628fff637e"/>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineStyle="Solid"/>
+						<leftPen lineStyle="Solid"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+						<rightPen lineStyle="Solid"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{amt_journal}]]></textFieldExpression>
+				</textField>
 			</band>
 		</groupFooter>
 	</group>
-	<group name="ctax">
+	<group name="ctax" isReprintHeaderOnEachPage="true" keepTogether="true" preventOrphanFooter="true">
 		<groupExpression><![CDATA[$F{vat_c_tax_id}]]></groupExpression>
 		<groupHeader>
 			<band height="26">
@@ -526,7 +553,7 @@ dateacct,vatdocumentno]]>
 					<textFieldExpression><![CDATA[$P{LIT_IsDetail}.equals("Y") ? str("DocumentNo") : ""]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement style="label" x="100" y="13" width="136" height="13" uuid="03a78175-7c53-410c-9ab6-a773f1cd86bd"/>
+					<reportElement style="label" x="100" y="13" width="94" height="13" uuid="03a78175-7c53-410c-9ab6-a773f1cd86bd"/>
 					<box leftPadding="2" rightPadding="2"/>
 					<textElement verticalAlignment="Middle">
 						<font size="8"/>
@@ -534,27 +561,17 @@ dateacct,vatdocumentno]]>
 					<textFieldExpression><![CDATA[$P{LIT_IsDetail}.equals("Y") ? str("DocumentType") : ""]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement style="label" x="294" y="13" width="96" height="13" uuid="0713d8c2-1834-47fa-b418-6a00d3b6204e">
+					<reportElement style="label" x="240" y="13" width="75" height="13" uuid="0713d8c2-1834-47fa-b418-6a00d3b6204e">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
 					<box leftPadding="2" rightPadding="2"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
-					<textFieldExpression><![CDATA[str("LIT_REP_812_VAT_Vatable")]]></textFieldExpression>
-				</textField>
-				<textField>
-					<reportElement style="label" x="390" y="13" width="165" height="13" uuid="4a53c11e-3870-4e2a-a1ca-62cb2f87f97e"/>
-					<box leftPadding="2" rightPadding="2">
-						<rightPen lineWidth="1.0"/>
-					</box>
-					<textElement textAlignment="Right">
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression><![CDATA[str("LIT_REP_812_" + ("D".equals($P{LIT_AccountSign}) ? "Debit" : "Credit"))]]></textFieldExpression>
+					<textFieldExpression><![CDATA[str("LIT_REP_815_DeductibleAmt")]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="ScaleFont">
-					<reportElement style="label" x="236" y="13" width="58" height="13" uuid="0cada874-24cd-4e2c-bc99-cf0b95be222e">
+					<reportElement style="label" x="194" y="13" width="46" height="13" uuid="0cada874-24cd-4e2c-bc99-cf0b95be222e">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
 					<box leftPadding="2" rightPadding="2"/>
@@ -563,37 +580,49 @@ dateacct,vatdocumentno]]>
 					</textElement>
 					<textFieldExpression><![CDATA[str("C_Currency_ID")]]></textFieldExpression>
 				</textField>
+				<textField textAdjust="ScaleFont" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement style="label" x="390" y="13" width="75" height="13" uuid="4431ca3b-9f1c-4d4a-89f0-049920378006">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<box leftPadding="2" rightPadding="2"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[str("LIT_REP_815_DeductibleVat")]]></textFieldExpression>
+				</textField>
+				<textField textAdjust="ScaleFont" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement style="label" x="465" y="13" width="90" height="13" uuid="ece2179f-be42-4f56-b822-61975aecff2b">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<box leftPadding="2" rightPadding="2">
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[str("LIT_REP_815_NonDeductibleVat")]]></textFieldExpression>
+				</textField>
+				<textField textAdjust="ScaleFont" pattern="#,##0.00">
+					<reportElement style="label" x="315" y="13" width="75" height="13" uuid="4b895d2f-c7da-4eeb-a657-2a69ded65906">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<box leftPadding="2" rightPadding="2">
+						<pen lineWidth="0.0" lineStyle="Solid" lineColor="#999999"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#999999"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#999999"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#999999"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#999999"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Inter"/>
+					</textElement>
+					<textFieldExpression><![CDATA[str("LIT_REP_815_NonDeductibleAmt")]]></textFieldExpression>
+				</textField>
 			</band>
 		</groupHeader>
 		<groupFooter>
 			<band height="13">
-				<textField textAdjust="StretchHeight" pattern="#,##0.00">
-					<reportElement style="code" x="294" y="0" width="96" height="13" uuid="adb575be-1de3-4efa-b81b-7703dae25e44"/>
-					<box leftPadding="2" rightPadding="2">
-						<bottomPen lineWidth="1.0"/>
-					</box>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font size="8" isBold="true"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$P{LIT_IsExcludeLIPE}.equals("Y")
-?
-	BigDecimal.ZERO.compareTo($V{baseamt_ctax}) != 0? $V{baseamt_ctax} : "[" +$V{baseamtnotax_ctax} + "]"
-: 
-	BigDecimal.ZERO.compareTo($V{baseamtfull_ctax}) != 0? $V{baseamtfull_ctax} : "[" +$V{baseamtnotax_ctax} + "]"]]></textFieldExpression>
-				</textField>
-				<textField textAdjust="StretchHeight" pattern="#,##0.00">
-					<reportElement style="code" x="390" y="0" width="165" height="13" uuid="97abb6bb-be3b-4f72-adc8-08b9c146fd16"/>
-					<box leftPadding="2" rightPadding="2">
-						<bottomPen lineWidth="1.0"/>
-						<rightPen lineWidth="1.0"/>
-					</box>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font size="8" isBold="true"/>
-					</textElement>
-					<textFieldExpression><![CDATA[BigDecimal.ZERO.compareTo($V{amt_ctax}) != 0 ?$V{amt_ctax} : "[" + $V{notaxamt_ctax}+ "]"]]></textFieldExpression>
-				</textField>
 				<textField>
-					<reportElement style="label" x="0" y="0" width="236" height="13" uuid="db266b60-2ef6-4c1e-88b4-596ba87075a0"/>
+					<reportElement style="label" x="0" y="0" width="194" height="13" uuid="db266b60-2ef6-4c1e-88b4-596ba87075a0"/>
 					<box leftPadding="2" rightPadding="2">
 						<leftPen lineWidth="1.0"/>
 						<bottomPen lineWidth="1.0"/>
@@ -603,8 +632,8 @@ dateacct,vatdocumentno]]>
 					</textElement>
 					<textFieldExpression><![CDATA[str("LIT_REP_812_Total")]]></textFieldExpression>
 				</textField>
-				<textField textAdjust="StretchHeight">
-					<reportElement style="label" x="236" y="0" width="58" height="13" uuid="96db4bad-86d9-4ad9-8b4e-b72fbcaa76c2"/>
+				<textField>
+					<reportElement style="label" x="194" y="0" width="46" height="13" uuid="96db4bad-86d9-4ad9-8b4e-b72fbcaa76c2"/>
 					<box leftPadding="2" rightPadding="2">
 						<bottomPen lineWidth="1.0"/>
 					</box>
@@ -612,6 +641,47 @@ dateacct,vatdocumentno]]>
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{iso_code}]]></textFieldExpression>
+				</textField>
+				<textField textAdjust="StretchHeight" pattern="#,##0.00">
+					<reportElement style="code" x="240" y="0" width="75" height="13" uuid="adb575be-1de3-4efa-b81b-7703dae25e44"/>
+					<box leftPadding="2" rightPadding="2">
+						<bottomPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{baseamt_ctax}]]></textFieldExpression>
+				</textField>
+				<textField textAdjust="StretchHeight" pattern="#,##0.00">
+					<reportElement style="code" x="315" y="0" width="75" height="13" uuid="b1a2c3d4-0001-0001-0001-000000000003"/>
+					<box leftPadding="2" rightPadding="2">
+						<bottomPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{baseamtnotax_ctax}]]></textFieldExpression>
+				</textField>
+				<textField textAdjust="StretchHeight" pattern="#,##0.00">
+					<reportElement style="code" x="390" y="0" width="75" height="13" uuid="97abb6bb-be3b-4f72-adc8-08b9c146fd16"/>
+					<box leftPadding="2" rightPadding="2">
+						<bottomPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{amt_ctax}]]></textFieldExpression>
+				</textField>
+				<textField textAdjust="StretchHeight" pattern="#,##0.00">
+					<reportElement style="code" x="465" y="0" width="90" height="13" uuid="b1a2c3d4-0001-0001-0001-000000000004"/>
+					<box leftPadding="2" rightPadding="2">
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{notaxamt_ctax}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
@@ -637,48 +707,8 @@ dateacct,vatdocumentno]]>
 		<band height="14" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<printWhenExpression><![CDATA[$P{LIT_IsDetail}.equals("Y")]]></printWhenExpression>
-			<textField pattern="#,##0.00">
-				<reportElement style="easy_read_code" positionType="Float" x="294" y="0" width="96" height="14" uuid="f8a99ef0-87cc-42df-8a0b-5c7742d17fab">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e50a010e-cf67-4444-9581-569d35822a6d"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<box leftPadding="2" rightPadding="2"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{LIT_IsExcludeLIPE}.equals("Y") ? 
-	BigDecimal.ZERO.compareTo($F{vat_c_invoicetax_taxbaseamt}) != 0? $F{vat_c_invoicetax_taxbaseamt} : "[" +$F{vat_c_invoicetax_taxbaseamtnotax} + "]"
-:
-	BigDecimal.ZERO.compareTo($F{vat_c_invoicetax_taxbaseamtfull}) != 0? $F{vat_c_invoicetax_taxbaseamtfull}: "[" +$F{vat_c_invoicetax_taxbaseamtnotax} + "]"]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00">
-				<reportElement style="easy_read_code" x="390" y="0" width="165" height="14" uuid="a24d2e10-eb95-466a-8d23-c1d15469a9a3">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e50ad8d4-c95d-4779-b95b-5fe99089fcb8"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box leftPadding="2" rightPadding="2">
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[BigDecimal.ZERO.compareTo($F{vat_c_invoicetax_taxamt}) != 0 ? $F{vat_c_invoicetax_taxamt} : "[" + $F{vat_cinvoicetax_notaxamt} + "]"]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement style="easy_read" x="100" y="0" width="136" height="14" uuid="87e1ac74-0cc6-45d0-8c74-3784ea91f0ef">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0c74b470-eb60-4b71-83f5-fd275f2f19b3"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<box leftPadding="2" rightPadding="2"/>
-				<textElement verticalAlignment="Middle">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{documenttype}]]></textFieldExpression>
-			</textField>
 			<textField>
 				<reportElement style="easy_read" x="0" y="0" width="100" height="14" uuid="5654d06a-3128-4720-afff-98b858e0af52">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0c74b470-eb60-4b71-83f5-fd275f2f19b3"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2">
@@ -690,67 +720,112 @@ dateacct,vatdocumentno]]>
 				<textFieldExpression><![CDATA[$F{vat_vatdocumentno}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="easy_read" positionType="Float" x="236" y="0" width="58" height="14" uuid="7cc8e560-e8e1-4545-9944-97287f619a85">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e50a010e-cf67-4444-9581-569d35822a6d"/>
+				<reportElement style="easy_read" x="100" y="0" width="94" height="14" uuid="87e1ac74-0cc6-45d0-8c74-3784ea91f0ef">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{documenttype}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="easy_read" x="194" y="0" width="46" height="14" uuid="7cc8e560-e8e1-4545-9944-97287f619a85">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{iso_code}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement style="easy_read_code" x="240" y="0" width="75" height="14" uuid="f8a99ef0-87cc-42df-8a0b-5c7742d17fab">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{vat_c_invoicetax_taxbaseamt}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement style="easy_read_code" x="315" y="0" width="75" height="14" uuid="b1a2c3d4-0001-0001-0001-000000000001">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{vat_c_invoicetax_taxbaseamtnotax}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement style="easy_read_code" x="390" y="0" width="75" height="14" uuid="a24d2e10-eb95-466a-8d23-c1d15469a9a3">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{vat_c_invoicetax_taxamt}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement style="easy_read_code" x="465" y="0" width="90" height="14" uuid="b1a2c3d4-0001-0001-0001-000000000002">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="2" rightPadding="2">
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{vat_cinvoicetax_notaxamt}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
 	<lastPageFooter>
 		<band height="20">
-			<textField textAdjust="StretchHeight" pattern="#,##0.00">
-				<reportElement style="code_highlight" x="294" y="6" width="96" height="14" uuid="b91dc5a1-5234-41e4-b616-3df0a5bbc0a1">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<box leftPadding="2" rightPadding="2"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[SUM($P{LIT_IsExcludeLIPE}.equals("Y")?$V{baseamt_total}:$V{baseamtfull_total}, $V{baseamtnotax_total})]]></textFieldExpression>
-			</textField>
-			<textField textAdjust="StretchHeight" pattern="#,##0.00">
-				<reportElement style="code_highlight" x="390" y="6" width="165" height="14" uuid="b756a7ec-0fdb-45b0-bb9b-273bc171da8c">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<box leftPadding="2" rightPadding="2"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[SUM($V{amt_total}, $V{notaxamt_total})]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement style="highlight" x="0" y="6" width="236" height="14" uuid="bcade0a6-dbc3-4dfd-9540-82f3ce7670b7">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<box leftPadding="2" rightPadding="2"/>
-				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[str("LIT_REP_812_Total" + ("D".equals($P{LIT_AccountSign}) ? "Debit" : "Credit"))]]></textFieldExpression>
-			</textField>
 			<line>
-				<reportElement x="0" y="0" width="555" height="1" uuid="d0576488-ef1b-48fc-b9f0-7dbf8794439e">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement x="0" y="0" width="555" height="1" uuid="d0576488-ef1b-48fc-b9f0-7dbf8794439e"/>
 				<graphicElement>
 					<pen lineWidth="0.5"/>
 				</graphicElement>
 			</line>
 			<textField>
-				<reportElement style="highlight" x="236" y="6" width="58" height="14" uuid="197bef5c-fa20-4d84-b3b4-77a6aec43096">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
+				<reportElement style="highlight" x="0" y="6" width="194" height="14" uuid="bcade0a6-dbc3-4dfd-9540-82f3ce7670b7"/>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[str("LIT_REP_812_Total" + ("D".equals($P{LIT_AccountSign}) ? "Debit" : "Credit"))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="highlight" x="194" y="6" width="46" height="14" uuid="197bef5c-fa20-4d84-b3b4-77a6aec43096"/>
 				<box leftPadding="2" rightPadding="2"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{iso_code}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" pattern="#,##0.00">
+				<reportElement style="code_highlight" x="240" y="6" width="75" height="14" uuid="b91dc5a1-5234-41e4-b616-3df0a5bbc0a1"/>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{baseamt_total}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" pattern="#,##0.00">
+				<reportElement style="code_highlight" x="315" y="6" width="75" height="14" uuid="b1a2c3d4-0001-0001-0001-000000000007"/>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{baseamtnotax_total}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" pattern="#,##0.00">
+				<reportElement style="code_highlight" x="390" y="6" width="75" height="14" uuid="b756a7ec-0fdb-45b0-bb9b-273bc171da8c"/>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{amt_total}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" pattern="#,##0.00">
+				<reportElement style="code_highlight" x="465" y="6" width="90" height="14" uuid="b1a2c3d4-0001-0001-0001-000000000008"/>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{notaxamt_total}]]></textFieldExpression>
 			</textField>
 		</band>
 	</lastPageFooter>

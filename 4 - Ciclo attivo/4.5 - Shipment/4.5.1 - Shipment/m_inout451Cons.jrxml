@@ -92,7 +92,7 @@
 	iol_product.producttype as m_product_producttype,
 	iol_product.help as m_product_help,
 	iol_product.value as m_product_value,
-	iol_product.description as m_product_description,
+	coalesce(iol_asi.description, iol_product.description) as m_product_description,
 	coalesce(iol_uom_trl.uomsymbol, iol_uom.uomsymbol) as c_uom_trl_uomsymbol,
 	iol_uom_trl.name as c_uom_trl_name,
 	iol_asi.lit_mslegacycode as lit_mslegacycode,
@@ -1403,7 +1403,7 @@ where
 					<font size="7" isBold="false"/>
 					<paragraph lineSpacing="Single" leftIndent="2" rightIndent="0" tabStopWidth="40"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{m_inoutline_name}!=null?$F{m_inoutline_name}:$F{m_product_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{m_inoutline_name}!=null?$F{m_inoutline_name}:$F{m_product_name}) +(" ")+($F{m_inoutline_description}!=null?$F{m_inoutline_description}:$F{m_product_description})]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement style="easy_read" stretchType="ContainerHeight" mode="Opaque" x="80" y="0" width="80" height="11" uuid="243c6d50-d02b-4348-86d8-4f082cb2c485">
@@ -1464,29 +1464,6 @@ where
 ("\n[" + $F{lit_mslegacycode} + "]")
 	: ""
 )]]></textFieldExpression>
-			</textField>
-		</band>
-		<band height="10">
-			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement style="easy_read" positionType="Float" stretchType="ContainerHeight" x="0" y="0" width="555" height="10" isRemoveLineWhenBlank="true" uuid="a696e17a-39c7-4994-a222-71196c3d8aa3">
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
-					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="false"/>
-					<paragraph lineSpacing="Single" leftIndent="2"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{m_inoutline_description}!=null?$F{m_inoutline_description}:$F{m_product_description}]]></textFieldExpression>
 			</textField>
 		</band>
 		<band height="10">

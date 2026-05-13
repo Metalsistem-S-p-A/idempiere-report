@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.17.0.final utlizzo versione della libreria JasperReports6.17.0-6d93193241dd8cc42629e188b94f9e0bc5722efd  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="421salesorder" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" isSummaryWithPageHeaderAndFooter="true" uuid="9847bff4-9f3a-49b0-9603-8d56c23b5d53">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempiere - PRODUZIONE"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempieredb"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<template><![CDATA["styles/ms-style.jrtx"]]></template>
 	<style name="easy_read" style="easy_read_bg">
@@ -53,24 +53,26 @@ and lit_c_order_tax."c_ordertax_taxbaseamt" + lit_c_order_tax."c_ordertax_taxamt
 		<parameter name="RECORD_ID" class="java.lang.Integer"/>
 		<parameter name="LOCALE_CODE" class="java.lang.String"/>
 		<queryString language="SQL">
-			<![CDATA[select
-	distinct LIT_MsFinish."value",
-	coalesce(LIT_MsFinish_trl."name", LIT_MsFinish."name") as "name"
+			<![CDATA[select distinct
+	LIT_MsFinish.value,
+	coalesce(LIT_MsFinish_trl.name, LIT_MsFinish.name) as name
 from
-	m_product
-inner join c_orderline on
-	c_orderline.m_product_id = m_product.m_product_id
-inner join c_order on
-	c_orderline.c_order_id = c_order.c_order_id
-inner join LIT_MsFinish on
-	m_product.LIT_MsFinish_ID = LIT_MsFinish.LIT_MsFinish_ID
+	c_orderline
+inner join m_product on
+	m_product.m_product_id = c_orderline.m_product_id
+left join m_attributesetinstance on
+	m_attributesetinstance.m_attributesetinstance_id = c_orderline.m_attributesetinstance_id
+left join m_attributeinstance on
+	m_attributeinstance.m_attributesetinstance_id = m_attributesetinstance.m_attributesetinstance_id
+left join LIT_MsFinish on
+	coalesce(m_attributeinstance.valuenumber, m_product.lit_msfinish_id) = LIT_MsFinish.LIT_MsFinish_ID
 left join LIT_msfinish_trl on
 	lit_msfinish.LIT_MsFinish_ID = LIT_MsFinish_trl.LIT_MsFinish_ID
 	and LIT_MsFinish_trl.ad_language = $P{LOCALE_CODE}
 where
-	c_order.c_order_id = $P{RECORD_ID}
+	c_orderline.c_order_id = $P{RECORD_ID}
 order by
-	LIT_MsFinish."value"]]>
+	LIT_MsFinish.value]]>
 		</queryString>
 		<field name="value" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.name" value="value"/>

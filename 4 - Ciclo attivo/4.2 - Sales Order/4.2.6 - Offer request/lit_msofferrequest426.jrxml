@@ -29,18 +29,21 @@
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempiereDb (dev)"/>
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<parameter name="RECORD_ID" class="java.lang.Integer"/>
+		<parameter name="LOCALE_CODE" class="java.lang.String">
+			<defaultValueExpression><![CDATA[$P{REPORT_LOCALE}.toString()]]></defaultValueExpression>
+		</parameter>
 		<queryString language="SQL">
 			<![CDATA[SELECT
-	value AS finish_code,
-	name AS finish_name
-FROM lit_msfinish
-WHERE lit_msfinish_id IN (
+	fin.value AS finish_code,
+	COALESCE(trl.name, fin.name) AS finish_name
+FROM lit_msfinish fin
+LEFT JOIN lit_msfinish_trl trl ON trl.lit_msfinish_id = fin.lit_msfinish_id AND trl.ad_language = $P{LOCALE_CODE}
+WHERE fin.lit_msfinish_id IN (
 	SELECT DISTINCT lit_msfinish_id
-	FROM lit_msofferrequestline l
-	JOIN lit_msofferrequest r ON l.lit_msofferrequest_id = r.lit_msofferrequest_id
-	WHERE r.lit_msofferrequest_id = $P{RECORD_ID}
+	FROM lit_msofferrequestline
+	WHERE lit_msofferrequest_id = $P{RECORD_ID}
 )
-ORDER BY value]]>
+ORDER BY fin.value]]>
 		</queryString>
 		<field name="finish_code" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.name" value="finish_code"/>
@@ -66,7 +69,7 @@ ORDER BY value]]>
 	</parameter>
 	<parameter name="PORTRAIT_FOOTER_IMAGE" class="java.io.InputStream"/>
 	<queryString language="SQL">
-		<![CDATA[SELECT
+		<![CDATA[SELECT DISTINCT
 	r.value AS request_no,
 	r.created AS created,
 	r.datepromised AS delivery_date,
@@ -93,10 +96,11 @@ ORDER BY value]]>
 	lit_height AS real_height,
 	lit_depth AS real_depth,
 	CASE l.lit_msofferrequestlinetype
-		WHEN 'P' THEN COALESCE(msp.lit_mscontqty, 0)
+		WHEN 'A' THEN COALESCE(msp.lit_msstdqty, 0)
 		ELSE null
 	END AS standard_qty,
-	r.weight AS weight
+	r.weight AS weight,
+	l.line
 FROM lit_msofferrequest r
 LEFT JOIN lit_msofferrequestline l ON l.lit_msofferrequest_id = r.lit_msofferrequest_id
 LEFT JOIN c_bpartner bp ON bp.c_bpartner_id = r.c_bpartner_id
@@ -113,7 +117,7 @@ LEFT JOIN lit_mspackagingqty msp ON msp.m_product_id = l.m_product_id AND
 LEFT JOIN c_country c ON c.c_country_id = r.c_country_id
 LEFT JOIN c_country_trl ctrl ON ctrl.c_country_id = c.c_country_id AND ctrl.ad_language = $P{LOCALE_CODE}
 LEFT JOIN c_region p ON p.c_region_id = r.c_region_id
-WHERE r.lit_msofferrequest_id =  $P{RECORD_ID}
+WHERE r.lit_msofferrequest_id = $P{RECORD_ID}
 ORDER BY l.line]]>
 	</queryString>
 	<field name="request_no" class="java.lang.String">

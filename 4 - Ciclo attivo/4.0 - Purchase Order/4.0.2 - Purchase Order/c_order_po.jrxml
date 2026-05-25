@@ -4,7 +4,7 @@
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="594"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempiere - PRODUZIONE"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempiere-test"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<template><![CDATA["styles/ms-style.jrtx"]]></template>
 	<style name="easy_read" style="easy_read_bg">
@@ -99,6 +99,8 @@ where
 	c_orderline.description as c_orderline_description,
 	c_orderline.linenetamt as c_orderline_linenetamt,
 	c_orderline.qtyentered as c_orderline_qtyentered,
+	m_attributesetinstance.lit_mslegacycode as legacycode,
+	m_attributesetinstance.description as asi_description,
 	c_order.datepromised as c_order_datepromised,
 	m_warehouse.name as m_warehouse_name,
 	c_location_warehouse.city as c_location_warehouse_city,
@@ -111,7 +113,7 @@ where
 	coalesce(ad_ref_list_trl_deliveryviarule.name, ad_ref_list_deliveryviarule.name) as c_order_deliveryviarule,
 	coalesce(ad_ref_list_trl_fob."name", ad_ref_list_fob.name) as c_order_fob,
 	coalesce(ad_ref_list_trl_paymentrule.name, ad_ref_list_paymentrule.name) as c_order_paymentrule,
-	c_orderline.discount as c_orderline_discount,
+	coalesce(c_orderline.discount ,0)as c_orderline_discount,
 	c_order.description as c_order_description,
 	coalesce(c_doctype_trl.name, c_doctype.name) as c_doctype_name,
 	coalesce(c_doctype_trl.printname, c_doctype.printname) as c_doctype_printname,
@@ -148,6 +150,7 @@ inner join c_bpartner on c_order.c_bpartner_id = c_bpartner.c_bpartner_id
 inner join c_currency on c_order.c_currency_id = c_currency.c_currency_id
 inner join c_orderline on c_order.c_order_id = c_orderline.c_order_id
 left join m_product on c_orderline.m_product_id = m_product.m_product_id
+left join m_attributesetinstance on c_orderline.m_attributesetinstance_id = m_attributesetinstance.m_attributesetinstance_id 
 left join c_bpartner_location on c_bpartner_location.c_bpartner_location_id = c_order.c_bpartner_location_id 
 left join c_location on	c_bpartner_location.c_location_id = c_location.c_location_id
 left join c_country on c_location.c_country_id = c_country.c_country_id
@@ -268,6 +271,16 @@ order by
 		<property name="com.jaspersoft.studio.field.name" value="c_orderline_qtyentered"/>
 		<property name="com.jaspersoft.studio.field.label" value="c_orderline_qtyentered"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="c_orderline"/>
+	</field>
+	<field name="legacycode" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="legacycode"/>
+		<property name="com.jaspersoft.studio.field.label" value="legacycode"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="m_attributesetinstance"/>
+	</field>
+	<field name="asi_description" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="asi_description"/>
+		<property name="com.jaspersoft.studio.field.label" value="asi_description"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="m_attributesetinstance"/>
 	</field>
 	<field name="c_order_datepromised" class="java.sql.Timestamp">
 		<property name="com.jaspersoft.studio.field.name" value="c_order_datepromised"/>
@@ -913,7 +926,13 @@ order by
 				<textElement verticalAlignment="Middle">
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{m_product_po_vendorproductno} != null ? $F{ad_orginfo_lit_report_param}.charAt(3) + $F{m_product_po_vendorproductno} : $F{m_product_value}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{m_product_po_vendorproductno} != null ? $F{ad_orginfo_lit_report_param}.charAt(3) + $F{m_product_po_vendorproductno} :
+(
+T($F{m_product_value}) + 
+(!T($F{legacycode}).isEmpty() && !$F{legacycode}.equals($F{m_product_value}) ? 
+("\n[" + $F{legacycode} + "]")
+	: ""
+))]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement style="easy_read" positionType="Float" stretchType="ContainerHeight" x="88" y="0" width="170" height="15" uuid="2443a8d6-fc04-4ed5-aa41-e4f92d50a990">
@@ -923,7 +942,7 @@ order by
 				<textElement verticalAlignment="Middle">
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{c_orderline_name} != null ? $F{c_orderline_name} :$F{m_product_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{c_orderline_name} != null ? $F{c_orderline_name} :$F{m_product_name}) + (T(" " + $F{asi_description}))]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
 				<reportElement style="easy_read" positionType="Float" stretchType="ContainerHeight" x="258" y="0" width="39" height="15" uuid="4caec870-6343-4747-b771-91f0e651de35">

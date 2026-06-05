@@ -12,80 +12,20 @@
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="185"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempiere - PRODUZIONE"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
 	<template><![CDATA["styles/ms-style.jrtx"]]></template>
-	<style name="dynamic_padding" style="default">
-		<box leftPadding="30" rightPadding="2"/>
+	<style name="easy_read" style="easy_read_bg">
 		<conditionalStyle>
-			<conditionExpression><![CDATA[$F{lv0_value} != null &&
-$F{lv1_value} != null &&
-$F{lv2_value} != null &&
-$F{lv3_value} != null &&
-$F{lv4_value} != null &&
-$F{lv5_value} != null &&
-$F{lv6_value} == null]]></conditionExpression>
-			<style>
-				<box leftPadding="26"/>
-			</style>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT} % 2 == 1]]></conditionExpression>
+			<style mode="Opaque" backcolor="#FFFFFF"/>
 		</conditionalStyle>
+	</style>
+	<style name="easy_read_code" style="easy_read_code_bg">
 		<conditionalStyle>
-			<conditionExpression><![CDATA[$F{lv0_value} != null &&
-$F{lv1_value} != null &&
-$F{lv2_value} != null &&
-$F{lv3_value} != null &&
-$F{lv4_value} != null &&
-$F{lv5_value} == null &&
-$F{lv6_value} == null]]></conditionExpression>
-			<style>
-				<box leftPadding="22"/>
-			</style>
-		</conditionalStyle>
-		<conditionalStyle>
-			<conditionExpression><![CDATA[$F{lv0_value} != null &&
-$F{lv1_value} != null &&
-$F{lv2_value} != null &&
-$F{lv3_value} != null &&
-$F{lv4_value} == null &&
-$F{lv5_value} == null &&
-$F{lv6_value} == null]]></conditionExpression>
-			<style>
-				<box leftPadding="18"/>
-			</style>
-		</conditionalStyle>
-		<conditionalStyle>
-			<conditionExpression><![CDATA[$F{lv0_value} != null &&
-$F{lv1_value} != null &&
-$F{lv2_value} != null &&
-$F{lv3_value} == null &&
-$F{lv4_value} == null &&
-$F{lv5_value} == null &&
-$F{lv6_value} == null]]></conditionExpression>
-			<style>
-				<box leftPadding="14"/>
-			</style>
-		</conditionalStyle>
-		<conditionalStyle>
-			<conditionExpression><![CDATA[$F{lv0_value} != null &&
-$F{lv1_value} != null &&
-$F{lv2_value} == null &&
-$F{lv3_value} == null &&
-$F{lv4_value} == null &&
-$F{lv5_value} == null &&
-$F{lv6_value} == null]]></conditionExpression>
-			<style>
-				<box leftPadding="10"/>
-			</style>
-		</conditionalStyle>
-		<conditionalStyle>
-			<conditionExpression><![CDATA[$F{lv0_value} != null &&
-$F{lv1_value} == null &&
-$F{lv2_value} == null &&
-$F{lv3_value} == null &&
-$F{lv4_value} == null &&
-$F{lv5_value} == null &&
-$F{lv6_value} == null]]></conditionExpression>
-			<style>
-				<box leftPadding="6"/>
-			</style>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT} % 2 == 1]]></conditionExpression>
+			<style mode="Opaque" backcolor="#FFFFFF"/>
 		</conditionalStyle>
 	</style>
 	<parameter name="AD_CLIENT_ID" class="java.lang.Integer">
@@ -94,7 +34,12 @@ $F{lv6_value} == null]]></conditionExpression>
 	<parameter name="C_AcctSchema_ID" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[1000001]]></defaultValueExpression>
 	</parameter>
-	<parameter name="Year" class="java.math.BigDecimal"/>
+	<parameter name="DateAcct1" class="java.sql.Timestamp">
+		<defaultValueExpression><![CDATA[java.sql.Timestamp.valueOf("1900-01-01 00:00:00.000000000")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DateAcct2" class="java.sql.Timestamp">
+		<defaultValueExpression><![CDATA[new java.sql.Timestamp(new java.util.Date().getTime())]]></defaultValueExpression>
+	</parameter>
 	<parameter name="AccountType" class="java.lang.String">
 		<defaultValueExpression><![CDATA["A"]]></defaultValueExpression>
 	</parameter>
@@ -131,7 +76,7 @@ case
 	  fa2.C_ACCTSCHEMA_ID = $P{C_AcctSchema_ID}
 				and
 	  fa2.AD_ORG_ID = $P{AD_Org_ID}
-				and date_part('year', fa2.dateacct) = $P{Year}  ))<0 then 'L'
+				and fa2.dateacct <= $P{DateAcct2} ))<0 then 'L'
 		when ce.accounttype = 'L'
 		and ce.accountsign = 'N'
 		and (
@@ -147,24 +92,24 @@ case
 	  fa2.C_ACCTSCHEMA_ID = $P{C_AcctSchema_ID}
 				and
 	  fa2.AD_ORG_ID = $P{AD_Org_ID}
-				and date_part('year', fa2.dateacct) = $P{Year} ))>0 then 'A'
+				and fa2.dateacct <= $P{DateAcct2} ))>0 then 'A'
 		else ce.accounttype
 	end as ACCOUNTTYPE,
 	coalesce(sum( case 
-	when ce.accounttype = 'A' and ce.accountsign = 'N' and date_part('year', fa.dateacct) = $P{Year} and
-	(select sum(fa2.amtacctdr-fa2.amtacctcr) from fact_acct fa2 left join gl_journal gl2 on fa2.record_id = gl2.gl_journal_id and fa2.ad_table_id = '224'
+	when ce.accounttype = 'A' and ce.accountsign = 'N' and fa.dateacct <= $P{DateAcct2} and
+	(select sum(fa2.amtacctdr-fa2.amtacctcr) from fact_acct fa2 left join gl_journal gl2 on fa.record_id = gl2.gl_journal_id and fa.ad_table_id = '224'
 		 where ( case when $P{NotPrintClosingPosting} = 'Y' then gl2.isexclude = 'N' or gl2.isexclude is null else 1 = 1 end and fa2.account_id = ce.c_elementvalue_id and
 	  fa2.ad_client_id = $P{AD_CLIENT_ID} and
 	  fa2.C_ACCTSCHEMA_ID = $P{C_AcctSchema_ID} and
-	  fa2.AD_ORG_ID = $P{AD_Org_ID} and date_part('year', fa2.dateacct) = $P{Year} ))<0 then (fa.amtacctdr-fa.amtacctcr)*-1
-		when ce.accounttype in ('A', 'M') and date_part('year', fa.dateacct) = $P{Year} then (fa.amtacctdr-fa.amtacctcr)
-			when ce.accounttype = 'L' and ce.accountsign = 'N' and date_part('year', fa.dateacct) = $P{Year} and (select sum(fa2.amtacctdr-fa2.amtacctcr) from fact_acct fa2 left join gl_journal gl2 on fa2.record_id = gl2.gl_journal_id and fa2.ad_table_id = '224' where ( case when $P{NotPrintClosingPosting} = 'Y' then gl2.isexclude = 'N' or gl2.isexclude is null else 1 = 1 end and fa2.account_id = ce.c_elementvalue_id and
+	  fa2.AD_ORG_ID = $P{AD_Org_ID} and fa2.dateacct <= $P{DateAcct2} ))<0 then (fa.amtacctdr-fa.amtacctcr)*-1
+		when ce.accounttype in ('A', 'M') and fa.dateacct <= $P{DateAcct2} then (fa.amtacctdr-fa.amtacctcr)
+			when ce.accounttype = 'L' and ce.accountsign = 'N' and fa.dateacct <= $P{DateAcct2} and (select sum(fa2.amtacctdr-fa2.amtacctcr) from fact_acct fa2 left join gl_journal gl2 on fa.record_id = gl2.gl_journal_id and fa.ad_table_id = '224' where ( case when $P{NotPrintClosingPosting} = 'Y' then gl2.isexclude = 'N' or gl2.isexclude is null else 1 = 1 end and fa2.account_id = ce.c_elementvalue_id and
 	  fa2.ad_client_id = $P{AD_CLIENT_ID} and
 	  fa2.C_ACCTSCHEMA_ID = $P{C_AcctSchema_ID} and
-	  fa2.AD_ORG_ID = $P{AD_Org_ID} and date_part('year', fa2.dateacct) = $P{Year} ))>0 then (fa.amtacctdr-fa.amtacctcr)
- when ce.accounttype in ('L', 'O') and date_part('year', fa.dateacct) = $P{Year} then (fa.amtacctdr-fa.amtacctcr)*-1
-     when ce.accounttype in ('E') and date_part('year', fa.dateacct) = $P{Year} then (fa.amtacctdr-fa.amtacctcr)     
-      when ce.accounttype in ('R') and date_part('year', fa.dateacct) = $P{Year} then (fa.amtacctdr-fa.amtacctcr)*-1 end), 0) as SALDO
+	  fa2.AD_ORG_ID = $P{AD_Org_ID} and fa2.dateacct <= $P{DateAcct2} ))>0 then (fa.amtacctdr-fa.amtacctcr)
+ when ce.accounttype in ('L', 'O') and fa.dateacct between $P{DateAcct1} and $P{DateAcct2} then (fa.amtacctdr-fa.amtacctcr)*-1
+     when ce.accounttype in ('E') and fa.dateacct between $P{DateAcct1} and $P{DateAcct2} then (fa.amtacctdr-fa.amtacctcr)     
+      when ce.accounttype in ('R') and fa.dateacct between $P{DateAcct1} and $P{DateAcct2} then (fa.amtacctdr-fa.amtacctcr)*-1 end), 0) as SALDO
 FROM ad_treenode tn
 inner join ad_tree t on tn.ad_tree_id = t.ad_tree_id and t.treetype = 'EV'
 JOIN c_elementvalue ce ON ce.c_elementvalue_id = tn.node_id
@@ -201,7 +146,8 @@ and case
 				or gl4.isexclude is null
 				else 1 = 1
 			end
-			and date_part('year', fa2.dateacct) = $P{Year}
+			and fa2.dateacct >= $P{DateAcct1}
+			and fa2.dateacct <= $P{DateAcct2}
 			and (fa2.account_id = ce.c_elementvalue_id
 				and
 	  fa2.ad_client_id = $P{AD_CLIENT_ID}
@@ -222,8 +168,8 @@ and case
 		from
 			fact_acct fa2
 		left join gl_journal gl2 on
-			fa2.record_id = gl2.gl_journal_id
-			and fa2.ad_table_id = '224'
+			fa.record_id = gl2.gl_journal_id
+			and fa.ad_table_id = '224'
 		where
 			( case
 				when $P{NotPrintClosingPosting} = 'Y' then gl2.isexclude = 'N'
@@ -237,7 +183,7 @@ and case
 	  fa2.C_ACCTSCHEMA_ID = $P{C_AcctSchema_ID}
 				and
 	  fa2.AD_ORG_ID = $P{AD_Org_ID}
-				and date_part('year', fa2.dateacct) = $P{Year} ))<0 then 'L'
+				and fa2.dateacct <= $P{DateAcct2} ))<0 then 'L'
 		when ce.accounttype = 'L'
 		and ce.accountsign = 'N'
 		and (
@@ -246,8 +192,8 @@ and case
 		from
 			fact_acct fa2
 		left join gl_journal gl2 on
-			fa2.record_id = gl2.gl_journal_id
-			and fa2.ad_table_id = '224'
+			fa.record_id = gl2.gl_journal_id
+			and fa.ad_table_id = '224'
 		where
 			( case
 				when $P{NotPrintClosingPosting} = 'Y' then gl2.isexclude = 'N'
@@ -261,7 +207,7 @@ and case
 	  fa2.C_ACCTSCHEMA_ID = $P{C_AcctSchema_ID}
 				and
 	  fa2.AD_ORG_ID = $P{AD_Org_ID}
-				and date_part('year', fa2.dateacct) = $P{Year} ))>0 then 'A'
+				and fa2.dateacct <= $P{DateAcct2} ))>0 then 'A'
 		else ce.accounttype
 	end = $P{AccountType}
 	and ce.ad_client_id = $P{AD_CLIENT_ID}
@@ -388,26 +334,24 @@ array_remove(string_to_array(regexp_replace(ce.value, '[^0-9.]', '', 'g'), '.'),
 	<group name="lv0" preventOrphanFooter="true">
 		<groupExpression><![CDATA[$F{lv0_value}]]></groupExpression>
 		<groupHeader>
-			<band height="14" splitType="Prevent">
+			<band height="12" splitType="Prevent">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				<printWhenExpression><![CDATA[$F{lv0_value} != null]]></printWhenExpression>
 				<textField textAdjust="StretchHeight">
-					<reportElement x="0" y="0" width="305" height="14" uuid="227a7eda-1e92-4601-b2d4-b5ac4396f0ce">
+					<reportElement stretchType="ContainerHeight" x="0" y="0" width="305" height="12" uuid="227a7eda-1e92-4601-b2d4-b5ac4396f0ce">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<box leftPadding="2"/>
-					<textElement verticalAlignment="Middle">
-						<font size="8" isBold="false"/>
+					<textElement verticalAlignment="Middle" markup="styled">
+						<font isBold="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{lv0_value} +" " + $F{lv0_name}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["<style fontName='JetBrains Mono' forecolor='#909090'>" + $F{lv0_value} +"</style> " + $F{lv0_name}]]></textFieldExpression>
 				</textField>
 				<textField evaluationTime="Group" evaluationGroup="lv0" pattern=" #,##0.00" isBlankWhenNull="true">
-					<reportElement style="code" stretchType="ContainerHeight" x="305" y="0" width="90" height="14" uuid="5df6097c-df22-4b58-b3ba-2be372289463">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
+					<reportElement style="code" stretchType="ContainerHeight" x="305" y="0" width="90" height="12" uuid="5df6097c-df22-4b58-b3ba-2be372289463"/>
 					<box leftPadding="2" bottomPadding="0" rightPadding="2"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font size="8" isBold="false"/>
+						<font isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{saldo_lv0}]]></textFieldExpression>
 				</textField>
@@ -420,7 +364,9 @@ array_remove(string_to_array(regexp_replace(ce.value, '[^0-9.]', '', 'g'), '.'),
 			<band height="12" splitType="Prevent">
 				<printWhenExpression><![CDATA[$F{lv1_value} != null]]></printWhenExpression>
 				<textField textAdjust="StretchHeight" evaluationTime="Group" evaluationGroup="lv1" pattern=" #,##0.00" isBlankWhenNull="true">
-					<reportElement style="code" stretchType="ContainerHeight" x="305" y="0" width="90" height="12" uuid="4e6454da-0c85-4423-8461-049ff6d3d08e"/>
+					<reportElement style="code" stretchType="ContainerHeight" x="305" y="0" width="90" height="12" forecolor="#555555" uuid="4e6454da-0c85-4423-8461-049ff6d3d08e">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
 					<box leftPadding="2" bottomPadding="0" rightPadding="2"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8" isBold="false"/>
@@ -428,17 +374,19 @@ array_remove(string_to_array(regexp_replace(ce.value, '[^0-9.]', '', 'g'), '.'),
 					<textFieldExpression><![CDATA[$V{saldo_lv1}]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-					<reportElement key="textField" x="0" y="0" width="305" height="12" forecolor="#000000" uuid="9de6e136-4847-439a-bc24-fa395e55a4c8"/>
-					<box leftPadding="6">
-						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<reportElement key="textField" x="0" y="0" width="305" height="12" forecolor="#555555" uuid="9de6e136-4847-439a-bc24-fa395e55a4c8">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="2">
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
 					</box>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="styled">
 						<font size="8" isBold="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{lv1_value} + " " + $F{lv1_name}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["<style fontName='JetBrains Mono' forecolor='#909090'>" + $F{lv1_value} + "</style> " + $F{lv1_name}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -446,23 +394,27 @@ array_remove(string_to_array(regexp_replace(ce.value, '[^0-9.]', '', 'g'), '.'),
 	<group name="lv2">
 		<groupExpression><![CDATA[$F{lv2_value}]]></groupExpression>
 		<groupHeader>
-			<band height="11" splitType="Prevent">
+			<band height="12" splitType="Prevent">
 				<printWhenExpression><![CDATA[$F{lv2_value} != null]]></printWhenExpression>
 				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-					<reportElement key="textField" x="0" y="0" width="305" height="11" forecolor="#000000" uuid="d141525d-609b-4d09-be46-80941cd88742"/>
-					<box leftPadding="10">
-						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<reportElement key="textField" x="0" y="0" width="305" height="12" forecolor="#555555" uuid="d141525d-609b-4d09-be46-80941cd88742">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="2">
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
 					</box>
-					<textElement verticalAlignment="Middle">
+					<textElement verticalAlignment="Middle" markup="styled">
 						<font size="8" isBold="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{lv2_value} + " " + $F{lv2_name}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["<style fontName='JetBrains Mono' forecolor='#909090'>" + $F{lv2_value} + "</style> " + $F{lv2_name}]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="StretchHeight" evaluationTime="Group" evaluationGroup="lv2" pattern=" #,##0.00" isBlankWhenNull="true">
-					<reportElement style="code" stretchType="ContainerHeight" x="305" y="0" width="90" height="11" uuid="ada9be93-ed46-4eac-9099-b351e63df104"/>
+					<reportElement style="code" stretchType="ContainerHeight" x="305" y="0" width="90" height="12" forecolor="#555555" uuid="ada9be93-ed46-4eac-9099-b351e63df104">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
 					<box leftPadding="2" bottomPadding="0" rightPadding="2"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8" isBold="false"/>
@@ -475,23 +427,27 @@ array_remove(string_to_array(regexp_replace(ce.value, '[^0-9.]', '', 'g'), '.'),
 	<group name="lv3">
 		<groupExpression><![CDATA[$F{lv3_value}]]></groupExpression>
 		<groupHeader>
-			<band height="11" splitType="Prevent">
+			<band height="12" splitType="Prevent">
 				<printWhenExpression><![CDATA[$F{lv3_value} != null]]></printWhenExpression>
 				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-					<reportElement key="textField" x="0" y="0" width="305" height="11" forecolor="#000000" uuid="5181c5a5-8394-4209-b664-e0cb436d0f25"/>
-					<box leftPadding="14">
-						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<reportElement key="textField" x="0" y="0" width="305" height="12" forecolor="#555555" uuid="5181c5a5-8394-4209-b664-e0cb436d0f25">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="2">
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
 					</box>
-					<textElement verticalAlignment="Middle">
+					<textElement verticalAlignment="Middle" markup="styled">
 						<font size="8" isBold="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{lv3_value} + " " + $F{lv3_name}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["<style fontName='JetBrains Mono' forecolor='#909090'>" + $F{lv3_value} + "</style> " + $F{lv3_name}]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="StretchHeight" evaluationTime="Group" evaluationGroup="lv3" pattern=" #,##0.00" isBlankWhenNull="true">
-					<reportElement style="code" stretchType="ContainerHeight" x="305" y="0" width="90" height="11" uuid="923b080c-586b-4e5d-adbf-d7fbd6ac4771"/>
+					<reportElement style="code" stretchType="ContainerHeight" x="305" y="0" width="90" height="12" forecolor="#555555" uuid="923b080c-586b-4e5d-adbf-d7fbd6ac4771">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
 					<box leftPadding="2" bottomPadding="0" rightPadding="2"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8" isBold="false"/>
@@ -504,23 +460,27 @@ array_remove(string_to_array(regexp_replace(ce.value, '[^0-9.]', '', 'g'), '.'),
 	<group name="lv4">
 		<groupExpression><![CDATA[$F{lv4_value}]]></groupExpression>
 		<groupHeader>
-			<band height="11" splitType="Prevent">
+			<band height="12" splitType="Prevent">
 				<printWhenExpression><![CDATA[$F{lv4_value} != null]]></printWhenExpression>
 				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-					<reportElement key="textField" x="0" y="0" width="305" height="11" forecolor="#000000" uuid="dc2c208b-43b9-490b-960a-2829ad88411f"/>
-					<box leftPadding="18">
-						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<reportElement key="textField" x="0" y="0" width="305" height="12" forecolor="#555555" uuid="dc2c208b-43b9-490b-960a-2829ad88411f">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="2">
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
 					</box>
-					<textElement verticalAlignment="Middle">
+					<textElement verticalAlignment="Middle" markup="styled">
 						<font size="8" isBold="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{lv4_value} + " " + $F{lv4_name}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["<style fontName='JetBrains Mono' forecolor='#909090'>" + $F{lv4_value} + "</style> " + $F{lv4_name}]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="StretchHeight" evaluationTime="Group" evaluationGroup="lv4" pattern=" #,##0.00" isBlankWhenNull="true">
-					<reportElement style="code" stretchType="ContainerHeight" x="305" y="0" width="90" height="11" uuid="a9e9c30a-eac8-412d-88d5-07266a9fc2bb"/>
+					<reportElement style="code" stretchType="ContainerHeight" x="305" y="0" width="90" height="12" forecolor="#555555" uuid="a9e9c30a-eac8-412d-88d5-07266a9fc2bb">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
 					<box leftPadding="2" bottomPadding="0" rightPadding="2"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8" isBold="false"/>
@@ -533,23 +493,27 @@ array_remove(string_to_array(regexp_replace(ce.value, '[^0-9.]', '', 'g'), '.'),
 	<group name="lv5">
 		<groupExpression><![CDATA[$F{lv5_value}]]></groupExpression>
 		<groupHeader>
-			<band height="11" splitType="Prevent">
+			<band height="12" splitType="Prevent">
 				<printWhenExpression><![CDATA[$F{lv5_value} != null]]></printWhenExpression>
 				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-					<reportElement key="textField" x="0" y="0" width="305" height="11" forecolor="#000000" uuid="cf0330da-d3ca-4993-9ff2-4e86ff8cb882"/>
-					<box leftPadding="22">
-						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<reportElement key="textField" x="0" y="0" width="305" height="12" forecolor="#555555" uuid="cf0330da-d3ca-4993-9ff2-4e86ff8cb882">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="2">
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
 					</box>
-					<textElement verticalAlignment="Middle">
+					<textElement verticalAlignment="Middle" markup="styled">
 						<font size="8" isBold="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{lv5_value} + " " + $F{lv5_name}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["<style fontName='JetBrains Mono' forecolor='#909090'>" + $F{lv5_value} + "</style> " + $F{lv5_name}]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="StretchHeight" evaluationTime="Group" evaluationGroup="lv5" pattern=" #,##0.00" isBlankWhenNull="true">
-					<reportElement style="code" stretchType="ContainerHeight" x="305" y="0" width="90" height="11" uuid="65600b5b-7441-4e13-aa73-3b3b82bde44b"/>
+					<reportElement style="code" stretchType="ContainerHeight" x="305" y="0" width="90" height="12" forecolor="#555555" uuid="65600b5b-7441-4e13-aa73-3b3b82bde44b">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
 					<box leftPadding="2" bottomPadding="0" rightPadding="2"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8" isBold="false"/>
@@ -562,23 +526,27 @@ array_remove(string_to_array(regexp_replace(ce.value, '[^0-9.]', '', 'g'), '.'),
 	<group name="lv6">
 		<groupExpression><![CDATA[$F{lv6_value}]]></groupExpression>
 		<groupHeader>
-			<band height="11" splitType="Prevent">
+			<band height="12" splitType="Prevent">
 				<printWhenExpression><![CDATA[$F{lv6_value} != null]]></printWhenExpression>
 				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-					<reportElement key="textField" x="0" y="0" width="305" height="11" forecolor="#000000" uuid="b48874f4-4462-47b5-a023-f02622a95815"/>
-					<box leftPadding="26">
-						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<reportElement key="textField" x="0" y="0" width="305" height="12" forecolor="#555555" uuid="b48874f4-4462-47b5-a023-f02622a95815">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="2">
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
 					</box>
-					<textElement verticalAlignment="Middle">
+					<textElement verticalAlignment="Middle" markup="styled">
 						<font size="8" isBold="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{lv6_value} + " " + $F{lv6_name}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["<style fontName='JetBrains Mono' forecolor='#909090'>" + $F{lv6_value} + "</style> " + $F{lv6_name}]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="StretchHeight" evaluationTime="Group" evaluationGroup="lv6" pattern=" #,##0.00" isBlankWhenNull="true">
-					<reportElement style="code" stretchType="ContainerHeight" x="305" y="0" width="90" height="11" uuid="74c60d43-f0a1-4415-a245-b6c5f673ac9e"/>
+					<reportElement style="code" stretchType="ContainerHeight" x="305" y="0" width="90" height="12" forecolor="#555555" uuid="74c60d43-f0a1-4415-a245-b6c5f673ac9e">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
 					<box leftPadding="2" bottomPadding="0" rightPadding="2"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8" isBold="false"/>
@@ -594,31 +562,35 @@ array_remove(string_to_array(regexp_replace(ce.value, '[^0-9.]', '', 'g'), '.'),
 		</groupFooter>
 	</group>
 	<detail>
-		<band height="11" splitType="Stretch">
+		<band height="12" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement key="" style="dynamic_padding" x="0" y="0" width="305" height="11" uuid="cf70cb7e-3c70-4089-b766-ac54de9f29ef"/>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<reportElement key="" style="easy_read" x="0" y="0" width="305" height="12" uuid="cf70cb7e-3c70-4089-b766-ac54de9f29ef">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="2">
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
 				</box>
-				<textElement verticalAlignment="Middle">
-					<font size="8" isBold="false" isItalic="true"/>
+				<textElement verticalAlignment="Middle" markup="styled">
+					<font size="8" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{value} +" " + $F{name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["<style fontName='JetBrains Mono' forecolor='#909090'>" + $F{value} +"</style> " + $F{name}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" pattern=" #,##0.00" isBlankWhenNull="true">
-				<reportElement key="textField" style="code" stretchType="ContainerHeight" x="305" y="0" width="90" height="11" forecolor="#000000" uuid="c507771d-1d07-4b54-a450-8c08c61f45ee"/>
+				<reportElement key="textField" style="easy_read_code" stretchType="ContainerHeight" x="305" y="0" width="90" height="12" uuid="c507771d-1d07-4b54-a450-8c08c61f45ee">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
 				<box leftPadding="2" bottomPadding="0" rightPadding="2">
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="8" isBold="false" isItalic="true"/>
+					<font size="8" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{saldo}]]></textFieldExpression>
 			</textField>

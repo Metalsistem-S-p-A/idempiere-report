@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.17.0.final utlizzo versione della libreria JasperReports6.17.0-6d93193241dd8cc42629e188b94f9e0bc5722efd  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Report Bilancio Sezioni Contrapposte" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" uuid="1bb97c55-5ec1-4004-a515-53066d34e11b">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Report Bilancio Sezioni Contrapposte" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" uuid="1bb97c55-5ec1-4004-a515-53066d34e11b">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="2.0"/>
@@ -42,7 +42,12 @@
 	<parameter name="C_AcctSchema_ID" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[1000001]]></defaultValueExpression>
 	</parameter>
-	<parameter name="Year" class="java.math.BigDecimal"/>
+	<parameter name="DateAcct1" class="java.sql.Timestamp">
+		<defaultValueExpression><![CDATA[java.sql.Timestamp.valueOf("1900-01-01 00:00:00.000000000")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DateAcct2" class="java.sql.Timestamp">
+		<defaultValueExpression><![CDATA[new java.sql.Timestamp(new java.util.Date().getTime())]]></defaultValueExpression>
+	</parameter>
 	<parameter name="AD_Org_ID" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[1000002]]></defaultValueExpression>
 	</parameter>
@@ -71,12 +76,18 @@
 	<parameter name="LANDSCAPE_FOOTER_IMAGE" class="java.io.InputStream"/>
 	<queryString>
 		<![CDATA[select 
- 	 
 	 c_currency.iso_code
 from c_acctschema 
 inner join c_currency on c_acctschema.c_currency_id = c_currency.c_currency_id
 where c_acctschema.ad_client_id = $P{AD_CLIENT_ID}
-and c_acctschema.ad_org_id in (0,$P{AD_Org_ID})]]>
+and c_acctschema.ad_org_id in (0,$P{AD_Org_ID})
+and (case
+        when $P{DateAcct2}::date < $P{DateAcct1}::date
+            then 0
+        when date_part('year', $P{DateAcct1}::date) <> date_part('year', $P{DateAcct2}::date)
+            then 0
+        else 1
+    end) = 1]]>
 	</queryString>
 	<field name="iso_code" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="iso_code"/>
@@ -121,9 +132,9 @@ and c_acctschema.ad_org_id in (0,$P{AD_Org_ID})]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[DATEFORMAT(DATE($P{Year}.intValue(), 1, 1), $P{DATE_FORMAT})
-+ " - " + 
-DATEFORMAT(DATE($P{Year}.intValue(), 12, 31), $P{DATE_FORMAT})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[DATEFORMAT($P{DateAcct1}, $P{DATE_FORMAT})
++ " - " +
+DATEFORMAT($P{DateAcct2}, $P{DATE_FORMAT})]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -167,14 +178,17 @@ DATEFORMAT(DATE($P{Year}.intValue(), 12, 31), $P{DATE_FORMAT})]]></textFieldExpr
 				<textFieldExpression><![CDATA[str("LIT_REP_861_BalanceSheet")]]></textFieldExpression>
 			</textField>
 			<subreport isUsingCache="true">
-				<reportElement key="subreport-1" x="0" y="36" width="395" height="48" uuid="15652bf6-6036-4bf4-8aa0-ad021b470bd7">
+				<reportElement key="subreport-1" x="0" y="38" width="395" height="48" uuid="15652bf6-6036-4bf4-8aa0-ad021b470bd7">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<subreportParameter name="AD_Org_ID">
 					<subreportParameterExpression><![CDATA[$P{AD_Org_ID}]]></subreportParameterExpression>
 				</subreportParameter>
-				<subreportParameter name="Year">
-					<subreportParameterExpression><![CDATA[$P{Year}]]></subreportParameterExpression>
+				<subreportParameter name="DateAcct1">
+					<subreportParameterExpression><![CDATA[$P{DateAcct1}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="DateAcct2">
+					<subreportParameterExpression><![CDATA[$P{DateAcct2}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="ExcludeVoided">
 					<subreportParameterExpression><![CDATA[$P{ExcludeVoided}]]></subreportParameterExpression>
@@ -202,14 +216,17 @@ DATEFORMAT(DATE($P{Year}.intValue(), 12, 31), $P{DATE_FORMAT})]]></textFieldExpr
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "bilancio_sez_contr_subreport_bis.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport isUsingCache="true">
-				<reportElement key="subreport-1" x="407" y="36" width="395" height="48" uuid="fdcc6d32-41b7-4576-b60e-4f03b8c193fb">
+				<reportElement key="subreport-1" x="407" y="38" width="395" height="48" uuid="fdcc6d32-41b7-4576-b60e-4f03b8c193fb">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<subreportParameter name="AD_Org_ID">
 					<subreportParameterExpression><![CDATA[$P{AD_Org_ID}]]></subreportParameterExpression>
 				</subreportParameter>
-				<subreportParameter name="Year">
-					<subreportParameterExpression><![CDATA[$P{Year}]]></subreportParameterExpression>
+				<subreportParameter name="DateAcct1">
+					<subreportParameterExpression><![CDATA[$P{DateAcct1}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="DateAcct2">
+					<subreportParameterExpression><![CDATA[$P{DateAcct2}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="ExcludeVoided">
 					<subreportParameterExpression><![CDATA[$P{ExcludeVoided}]]></subreportParameterExpression>
@@ -413,11 +430,14 @@ DATEFORMAT(DATE($P{Year}.intValue(), 12, 31), $P{DATE_FORMAT})]]></textFieldExpr
 				<reportElement key="subreport-1" positionType="Float" x="0" y="34" width="395" height="48" uuid="45d89e76-1d4b-42dd-881f-5b8a5727016c">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<subreportParameter name="Year">
-					<subreportParameterExpression><![CDATA[$P{Year}]]></subreportParameterExpression>
+				<subreportParameter name="DateAcct1">
+					<subreportParameterExpression><![CDATA[$P{DateAcct1}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="AD_Org_ID">
 					<subreportParameterExpression><![CDATA[$P{AD_Org_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="DateAcct2">
+					<subreportParameterExpression><![CDATA[$P{DateAcct2}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="AD_CLIENT_ID">
 					<subreportParameterExpression><![CDATA[$P{AD_CLIENT_ID}]]></subreportParameterExpression>
@@ -487,8 +507,11 @@ DATEFORMAT(DATE($P{Year}.intValue(), 12, 31), $P{DATE_FORMAT})]]></textFieldExpr
 				<subreportParameter name="AD_Org_ID">
 					<subreportParameterExpression><![CDATA[$P{AD_Org_ID}]]></subreportParameterExpression>
 				</subreportParameter>
-				<subreportParameter name="Year">
-					<subreportParameterExpression><![CDATA[$P{Year}]]></subreportParameterExpression>
+				<subreportParameter name="DateAcct1">
+					<subreportParameterExpression><![CDATA[$P{DateAcct1}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="DateAcct2">
+					<subreportParameterExpression><![CDATA[$P{DateAcct2}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="ExcludeVoided">
 					<subreportParameterExpression><![CDATA[$P{ExcludeVoided}]]></subreportParameterExpression>
@@ -627,4 +650,13 @@ DATEFORMAT(DATE($P{Year}.intValue(), 12, 31), $P{DATE_FORMAT})]]></textFieldExpr
 			</textField>
 		</band>
 	</pageFooter>
+	<noData>
+		<band height="30">
+			<textField>
+				<reportElement style="title" x="0" y="0" width="801" height="30" uuid="71e26dee-23ec-429d-abe1-d63e05442d05"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["La data finale deve essere successiva alla data iniziale. Le date devono essere nello stesso anno"]]></textFieldExpression>
+			</textField>
+		</band>
+	</noData>
 </jasperReport>

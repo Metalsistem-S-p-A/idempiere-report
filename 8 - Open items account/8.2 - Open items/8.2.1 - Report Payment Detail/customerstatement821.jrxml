@@ -66,7 +66,13 @@ select
 	invoiceopentodate2(i.c_invoice_id,ps.c_invoicepayschedule_id, $P{DateAcctFrom} ) END),0) as Openamt
 from C_INVOICE I 
 left join c_invoicepayschedule ps on i.c_invoice_id=ps.c_invoice_id
-where i.c_bpartner_id= $P{C_BPartner_ID}  and DATEINVOICED <  $P{DateAcctFrom}  )+
+where i.c_bpartner_id= $P{C_BPartner_ID}  and DATEINVOICED <  $P{DateAcctFrom} 
+and EXISTS (
+    SELECT 1 FROM fact_acct fa
+    WHERE fa.record_id = i.c_invoice_id
+    AND fa.ad_table_id = (SELECT ad_table_id FROM ad_table WHERE tablename='C_Invoice')
+    AND fa.dateacct < $P{DateAcctFrom}
+))+
            (Select (
               (select COALESCE(SUM(par.PAYAMT) + SUM(par.discountamt),0) as ARPayments
 	      from C_PAYMENT  par, C_DOCTYPE doc  where doc.NAME ='AR Receipt'
@@ -137,6 +143,12 @@ LEFT JOIN C_Allocationhdr hdr ON hdr.C_Allocationhdr_ID = abb.C_Allocationhdr_ID
 LEFT JOIN C_BANKaccount bank ON pay.c_bankaccount_id=bank.c_bankaccount_id
 LEFT JOIN lit_rep_payschedule_v ps ON inv.c_invoice_id = ps.c_invoice_id
 WHERE inv.C_DOCTYPE_ID=doc.C_DOCTYPE_ID AND inv.DOCSTATUS IN ('CO','CL')
+AND EXISTS (
+    SELECT 1 FROM fact_acct fa
+    WHERE fa.record_id = inv.c_invoice_id
+    AND fa.ad_table_id = (SELECT ad_table_id FROM ad_table WHERE tablename='C_Invoice')
+    AND fa.dateacct <= $P{DateAcctTo}
+)
 and 
 	CASE WHEN $P{IsCustomer} = 'Y' THEN bp.iscustomer = $P{IsCustomer}  ELSE 1=1
 END
@@ -171,7 +183,13 @@ select
 	invoiceopentodate2(i.c_invoice_id,ps.c_invoicepayschedule_id, $P{DateAcctFrom} ) END),0) as Openamt
 from C_INVOICE I 
 left join c_invoicepayschedule ps on i.c_invoice_id=ps.c_invoice_id
-where i.c_bpartner_id= $P{C_BPartner_ID}  and DATEINVOICED <  $P{DateAcctFrom}  )+
+where i.c_bpartner_id= $P{C_BPartner_ID}  and DATEINVOICED <  $P{DateAcctFrom}
+and EXISTS (
+    SELECT 1 FROM fact_acct fa
+    WHERE fa.record_id = i.c_invoice_id
+    AND fa.ad_table_id = (SELECT ad_table_id FROM ad_table WHERE tablename='C_Invoice')
+    AND fa.dateacct < $P{DateAcctFrom}
+))+
            (Select (
               (select COALESCE(SUM(par.PAYAMT) + SUM(par.discountamt),0) as ARPayments
 	      from C_PAYMENT  par, C_DOCTYPE doc  where doc.NAME ='AR Receipt'
@@ -256,7 +274,13 @@ and
 	invoiceopentodate2(i.c_invoice_id,ps.c_invoicepayschedule_id, $P{DateAcctFrom} ) END),0) as Openamt
 from C_INVOICE I 
 left join c_invoicepayschedule ps on i.c_invoice_id=ps.c_invoice_id
-where i.c_bpartner_id= $P{C_BPartner_ID}  and DATEINVOICED <  $P{DateAcctFrom}  )+
+where i.c_bpartner_id= $P{C_BPartner_ID}  and DATEINVOICED <  $P{DateAcctFrom}
+and EXISTS (
+    SELECT 1 FROM fact_acct fa
+    WHERE fa.record_id = i.c_invoice_id
+    AND fa.ad_table_id = (SELECT ad_table_id FROM ad_table WHERE tablename='C_Invoice')
+    AND fa.dateacct < $P{DateAcctFrom}
+))+
            (Select (
               (select COALESCE(SUM(par.PAYAMT) + SUM(par.discountamt),0) as ARPayments
 	      from C_PAYMENT  par, C_DOCTYPE doc  where doc.NAME ='AR Receipt'
@@ -327,8 +351,8 @@ and
     WHEN  $P{C_BPartner_ID}  <>0 then bp.c_bpartner_id = $P{C_BPartner_ID} 
   end
 and p.C_Charge_ID is NULL
-order by "BPARTNER",datetrx,documentno
-) x]]>
+) x
+order by  x."BPARTNER", x.datetrx, x.documentno, x.paymentdate]]>
 	</queryString>
 	<field name="openningbal" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="openningbal"/>
@@ -487,9 +511,6 @@ order by "BPARTNER",datetrx,documentno
 		<property name="com.jaspersoft.studio.field.name" value="c_currency_iso_code"/>
 		<property name="com.jaspersoft.studio.field.label" value="c_currency_iso_code"/>
 	</field>
-	<sortField name="datetrx"/>
-	<sortField name="documentno"/>
-	<sortField name="paymentdate"/>
 	<variable name="importoabbianto1" class="java.math.BigDecimal" resetType="Group" resetGroup="Documentno" calculation="Sum">
 		<variableExpression><![CDATA[OR(new Date($F{paymentdate}.getTime()).before( $P{DateAcctTo}),new Date($F{paymentdate}.getTime()).equals( $P{DateAcctTo} )) ?$F{allocationamt} : new BigDecimal(0)]]></variableExpression>
 		<initialValueExpression><![CDATA[new BigDecimal(0)]]></initialValueExpression>
@@ -873,7 +894,9 @@ order by "BPARTNER",datetrx,documentno
 	<detail>
 		<band height="16">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<printWhenExpression><![CDATA[AND($F{allocationamt}!=null,(new Date($F{paymentdate}.getTime()).before( $P{DateAcctTo})))]]></printWhenExpression>
+			<printWhenExpression><![CDATA[AND($F{allocationamt}!=null,
+    OR(new Date($F{paymentdate}.getTime()).before($P{DateAcctTo}),
+       new Date($F{paymentdate}.getTime()).equals($P{DateAcctTo})))]]></printWhenExpression>
 			<textField textAdjust="ScaleFont" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
 				<reportElement style="easy_read_code" positionType="Float" x="415" y="0" width="72" height="16" uuid="eb3f8e93-9b96-4016-b69d-434f4eef630e">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="46f7af20-3217-48ff-8c73-9e211d64ce8d"/>

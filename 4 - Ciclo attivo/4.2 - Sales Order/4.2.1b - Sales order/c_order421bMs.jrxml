@@ -54,8 +54,8 @@ and lit_c_order_tax."c_ordertax_taxbaseamt" + lit_c_order_tax."c_ordertax_taxamt
 		<parameter name="LOCALE_CODE" class="java.lang.String"/>
 		<queryString language="SQL">
 			<![CDATA[select distinct
-	LIT_MsFinish.value,
-	coalesce(LIT_MsFinish_trl.name, LIT_MsFinish.name) as name
+	lit_msfinish.value,
+	coalesce(lit_msfinish_trl.name, lit_msfinish.name) as name
 from
 	c_orderline
 inner join m_product on
@@ -64,15 +64,17 @@ left join m_attributesetinstance on
 	m_attributesetinstance.m_attributesetinstance_id = c_orderline.m_attributesetinstance_id
 left join m_attributeinstance on
 	m_attributeinstance.m_attributesetinstance_id = m_attributesetinstance.m_attributesetinstance_id
-left join LIT_MsFinish on
-	coalesce(m_attributeinstance.valuenumber, m_product.lit_msfinish_id) = LIT_MsFinish.LIT_MsFinish_ID
-left join LIT_msfinish_trl on
-	lit_msfinish.LIT_MsFinish_ID = LIT_MsFinish_trl.LIT_MsFinish_ID
-	and LIT_MsFinish_trl.ad_language = $P{LOCALE_CODE}
+left join lit_msfinish on
+	coalesce(m_attributeinstance.valuenumber, m_product.lit_msfinish_id) = lit_msfinish.lit_msfinish_id
+left join lit_msfinish_trl on
+	lit_msfinish.lit_msfinish_id = lit_msfinish_trl.lit_msfinish_id
+	and lit_msfinish_trl.ad_language = $P{LOCALE_CODE}
 where
 	c_orderline.c_order_id = $P{RECORD_ID}
+and
+	lit_msfinish.value is not null
 order by
-	LIT_MsFinish.value]]>
+	lit_msfinish.value]]>
 		</queryString>
 		<field name="value" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.name" value="value"/>
@@ -1324,7 +1326,7 @@ and c_orderline.bay_masterorderline_id is null
 	<detail>
 		<band height="13" splitType="Prevent">
 			<property name="local_mesure_unitheight" value="pixel"/>
-			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<printWhenExpression><![CDATA[($F{c_orderline_isdescription}.equals("N"))]]></printWhenExpression>
 			<textField textAdjust="StretchHeight" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement style="easy_read_code" positionType="Float" stretchType="ContainerHeight" x="505" y="0" width="50" height="13" isPrintInFirstWholeBand="true" uuid="4bc6154c-a70d-4080-9744-e382b7b704d6">

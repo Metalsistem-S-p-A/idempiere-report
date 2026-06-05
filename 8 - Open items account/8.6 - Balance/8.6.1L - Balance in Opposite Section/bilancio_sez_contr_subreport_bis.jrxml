@@ -12,9 +12,6 @@
 	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="185"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempiere - PRODUZIONE"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<import value="net.sf.jasperreports.engine.*"/>
-	<import value="java.util.*"/>
-	<import value="net.sf.jasperreports.engine.data.*"/>
 	<template><![CDATA["styles/ms-style.jrtx"]]></template>
 	<style name="dynamic_padding" style="default">
 		<box leftPadding="30" rightPadding="2"/>
@@ -97,12 +94,7 @@ $F{lv6_value} == null]]></conditionExpression>
 	<parameter name="C_AcctSchema_ID" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[1000001]]></defaultValueExpression>
 	</parameter>
-	<parameter name="DateAcct1" class="java.sql.Timestamp">
-		<defaultValueExpression><![CDATA[java.sql.Timestamp.valueOf("1900-01-01 00:00:00.000000000")]]></defaultValueExpression>
-	</parameter>
-	<parameter name="DateAcct2" class="java.sql.Timestamp">
-		<defaultValueExpression><![CDATA[new java.sql.Timestamp(new java.util.Date().getTime())]]></defaultValueExpression>
-	</parameter>
+	<parameter name="Year" class="java.math.BigDecimal"/>
 	<parameter name="AccountType" class="java.lang.String">
 		<defaultValueExpression><![CDATA["A"]]></defaultValueExpression>
 	</parameter>
@@ -139,7 +131,7 @@ case
 	  fa2.C_ACCTSCHEMA_ID = $P{C_AcctSchema_ID}
 				and
 	  fa2.AD_ORG_ID = $P{AD_Org_ID}
-				and fa2.dateacct <= $P{DateAcct2} ))<0 then 'L'
+				and date_part('year', fa2.dateacct) = $P{Year}  ))<0 then 'L'
 		when ce.accounttype = 'L'
 		and ce.accountsign = 'N'
 		and (
@@ -155,24 +147,24 @@ case
 	  fa2.C_ACCTSCHEMA_ID = $P{C_AcctSchema_ID}
 				and
 	  fa2.AD_ORG_ID = $P{AD_Org_ID}
-				and fa2.dateacct <= $P{DateAcct2} ))>0 then 'A'
+				and date_part('year', fa2.dateacct) = $P{Year} ))>0 then 'A'
 		else ce.accounttype
 	end as ACCOUNTTYPE,
 	coalesce(sum( case 
-	when ce.accounttype = 'A' and ce.accountsign = 'N' and fa.dateacct <= $P{DateAcct2} and
-	(select sum(fa2.amtacctdr-fa2.amtacctcr) from fact_acct fa2 left join gl_journal gl2 on fa.record_id = gl2.gl_journal_id and fa.ad_table_id = '224'
+	when ce.accounttype = 'A' and ce.accountsign = 'N' and date_part('year', fa.dateacct) = $P{Year} and
+	(select sum(fa2.amtacctdr-fa2.amtacctcr) from fact_acct fa2 left join gl_journal gl2 on fa2.record_id = gl2.gl_journal_id and fa2.ad_table_id = '224'
 		 where ( case when $P{NotPrintClosingPosting} = 'Y' then gl2.isexclude = 'N' or gl2.isexclude is null else 1 = 1 end and fa2.account_id = ce.c_elementvalue_id and
 	  fa2.ad_client_id = $P{AD_CLIENT_ID} and
 	  fa2.C_ACCTSCHEMA_ID = $P{C_AcctSchema_ID} and
-	  fa2.AD_ORG_ID = $P{AD_Org_ID} and fa2.dateacct <= $P{DateAcct2} ))<0 then (fa.amtacctdr-fa.amtacctcr)*-1
-		when ce.accounttype in ('A', 'M') and fa.dateacct <= $P{DateAcct2} then (fa.amtacctdr-fa.amtacctcr)
-			when ce.accounttype = 'L' and ce.accountsign = 'N' and fa.dateacct <= $P{DateAcct2} and (select sum(fa2.amtacctdr-fa2.amtacctcr) from fact_acct fa2 left join gl_journal gl2 on fa.record_id = gl2.gl_journal_id and fa.ad_table_id = '224' where ( case when $P{NotPrintClosingPosting} = 'Y' then gl2.isexclude = 'N' or gl2.isexclude is null else 1 = 1 end and fa2.account_id = ce.c_elementvalue_id and
+	  fa2.AD_ORG_ID = $P{AD_Org_ID} and date_part('year', fa2.dateacct) = $P{Year} ))<0 then (fa.amtacctdr-fa.amtacctcr)*-1
+		when ce.accounttype in ('A', 'M') and date_part('year', fa.dateacct) = $P{Year} then (fa.amtacctdr-fa.amtacctcr)
+			when ce.accounttype = 'L' and ce.accountsign = 'N' and date_part('year', fa.dateacct) = $P{Year} and (select sum(fa2.amtacctdr-fa2.amtacctcr) from fact_acct fa2 left join gl_journal gl2 on fa2.record_id = gl2.gl_journal_id and fa2.ad_table_id = '224' where ( case when $P{NotPrintClosingPosting} = 'Y' then gl2.isexclude = 'N' or gl2.isexclude is null else 1 = 1 end and fa2.account_id = ce.c_elementvalue_id and
 	  fa2.ad_client_id = $P{AD_CLIENT_ID} and
 	  fa2.C_ACCTSCHEMA_ID = $P{C_AcctSchema_ID} and
-	  fa2.AD_ORG_ID = $P{AD_Org_ID} and fa2.dateacct <= $P{DateAcct2} ))>0 then (fa.amtacctdr-fa.amtacctcr)
- when ce.accounttype in ('L', 'O') and fa.dateacct between $P{DateAcct1} and $P{DateAcct2} then (fa.amtacctdr-fa.amtacctcr)*-1
-     when ce.accounttype in ('E') and fa.dateacct between $P{DateAcct1} and $P{DateAcct2} then (fa.amtacctdr-fa.amtacctcr)     
-      when ce.accounttype in ('R') and fa.dateacct between $P{DateAcct1} and $P{DateAcct2} then (fa.amtacctdr-fa.amtacctcr)*-1 end), 0) as SALDO
+	  fa2.AD_ORG_ID = $P{AD_Org_ID} and date_part('year', fa2.dateacct) = $P{Year} ))>0 then (fa.amtacctdr-fa.amtacctcr)
+ when ce.accounttype in ('L', 'O') and date_part('year', fa.dateacct) = $P{Year} then (fa.amtacctdr-fa.amtacctcr)*-1
+     when ce.accounttype in ('E') and date_part('year', fa.dateacct) = $P{Year} then (fa.amtacctdr-fa.amtacctcr)     
+      when ce.accounttype in ('R') and date_part('year', fa.dateacct) = $P{Year} then (fa.amtacctdr-fa.amtacctcr)*-1 end), 0) as SALDO
 FROM ad_treenode tn
 inner join ad_tree t on tn.ad_tree_id = t.ad_tree_id and t.treetype = 'EV'
 JOIN c_elementvalue ce ON ce.c_elementvalue_id = tn.node_id
@@ -209,8 +201,7 @@ and case
 				or gl4.isexclude is null
 				else 1 = 1
 			end
-			and fa2.dateacct >= $P{DateAcct1}
-			and fa2.dateacct <= $P{DateAcct2}
+			and date_part('year', fa2.dateacct) = $P{Year}
 			and (fa2.account_id = ce.c_elementvalue_id
 				and
 	  fa2.ad_client_id = $P{AD_CLIENT_ID}
@@ -231,8 +222,8 @@ and case
 		from
 			fact_acct fa2
 		left join gl_journal gl2 on
-			fa.record_id = gl2.gl_journal_id
-			and fa.ad_table_id = '224'
+			fa2.record_id = gl2.gl_journal_id
+			and fa2.ad_table_id = '224'
 		where
 			( case
 				when $P{NotPrintClosingPosting} = 'Y' then gl2.isexclude = 'N'
@@ -246,7 +237,7 @@ and case
 	  fa2.C_ACCTSCHEMA_ID = $P{C_AcctSchema_ID}
 				and
 	  fa2.AD_ORG_ID = $P{AD_Org_ID}
-				and fa2.dateacct <= $P{DateAcct2} ))<0 then 'L'
+				and date_part('year', fa2.dateacct) = $P{Year} ))<0 then 'L'
 		when ce.accounttype = 'L'
 		and ce.accountsign = 'N'
 		and (
@@ -255,8 +246,8 @@ and case
 		from
 			fact_acct fa2
 		left join gl_journal gl2 on
-			fa.record_id = gl2.gl_journal_id
-			and fa.ad_table_id = '224'
+			fa2.record_id = gl2.gl_journal_id
+			and fa2.ad_table_id = '224'
 		where
 			( case
 				when $P{NotPrintClosingPosting} = 'Y' then gl2.isexclude = 'N'
@@ -270,7 +261,7 @@ and case
 	  fa2.C_ACCTSCHEMA_ID = $P{C_AcctSchema_ID}
 				and
 	  fa2.AD_ORG_ID = $P{AD_Org_ID}
-				and fa2.dateacct <= $P{DateAcct2} ))>0 then 'A'
+				and date_part('year', fa2.dateacct) = $P{Year} ))>0 then 'A'
 		else ce.accounttype
 	end = $P{AccountType}
 	and ce.ad_client_id = $P{AD_CLIENT_ID}
@@ -394,7 +385,7 @@ array_remove(string_to_array(regexp_replace(ce.value, '[^0-9.]', '', 'g'), '.'),
 	<variable name="saldo_gruppo" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{saldo}]]></variableExpression>
 	</variable>
-	<group name="lv0">
+	<group name="lv0" preventOrphanFooter="true">
 		<groupExpression><![CDATA[$F{lv0_value}]]></groupExpression>
 		<groupHeader>
 			<band height="14" splitType="Prevent">
@@ -423,7 +414,7 @@ array_remove(string_to_array(regexp_replace(ce.value, '[^0-9.]', '', 'g'), '.'),
 			</band>
 		</groupHeader>
 	</group>
-	<group name="lv1">
+	<group name="lv1" keepTogether="true">
 		<groupExpression><![CDATA[$F{lv1_value}]]></groupExpression>
 		<groupHeader>
 			<band height="12" splitType="Prevent">

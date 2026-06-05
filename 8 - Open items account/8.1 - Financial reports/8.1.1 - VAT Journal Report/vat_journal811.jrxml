@@ -449,7 +449,7 @@ ORDER BY
 	<variable name="notaxamt2" class="java.math.BigDecimal" resetType="Page" calculation="Sum">
 		<variableExpression><![CDATA[$F{notaxamt}]]></variableExpression>
 	</variable>
-	<group name="LIT_VAT_Journal">
+	<group name="LIT_VAT_Journal" isReprintHeaderOnEachPage="true" keepTogether="true">
 		<groupExpression><![CDATA[$F{lit_vatjournal_id}]]></groupExpression>
 		<groupHeader>
 			<band height="53">

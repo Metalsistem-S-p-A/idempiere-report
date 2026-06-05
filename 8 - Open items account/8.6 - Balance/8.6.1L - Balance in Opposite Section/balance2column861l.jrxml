@@ -42,12 +42,7 @@
 	<parameter name="C_AcctSchema_ID" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[1000001]]></defaultValueExpression>
 	</parameter>
-	<parameter name="DateAcct1" class="java.sql.Timestamp">
-		<defaultValueExpression><![CDATA[java.sql.Timestamp.valueOf("1900-01-01 00:00:00.000000000")]]></defaultValueExpression>
-	</parameter>
-	<parameter name="DateAcct2" class="java.sql.Timestamp">
-		<defaultValueExpression><![CDATA[new java.sql.Timestamp(new java.util.Date().getTime())]]></defaultValueExpression>
-	</parameter>
+	<parameter name="Year" class="java.math.BigDecimal"/>
 	<parameter name="AD_Org_ID" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[1000002]]></defaultValueExpression>
 	</parameter>
@@ -126,9 +121,9 @@ and c_acctschema.ad_org_id in (0,$P{AD_Org_ID})]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[DATEFORMAT($P{DateAcct1}, $P{DATE_FORMAT})
-+ " - " +
-DATEFORMAT($P{DateAcct2}, $P{DATE_FORMAT})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[DATEFORMAT(DATE($P{Year}.intValue(), 1, 1), $P{DATE_FORMAT})
++ " - " + 
+DATEFORMAT(DATE($P{Year}.intValue(), 12, 31), $P{DATE_FORMAT})]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -178,11 +173,8 @@ DATEFORMAT($P{DateAcct2}, $P{DATE_FORMAT})]]></textFieldExpression>
 				<subreportParameter name="AD_Org_ID">
 					<subreportParameterExpression><![CDATA[$P{AD_Org_ID}]]></subreportParameterExpression>
 				</subreportParameter>
-				<subreportParameter name="DateAcct1">
-					<subreportParameterExpression><![CDATA[$P{DateAcct1}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="DateAcct2">
-					<subreportParameterExpression><![CDATA[$P{DateAcct2}]]></subreportParameterExpression>
+				<subreportParameter name="Year">
+					<subreportParameterExpression><![CDATA[$P{Year}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="ExcludeVoided">
 					<subreportParameterExpression><![CDATA[$P{ExcludeVoided}]]></subreportParameterExpression>
@@ -216,11 +208,8 @@ DATEFORMAT($P{DateAcct2}, $P{DATE_FORMAT})]]></textFieldExpression>
 				<subreportParameter name="AD_Org_ID">
 					<subreportParameterExpression><![CDATA[$P{AD_Org_ID}]]></subreportParameterExpression>
 				</subreportParameter>
-				<subreportParameter name="DateAcct1">
-					<subreportParameterExpression><![CDATA[$P{DateAcct1}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="DateAcct2">
-					<subreportParameterExpression><![CDATA[$P{DateAcct2}]]></subreportParameterExpression>
+				<subreportParameter name="Year">
+					<subreportParameterExpression><![CDATA[$P{Year}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="ExcludeVoided">
 					<subreportParameterExpression><![CDATA[$P{ExcludeVoided}]]></subreportParameterExpression>
@@ -424,14 +413,11 @@ DATEFORMAT($P{DateAcct2}, $P{DATE_FORMAT})]]></textFieldExpression>
 				<reportElement key="subreport-1" positionType="Float" x="0" y="34" width="395" height="48" uuid="45d89e76-1d4b-42dd-881f-5b8a5727016c">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<subreportParameter name="DateAcct1">
-					<subreportParameterExpression><![CDATA[$P{DateAcct1}]]></subreportParameterExpression>
+				<subreportParameter name="Year">
+					<subreportParameterExpression><![CDATA[$P{Year}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="AD_Org_ID">
 					<subreportParameterExpression><![CDATA[$P{AD_Org_ID}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="DateAcct2">
-					<subreportParameterExpression><![CDATA[$P{DateAcct2}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="AD_CLIENT_ID">
 					<subreportParameterExpression><![CDATA[$P{AD_CLIENT_ID}]]></subreportParameterExpression>
@@ -501,11 +487,8 @@ DATEFORMAT($P{DateAcct2}, $P{DATE_FORMAT})]]></textFieldExpression>
 				<subreportParameter name="AD_Org_ID">
 					<subreportParameterExpression><![CDATA[$P{AD_Org_ID}]]></subreportParameterExpression>
 				</subreportParameter>
-				<subreportParameter name="DateAcct1">
-					<subreportParameterExpression><![CDATA[$P{DateAcct1}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="DateAcct2">
-					<subreportParameterExpression><![CDATA[$P{DateAcct2}]]></subreportParameterExpression>
+				<subreportParameter name="Year">
+					<subreportParameterExpression><![CDATA[$P{Year}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="ExcludeVoided">
 					<subreportParameterExpression><![CDATA[$P{ExcludeVoided}]]></subreportParameterExpression>

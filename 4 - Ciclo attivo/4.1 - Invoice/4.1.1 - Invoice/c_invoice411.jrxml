@@ -116,7 +116,7 @@
     ad_user_a.name AS ad_user_a_name,
     c_currency.iso_code AS c_currency_iso_code,
     coalesce(ad_ref_list_trl.name, ad_ref_list.name) AS c_invoice_paymentrule,
-    c_paymentterm.value AS c_paymentterm_value,
+    coalesce(c_paymentterm_trl.name, c_paymentterm.name) AS c_paymentterm_value,
     c_paymentterm.discount AS c_paymentterm_discount,
     coalesce(c_uom_trl.name, c_uom.name) AS c_uom_trl_name,
     coalesce(c_uom_trl.uomsymbol, c_uom.name) AS c_uom_trl_uomsymbol,
@@ -187,6 +187,7 @@
      LEFT JOIN ad_ref_list ad_ref_list ON c_invoice.paymentrule = ad_ref_list.value::bpchar AND ad_ref_list.ad_reference_id = 195::numeric
      LEFT JOIN ad_ref_list_trl ad_ref_list_trl ON ad_ref_list.ad_ref_list_id = ad_ref_list_trl.ad_ref_list_id AND ad_ref_list_trl.ad_language::text = $P{LOCALE_CODE}
      LEFT JOIN c_paymentterm c_paymentterm ON c_invoice.c_paymentterm_id = c_paymentterm.c_paymentterm_id
+     LEFT JOIN c_paymentterm_trl c_paymentterm_trl ON c_paymentterm.c_paymentterm_id = c_paymentterm_trl.c_paymentterm_id  AND c_paymentterm_trl.ad_language::text = $P{LOCALE_CODE}
      LEFT JOIN c_doctype c_doctype ON c_invoice.c_doctypetarget_id = c_doctype.c_doctype_id
      LEFT JOIN c_doctype_trl c_doctype_trl ON c_doctype.c_doctype_id = c_doctype_trl.c_doctype_id AND c_doctype_trl.ad_language::text = $P{LOCALE_CODE}
      LEFT JOIN c_bankaccount c_bankaccount ON c_invoice.c_bankaccount_id = c_bankaccount.c_bankaccount_id

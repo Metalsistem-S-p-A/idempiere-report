@@ -12,64 +12,6 @@
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
 	<template><![CDATA["styles/ms-style.jrtx"]]></template>
-	<style name="dynamic_padding" style="default">
-		<box leftPadding="30" rightPadding="2"/>
-		<conditionalStyle>
-			<conditionExpression><![CDATA[$F{t1} != null &&
-$F{t2} != null &&
-$F{t3} != null &&
-$F{t4} != null &&
-$F{t5} != null &&
-$F{t6} == null]]></conditionExpression>
-			<style>
-				<box leftPadding="22"/>
-			</style>
-		</conditionalStyle>
-		<conditionalStyle>
-			<conditionExpression><![CDATA[$F{t1} != null &&
-$F{t2} != null &&
-$F{t3} != null &&
-$F{t4} != null &&
-$F{t5} == null &&
-$F{t6} == null]]></conditionExpression>
-			<style>
-				<box leftPadding="18"/>
-			</style>
-		</conditionalStyle>
-		<conditionalStyle>
-			<conditionExpression><![CDATA[$F{t1} != null &&
-$F{t2} != null &&
-$F{t3} != null &&
-$F{t4} == null &&
-$F{t5} == null &&
-$F{t6} == null]]></conditionExpression>
-			<style>
-				<box leftPadding="14"/>
-			</style>
-		</conditionalStyle>
-		<conditionalStyle>
-			<conditionExpression><![CDATA[$F{t1} != null &&
-$F{t2} != null &&
-$F{t3} == null &&
-$F{t4} == null &&
-$F{t5} == null &&
-$F{t6} == null]]></conditionExpression>
-			<style>
-				<box leftPadding="10"/>
-			</style>
-		</conditionalStyle>
-		<conditionalStyle>
-			<conditionExpression><![CDATA[$F{t1} != null &&
-$F{t2} == null &&
-$F{t3} == null &&
-$F{t4} == null &&
-$F{t5} == null &&
-$F{t6} == null]]></conditionExpression>
-			<style>
-				<box leftPadding="6"/>
-			</style>
-		</conditionalStyle>
-	</style>
 	<style name="easy_read" style="easy_read_bg">
 		<conditionalStyle>
 			<conditionExpression><![CDATA[$V{REPORT_COUNT} % 2 == 1]]></conditionExpression>
@@ -118,114 +60,123 @@ $F{t6} == null]]></conditionExpression>
 	</parameter>
 	<parameter name="LANDSCAPE_FOOTER_IMAGE" class="java.io.InputStream"/>
 	<queryString>
-		<![CDATA[WITH RECURSIVE "hierarchy" AS (
-    select d.node_id, d.parent_id, d.seqno, b.issummary, b.name, 1 AS level, array[(b.value || ' ' || b.name)::text] as tree, ARRAY[1, d.seqno] AS sortable
-	from c_element a
-	inner join c_elementvalue b on a.c_element_id = b.c_element_id
-	inner join ad_tree c on a.ad_tree_id = c.ad_tree_id
-	inner join ad_treenode d on c.ad_tree_id = d.ad_tree_id and d.node_id = b.c_elementvalue_id and d.parent_id = 0
-	where a.c_element_id = $P{C_AcctSchema_ID}
-	and a.isactive = 'Y'
-	and b.isactive = 'Y'
-	and c.isactive = 'Y'
-	and d.isactive = 'Y'
-	and (b.validfrom is null or b.validfrom >= current_timestamp)
-	and (b.validto is null or b.validto <= current_timestamp)
-	UNION ALL
-	select d.node_id, d.parent_id, d.seqno, b.issummary, b.name, g.level + 1 AS level, case when b.issummary = 'Y' then array_append(g.tree, b.value || ' ' || b.name) else g.tree end, array_cat(g.sortable, array[g.level + 1, d.seqno])
-	from c_element a
-	inner join c_elementvalue b on a.c_element_id = b.c_element_id
-	inner join ad_tree c on a.ad_tree_id = c.ad_tree_id
-	inner join ad_treenode d on c.ad_tree_id = d.ad_tree_id and d.node_id = b.c_elementvalue_id
-	JOIN "hierarchy" g ON d.parent_id = g.node_id
-	where a.c_element_id = $P{C_AcctSchema_ID}
-	and a.isactive = 'Y'
-	and b.isactive = 'Y'
-	and c.isactive = 'Y'
-	and d.isactive = 'Y'
-	and (b.validfrom is null or b.validfrom >= current_timestamp)
-	and (b.validto is null or b.validto <= current_timestamp)
-)
-SELECT tree[1] as t1, tree[2] as t2, tree[3] as t3, tree[4] as t4, tree[5] as t5, tree[6] as t6, value, name, dare, avere,
-	(select c_currency.iso_code
-from c_acctschema
-inner join c_currency on c_acctschema.c_currency_id = c_currency.c_currency_id
-where c_acctschema.ad_client_id = $P{AD_CLIENT_ID}
-and c_acctschema.ad_org_id in (0, $P{AD_Org_ID})) AS iso_code
-FROM "hierarchy" as g
-inner join (
-select
-c_elementvalue_id,
-ce.value,
-  COALESCE(SUM(FA.AMTACCTDR),0) AS DARE,
-  COALESCE(SUM(FA.AMTACCTCR),0) AS AVERE
-FROM C_ELEMENTVALUE CE 
-
-LEFT JOIN FACT_ACCT FA
-  ON
-  (
-	FA.ACCOUNT_ID = CE.C_ELEMENTVALUE_ID
-	AND FA.AD_CLIENT_ID = $P{AD_CLIENT_ID}
-	AND FA.C_ACCTSCHEMA_ID = $P{C_AcctSchema_ID}
-	AND FA.POSTINGTYPE = 'A'
-	AND ($P{AD_Org_ID} = 0 OR $P{AD_Org_ID} = FA.AD_ORG_ID)
-  )
-LEFT JOIN C_INVOICE I           ON (FA.AD_TABLE_ID=318 AND FA.RECORD_ID=I.C_INVOICE_ID)
-LEFT JOIN C_PAYMENT P           ON (FA.AD_TABLE_ID=335 AND FA.RECORD_ID=P.C_PAYMENT_ID)
-LEFT JOIN C_ORDER O             ON (FA.AD_TABLE_ID=259 AND FA.RECORD_ID=O.C_ORDER_ID)
-LEFT JOIN C_ALLOCATIONLINE AL   ON (FA.AD_TABLE_ID=735 AND FA.RECORD_ID=AL.C_ALLOCATIONHDR_ID AND FA.LINE_ID = AL.C_ALLOCATIONLINE_ID)
-LEFT JOIN C_PAYMENT PA          ON (FA.AD_TABLE_ID=735 AND AL.C_PAYMENT_ID=PA.C_PAYMENT_ID)
-LEFT JOIN C_BANKSTATEMENT BS    ON (FA.AD_TABLE_ID=392 AND FA.RECORD_ID=BS.C_BANKSTATEMENT_ID)
-LEFT JOIN C_CASH CS             ON (FA.AD_TABLE_ID=407 AND FA.RECORD_ID=CS.C_CASH_ID)
-LEFT JOIN GL_JOURNAL GJ         ON (FA.AD_TABLE_ID=224 AND FA.RECORD_ID=GJ.GL_JOURNAL_ID)
-LEFT JOIN M_INOUT M             ON (FA.AD_TABLE_ID=319 AND FA.RECORD_ID=M.M_INOUT_ID)
-LEFT JOIN M_INVENTORY IV        ON (FA.AD_TABLE_ID=321 AND FA.RECORD_ID=IV.M_INVENTORY_ID)
-LEFT JOIN M_MOVEMENT MM         ON (FA.AD_TABLE_ID=323 AND FA.RECORD_ID=MM.M_MOVEMENT_ID)
-LEFT JOIN M_MATCHINV MC         ON (FA.AD_TABLE_ID=472 AND FA.RECORD_ID=MC.M_MATCHINV_ID)
-LEFT JOIN C_INVOICELINE LM      ON (FA.AD_TABLE_ID=472 AND MC.C_INVOICELINE_ID = LM.C_INVOICELINE_ID)
-LEFT JOIN M_INOUTLINE ILM       ON (FA.AD_TABLE_ID=472 AND MC.M_INOUTLINE_ID = ILM.M_INOUTLINE_ID)
-LEFT JOIN M_INOUT IOM           ON (FA.AD_TABLE_ID=472 AND ILM.M_INOUT_ID = IOM.M_INOUT_ID)
-WHERE
-  CE.AD_CLIENT_ID = $P{AD_CLIENT_ID}
-  AND CE.ISSUMMARY = 'N'
-and ((fa.dateacct >= $P{DateAcct1} or ce.accounttype not in ('R','E')) and  fa.dateacct <= $P{DateAcct2})
-AND
-  (
-    ($P{C_ElementValue_ID1} = 0 AND $P{C_ElementValue_ID2} = 0)
-    OR
-    CE.VALUE BETWEEN
-      (SELECT E1.VALUE FROM C_ELEMENTVALUE E1 WHERE E1.C_ELEMENTVALUE_ID=$P{C_ElementValue_ID1})
-      AND
-      (SELECT E2.VALUE FROM C_ELEMENTVALUE E2 WHERE E2.C_ELEMENTVALUE_ID=(CASE $P{C_ElementValue_ID2} WHEN 0 THEN $P{C_ElementValue_ID1} ELSE $P{C_ElementValue_ID2} END))
-  )
-GROUP BY ce.c_elementvalue_id
-) as x on G.node_id = x.c_elementvalue_id
-where issummary = 'N'
-order by sortable]]>
+		<![CDATA[SELECT et.lv0_value, et.lv0_name,
+       et.lv1_value, et.lv1_name,
+       et.lv2_value, et.lv2_name,
+       et.lv3_value, et.lv3_name,
+       et.lv4_value, et.lv4_name,
+       et.lv5_value, et.lv5_name,
+       et.lv6_value, et.lv6_name,
+       ce.value, ce.name, x.dare, x.avere,
+       (SELECT c_currency.iso_code
+          FROM c_acctschema
+          INNER JOIN c_currency ON c_acctschema.c_currency_id = c_currency.c_currency_id
+         WHERE c_acctschema.ad_client_id = $P{AD_CLIENT_ID}
+           AND c_acctschema.ad_org_id IN (0, $P{AD_Org_ID})
+         LIMIT 1) AS iso_code
+  FROM ad_treenode tn
+  INNER JOIN ad_tree t ON tn.ad_tree_id = t.ad_tree_id AND t.treetype = 'EV'
+  INNER JOIN c_elementvalue ce ON ce.c_elementvalue_id = tn.node_id
+  INNER JOIN LATERAL get_ev_tree($P{AD_CLIENT_ID}, $P{AD_Org_ID}) et ON tn.parent_id = et.c_elementvalue_id
+  INNER JOIN (
+    SELECT ce.c_elementvalue_id,
+           ce.value,
+           COALESCE(SUM(fa.amtacctdr), 0) AS dare,
+           COALESCE(SUM(fa.amtacctcr), 0) AS avere
+      FROM c_elementvalue ce
+      LEFT JOIN fact_acct fa ON (fa.account_id = ce.c_elementvalue_id
+                              AND fa.ad_client_id = $P{AD_CLIENT_ID}
+                              AND fa.c_acctschema_id = $P{C_AcctSchema_ID}
+                              AND fa.postingtype = 'A'
+                              AND ($P{AD_Org_ID} = 0 OR $P{AD_Org_ID} = fa.ad_org_id)
+								AND (fa.dateacct >= $P{DateAcct1}::timestamp or $P{DateAcct1}::timestamp is NULL)
+                              AND (fa.dateacct <= $P{DateAcct2}::timestamp or $P{DateAcct2}::timestamp is null))
+      LEFT JOIN c_invoice i ON (fa.ad_table_id = 318 AND fa.record_id = i.c_invoice_id)
+      LEFT JOIN c_payment p ON (fa.ad_table_id = 335 AND fa.record_id = p.c_payment_id)
+      LEFT JOIN c_order o ON (fa.ad_table_id = 259 AND fa.record_id = o.c_order_id)
+      LEFT JOIN c_allocationline al ON (fa.ad_table_id = 735 AND fa.record_id = al.c_allocationhdr_id AND fa.line_id = al.c_allocationline_id)
+      LEFT JOIN c_payment pa ON (fa.ad_table_id = 735 AND al.c_payment_id = pa.c_payment_id)
+      LEFT JOIN c_bankstatement bs ON (fa.ad_table_id = 392 AND fa.record_id = bs.c_bankstatement_id)
+      LEFT JOIN c_cash cs ON (fa.ad_table_id = 407 AND fa.record_id = cs.c_cash_id)
+      LEFT JOIN gl_journal gj ON (fa.ad_table_id = 224 AND fa.record_id = gj.gl_journal_id)
+      LEFT JOIN m_inout m ON (fa.ad_table_id = 319 AND fa.record_id = m.m_inout_id)
+      LEFT JOIN m_inventory iv ON (fa.ad_table_id = 321 AND fa.record_id = iv.m_inventory_id)
+      LEFT JOIN m_movement mm ON (fa.ad_table_id = 323 AND fa.record_id = mm.m_movement_id)
+      LEFT JOIN m_matchinv mc ON (fa.ad_table_id = 472 AND fa.record_id = mc.m_matchinv_id)
+      LEFT JOIN c_invoiceline lm ON (fa.ad_table_id = 472 AND mc.c_invoiceline_id = lm.c_invoiceline_id)
+      LEFT JOIN m_inoutline ilm ON (fa.ad_table_id = 472 AND mc.m_inoutline_id = ilm.m_inoutline_id)
+      LEFT JOIN m_inout iom ON (fa.ad_table_id = 472 AND ilm.m_inout_id = iom.m_inout_id)
+     WHERE ce.ad_client_id = $P{AD_CLIENT_ID}
+       AND ce.issummary = 'N'
+       AND (($P{C_ElementValue_ID1} = 0 AND $P{C_ElementValue_ID2} = 0)
+            OR ce.value BETWEEN (SELECT e1.value FROM c_elementvalue e1
+                                  WHERE e1.c_elementvalue_id = $P{C_ElementValue_ID1})
+                            AND (SELECT e2.value FROM c_elementvalue e2
+                                  WHERE e2.c_elementvalue_id = CASE WHEN $P{C_ElementValue_ID2} = 0
+                                                                       THEN $P{C_ElementValue_ID1}
+                                                                       ELSE $P{C_ElementValue_ID2} END))
+     GROUP BY ce.c_elementvalue_id, ce.value
+     HAVING COALESCE(SUM(fa.amtacctdr), 0) <> 0 OR COALESCE(SUM(fa.amtacctcr), 0) <> 0
+  ) x ON ce.c_elementvalue_id = x.c_elementvalue_id
+ WHERE tn.ad_client_id = $P{AD_CLIENT_ID}
+   AND ce.issummary = 'N'
+ ORDER BY array_remove(string_to_array(regexp_replace(ce.value, '[^0-9.]', '', 'g'), '.'), '')::int[]]]>
 	</queryString>
-	<field name="t1" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="t1"/>
-		<property name="com.jaspersoft.studio.field.label" value="t1"/>
+	<field name="lv0_value" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="lv0_value"/>
+		<property name="com.jaspersoft.studio.field.label" value="lv0_value"/>
 	</field>
-	<field name="t2" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="t2"/>
-		<property name="com.jaspersoft.studio.field.label" value="t2"/>
+	<field name="lv0_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="lv0_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="lv0_name"/>
 	</field>
-	<field name="t3" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="t3"/>
-		<property name="com.jaspersoft.studio.field.label" value="t3"/>
+	<field name="lv1_value" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="lv1_value"/>
+		<property name="com.jaspersoft.studio.field.label" value="lv1_value"/>
 	</field>
-	<field name="t4" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="t4"/>
-		<property name="com.jaspersoft.studio.field.label" value="t4"/>
+	<field name="lv1_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="lv1_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="lv1_name"/>
 	</field>
-	<field name="t5" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="t5"/>
-		<property name="com.jaspersoft.studio.field.label" value="t5"/>
+	<field name="lv2_value" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="lv2_value"/>
+		<property name="com.jaspersoft.studio.field.label" value="lv2_value"/>
 	</field>
-	<field name="t6" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="t6"/>
-		<property name="com.jaspersoft.studio.field.label" value="t6"/>
+	<field name="lv2_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="lv2_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="lv2_name"/>
+	</field>
+	<field name="lv3_value" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="lv3_value"/>
+		<property name="com.jaspersoft.studio.field.label" value="lv3_value"/>
+	</field>
+	<field name="lv3_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="lv3_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="lv3_name"/>
+	</field>
+	<field name="lv4_value" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="lv4_value"/>
+		<property name="com.jaspersoft.studio.field.label" value="lv4_value"/>
+	</field>
+	<field name="lv4_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="lv4_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="lv4_name"/>
+	</field>
+	<field name="lv5_value" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="lv5_value"/>
+		<property name="com.jaspersoft.studio.field.label" value="lv5_value"/>
+	</field>
+	<field name="lv5_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="lv5_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="lv5_name"/>
+	</field>
+	<field name="lv6_value" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="lv6_value"/>
+		<property name="com.jaspersoft.studio.field.label" value="lv6_value"/>
+	</field>
+	<field name="lv6_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="lv6_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="lv6_name"/>
 	</field>
 	<field name="value" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="value"/>
@@ -235,6 +186,7 @@ order by sortable]]>
 	<field name="name" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="name"/>
 		<property name="com.jaspersoft.studio.field.label" value="name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="c_elementvalue"/>
 	</field>
 	<field name="dare" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="dare"/>
@@ -254,182 +206,196 @@ order by sortable]]>
 	<variable name="total_avere" class="java.math.BigDecimal" resetType="Master" calculation="Sum">
 		<variableExpression><![CDATA[$F{avere}]]></variableExpression>
 	</variable>
-	<group name="t1">
-		<groupExpression><![CDATA[$F{t1}]]></groupExpression>
+	<group name="t0">
+		<groupExpression><![CDATA[$F{lv0_value}]]></groupExpression>
 		<groupHeader>
-			<band height="15">
-				<printWhenExpression><![CDATA[$F{t1} != null]]></printWhenExpression>
-				<textField textAdjust="ScaleFont">
-					<reportElement x="0" y="0" width="782" height="15" isRemoveLineWhenBlank="true" uuid="a8030400-4953-442e-a8c3-0dc6d2247943">
+			<band height="12">
+				<printWhenExpression><![CDATA[$F{lv0_value} != null]]></printWhenExpression>
+				<textField textAdjust="StretchHeight">
+					<reportElement stretchType="ContainerHeight" x="0" y="0" width="482" height="12" uuid="3c669417-d0fd-4f90-89ad-4b407ee46ce5">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
-					<box leftPadding="2" rightPadding="2">
-						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					</box>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font size="8"/>
+					<box leftPadding="2"/>
+					<textElement verticalAlignment="Middle" markup="styled">
+						<font isBold="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{t1}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["<style fontName='JetBrains Mono' forecolor='#909090'>" + $F{lv0_value} +"</style> " + $F{lv0_name}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="t1">
+		<groupExpression><![CDATA[$F{lv1_value}]]></groupExpression>
+		<groupHeader>
+			<band height="12">
+				<printWhenExpression><![CDATA[$F{lv1_value} != null]]></printWhenExpression>
+				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+					<reportElement key="textField" x="0" y="0" width="482" height="12" forecolor="#555555" uuid="e37eccac-b5b4-4b87-b813-c0eda9ad6c62">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="2">
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle" markup="styled">
+						<font size="8" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["<style fontName='JetBrains Mono' forecolor='#909090'>" + $F{lv1_value} + "</style> " + $F{lv1_name}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
 	</group>
 	<group name="t2">
-		<groupExpression><![CDATA[$F{t2}]]></groupExpression>
+		<groupExpression><![CDATA[$F{lv2_value}]]></groupExpression>
 		<groupHeader>
-			<band height="15">
-				<printWhenExpression><![CDATA[$F{t2} != null]]></printWhenExpression>
-				<textField textAdjust="ScaleFont">
-					<reportElement x="0" y="0" width="782" height="15" isRemoveLineWhenBlank="true" uuid="12c13605-19a0-44e4-81dd-b094953a4e2b">
+			<band height="12">
+				<printWhenExpression><![CDATA[$F{lv2_value} != null]]></printWhenExpression>
+				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+					<reportElement key="textField" x="0" y="0" width="482" height="12" forecolor="#555555" uuid="b1e1bab0-0b29-4fd3-9616-cc9f6fb27e04">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
-					<box leftPadding="4" rightPadding="2">
-						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<box leftPadding="2">
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
 					</box>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font size="8"/>
+					<textElement verticalAlignment="Middle" markup="styled">
+						<font size="8" isBold="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{t2}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["<style fontName='JetBrains Mono' forecolor='#909090'>" + $F{lv2_value} + "</style> " + $F{lv2_name}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
 	</group>
 	<group name="t3">
-		<groupExpression><![CDATA[$F{t3}]]></groupExpression>
+		<groupExpression><![CDATA[$F{lv3_value}]]></groupExpression>
 		<groupHeader>
-			<band height="15">
-				<printWhenExpression><![CDATA[$F{t3} != null]]></printWhenExpression>
-				<textField textAdjust="ScaleFont">
-					<reportElement x="0" y="0" width="782" height="15" isRemoveLineWhenBlank="true" uuid="ada67acf-3d8d-4a5b-aed6-84bfad62e832">
+			<band height="12">
+				<printWhenExpression><![CDATA[$F{lv3_value} != null]]></printWhenExpression>
+				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+					<reportElement key="textField" x="0" y="0" width="482" height="12" forecolor="#555555" uuid="6da1d89b-1983-4966-8700-5e60cac42409">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
-					<box leftPadding="6" rightPadding="2">
-						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<box leftPadding="2">
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
 					</box>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font size="8"/>
+					<textElement verticalAlignment="Middle" markup="styled">
+						<font size="8" isBold="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{t3}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["<style fontName='JetBrains Mono' forecolor='#909090'>" + $F{lv3_value} + "</style> " + $F{lv3_name}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
 	</group>
 	<group name="t4">
-		<groupExpression><![CDATA[$F{t4}]]></groupExpression>
+		<groupExpression><![CDATA[$F{lv4_value}]]></groupExpression>
 		<groupHeader>
-			<band height="15">
-				<printWhenExpression><![CDATA[$F{t4} != null]]></printWhenExpression>
-				<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-					<reportElement x="0" y="0" width="782" height="15" isRemoveLineWhenBlank="true" uuid="58bfa540-a845-42a8-85d2-a9ba3fdb39dd">
+			<band height="12">
+				<printWhenExpression><![CDATA[$F{lv4_value} != null]]></printWhenExpression>
+				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+					<reportElement key="textField" x="0" y="0" width="482" height="12" forecolor="#555555" uuid="665e0294-68dd-445b-a8cd-5273e02c3397">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
-					<box leftPadding="8" rightPadding="2">
-						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<box leftPadding="2">
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
 					</box>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font size="8"/>
+					<textElement verticalAlignment="Middle" markup="styled">
+						<font size="8" isBold="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{t4}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["<style fontName='JetBrains Mono' forecolor='#909090'>" + $F{lv4_value} + "</style> " + $F{lv4_name}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
 	</group>
 	<group name="t5">
-		<groupExpression><![CDATA[$F{t5}]]></groupExpression>
+		<groupExpression><![CDATA[$F{lv5_value}]]></groupExpression>
 		<groupHeader>
-			<band height="15">
-				<printWhenExpression><![CDATA[$F{t5} != null]]></printWhenExpression>
-				<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-					<reportElement x="0" y="0" width="782" height="15" isRemoveLineWhenBlank="true" uuid="26f14c27-4ea4-4e8a-af76-b159e1edfeed">
+			<band height="12">
+				<printWhenExpression><![CDATA[$F{lv5_value} != null]]></printWhenExpression>
+				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+					<reportElement key="textField" x="0" y="0" width="482" height="12" forecolor="#555555" uuid="220705d5-9fbb-4664-8d4a-f8884266787f">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
-					<box leftPadding="10" rightPadding="2">
-						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<box leftPadding="2">
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
 					</box>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font size="8"/>
+					<textElement verticalAlignment="Middle" markup="styled">
+						<font size="8" isBold="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{t5}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["<style fontName='JetBrains Mono' forecolor='#909090'>" + $F{lv5_value} + "</style> " + $F{lv5_name}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
 	</group>
 	<group name="t6">
-		<groupExpression><![CDATA[$F{t6}]]></groupExpression>
+		<groupExpression><![CDATA[$F{lv6_value}]]></groupExpression>
 		<groupHeader>
-			<band height="15">
-				<printWhenExpression><![CDATA[$F{t6} != null]]></printWhenExpression>
-				<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-					<reportElement x="0" y="0" width="782" height="15" isRemoveLineWhenBlank="true" uuid="0b83ae77-18df-425e-98d8-dfa1f31e5310">
+			<band height="12">
+				<printWhenExpression><![CDATA[$F{lv6_value} != null]]></printWhenExpression>
+				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+					<reportElement key="textField" x="0" y="0" width="482" height="12" forecolor="#555555" uuid="67991f96-75b6-4c72-8d84-8002fe3a1508">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
-					<box leftPadding="12" rightPadding="2">
-						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<box leftPadding="2">
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
 					</box>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font size="8"/>
+					<textElement verticalAlignment="Middle" markup="styled">
+						<font size="8" isBold="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{t6}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["<style fontName='JetBrains Mono' forecolor='#909090'>" + $F{lv6_value} + "</style> " + $F{lv6_name}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
 	</group>
 	<pageHeader>
 		<band height="115">
-			<textField>
-				<reportElement key="staticText" style="title" x="0" y="70" width="782" height="20" uuid="a3f1dbfd-d371-46e5-a87b-1f100b234fd5">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[str("LIT_REP_863_Title")]]></textFieldExpression>
-			</textField>
-			<textField pattern="dd/MM/yyyy" isBlankWhenNull="false">
-				<reportElement key="textField" x="0" y="90" width="782" height="15" uuid="e325e6dc-dbd6-4436-8f83-bdcc4eae2fa2">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="10" isBold="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[DATEFORMAT($P{DateAcct1}, $P{DATE_FORMAT})
-+ " - " +
-DATEFORMAT($P{DateAcct2}, $P{DATE_FORMAT})]]></textFieldExpression>
-			</textField>
 			<image onErrorType="Blank">
 				<reportElement x="-30" y="0" width="842" height="70" isRemoveLineWhenBlank="true" uuid="60449ee1-1a6f-4f98-ae89-84a944c295e5">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<imageExpression><![CDATA[$P{LANDSCAPE_HEADER_IMAGE}]]></imageExpression>
 			</image>
+			<textField>
+				<reportElement key="staticText-1" style="title" x="0" y="74" width="802" height="20" uuid="7bab1dff-2b7a-4699-b3c1-6fb90596d091">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[str("LIT_REP_863_Title")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="staticText-1" x="0" y="94" width="802" height="15" uuid="5f9d114c-3ab5-4640-a2e2-96d40b61bb8e"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[DATEFORMAT($P{DateAcct1}, $P{DATE_FORMAT}) + " - " +
+DATEFORMAT($P{DateAcct2}, $P{DATE_FORMAT})]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
@@ -492,26 +458,9 @@ DATEFORMAT($P{DateAcct2}, $P{DATE_FORMAT})]]></textFieldExpression>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="15" splitType="Stretch">
-			<textField textAdjust="ScaleFont">
-				<reportElement style="dynamic_padding" x="0" y="0" width="482" height="15" uuid="205441bc-dc29-4184-a9cf-623704effc99">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ea04cf6c-abf2-4508-9d4b-f9f0a51624d3"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<box>
-					<pen lineWidth="0.5" lineStyle="Dotted"/>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{value} + " " + $F{name}]]></textFieldExpression>
-			</textField>
+		<band height="12" splitType="Stretch">
 			<textField textAdjust="ScaleFont" pattern="#,##0.00">
-				<reportElement style="code" x="482" y="0" width="100" height="15" uuid="7a80e2bd-c1f8-4da5-b725-9d268e2cf3c5">
+				<reportElement style="easy_read_code" x="482" y="0" width="100" height="12" uuid="7a80e2bd-c1f8-4da5-b725-9d268e2cf3c5">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="68024654-d96a-43d3-804b-401c1be098e6"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -519,7 +468,7 @@ DATEFORMAT($P{DateAcct2}, $P{DATE_FORMAT})]]></textFieldExpression>
 					<pen lineWidth="0.5" lineStyle="Dotted"/>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
@@ -528,7 +477,7 @@ DATEFORMAT($P{DateAcct2}, $P{DATE_FORMAT})]]></textFieldExpression>
 				<textFieldExpression><![CDATA[$F{dare}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" pattern="#,##0.00">
-				<reportElement style="code" x="582" y="0" width="100" height="15" uuid="830fbc38-f49b-42a5-a56a-03f63245083d">
+				<reportElement style="easy_read_code" x="582" y="0" width="100" height="12" uuid="830fbc38-f49b-42a5-a56a-03f63245083d">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="43bd253c-9aeb-406a-8f86-ccdfe41818c4"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -536,7 +485,7 @@ DATEFORMAT($P{DateAcct2}, $P{DATE_FORMAT})]]></textFieldExpression>
 					<pen lineWidth="0.5" lineStyle="Dotted"/>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
@@ -545,7 +494,7 @@ DATEFORMAT($P{DateAcct2}, $P{DATE_FORMAT})]]></textFieldExpression>
 				<textFieldExpression><![CDATA[$F{avere}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" pattern="#,##0.00">
-				<reportElement style="code" x="682" y="0" width="100" height="15" uuid="ef9a01bc-df57-41c4-a3d9-468867cdcc68">
+				<reportElement style="easy_read_code" x="682" y="0" width="100" height="12" uuid="ef9a01bc-df57-41c4-a3d9-468867cdcc68">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="43bd253c-9aeb-406a-8f86-ccdfe41818c4"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -553,13 +502,28 @@ DATEFORMAT($P{DateAcct2}, $P{DATE_FORMAT})]]></textFieldExpression>
 					<pen lineWidth="0.5" lineStyle="Dotted"/>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{dare}.subtract($F{avere})]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement key="" style="easy_read" x="0" y="0" width="482" height="12" uuid="3d3ea23f-1846-4402-b3cf-91a392f14f63">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="2">
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="styled">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<style fontName='JetBrains Mono' forecolor='#909090'>" + $F{value} +"</style> " + $F{name}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -572,11 +536,11 @@ DATEFORMAT($P{DateAcct2}, $P{DATE_FORMAT})]]></textFieldExpression>
 				<imageExpression><![CDATA[$P{LANDSCAPE_FOOTER_IMAGE}]]></imageExpression>
 			</image>
 			<textField>
-				<reportElement style="page_number" positionType="FixRelativeToBottom" x="0" y="10" width="280" height="12" uuid="2019ed64-f5b5-4975-a871-c71c104a974c"/>
+				<reportElement style="page_number" positionType="Float" x="0" y="10" width="280" height="12" uuid="2019ed64-f5b5-4975-a871-c71c104a974c"/>
 				<textFieldExpression><![CDATA["RP.863 - " + str("DatePrinted") + ": " + DATEFORMAT(NOW( ),$P{DATE_FORMAT} + " " + $P{TIME_FORMAT})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="page_number" positionType="FixRelativeToBottom" x="280" y="10" width="501" height="12" uuid="2a3465bd-af4e-4c44-9ca5-bbd398f7014d">
+				<reportElement style="page_number" positionType="Float" x="280" y="10" width="501" height="12" uuid="2a3465bd-af4e-4c44-9ca5-bbd398f7014d">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle">

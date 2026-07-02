@@ -2105,7 +2105,7 @@ order by
 					<font fontName="SansSerif" size="9"/>
 					<paragraph lineSpacing="Single" firstLineIndent="0" leftIndent="4"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Y".equals($P{IsTax})? $V{GrandTotal}: $V{NetTotal}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Y".equals($P{IsTax})? $V{GrandTotal} : $V{NetTotal}.add($F{extrafinitura}).add($F{extraimballo})]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement style="highlight" positionType="Float" x="415" y="146" width="34" height="15" uuid="0c31594a-5c02-4c71-aa6a-b1398b70b9f4">

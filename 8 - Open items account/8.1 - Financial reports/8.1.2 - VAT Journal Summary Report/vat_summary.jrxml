@@ -197,6 +197,7 @@ and c_acctschema.ad_org_id in (0, $P{AD_Org_ID})) as iso_code,
             WHEN c_tax.lit_excludelipe::text = 'EX'::text THEN 0::numeric
             WHEN c_tax.lit_excludelipe::text = 'SB'::text AND c_doctype.docbasetype = 'API'::bpchar THEN c_invoicetax.taxamt * '-1'::integer::numeric
             WHEN c_tax.lit_excludelipe::text = 'SB'::text AND c_doctype.docbasetype = 'APC'::bpchar THEN c_invoicetax.taxamt
+            WHEN c_tax.lit_excludelipe::text = 'SB'::text AND c_doctype.docbasetype NOT IN ('API'::bpchar, 'APC'::bpchar) AND lvj2.accountsign = 'C'::bpchar THEN c_invoicetax.taxamt * '-1'::integer::numeric
             WHEN c_tax.issalestax = 'Y'::bpchar THEN c_invoicetax.taxamt * 0::numeric
             WHEN c_invoice.c_currency_id <> COALESCE(accs.c_currency_id, 102::numeric) AND (c_doctype.docbasetype = ANY (ARRAY['ARC'::bpchar, 'APC'::bpchar])) THEN (( SELECT currencyconvertinvoice(c_invoice.c_invoice_id, COALESCE(accs.c_currency_id, 102::numeric), c_invoicetax.taxamt, (( SELECT
                             CASE

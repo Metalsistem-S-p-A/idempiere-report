@@ -55,6 +55,7 @@
      coalesce(vat."taxbaseamt", 0) AS vat_c_invoicetax_taxbaseamt,
      coalesce(vat."taxbaseamtfull", 0) AS vat_c_invoicetax_taxbaseamtfull,
      coalesce(vat."taxamt", 0) AS vat_c_invoicetax_taxamt,
+     coalesce(vat."taxamtfull", 0) AS vat_c_invoicetax_taxamtfull,
      coalesce(vat.taxbaseamtnotax, 0) as vat_c_invoicetax_taxbaseamtnotax,
      coalesce(vat.notaxamt, 0) as vat_cinvoicetax_notaxamt,
      vat."c_bpartner_name" AS vat_c_bpartner_name,
@@ -162,7 +163,7 @@ and c_acctschema.ad_org_id in (0, $P{AD_Org_ID})) as iso_code,
                                 ELSE c_invoice.dateacct
                             END AS dateacct))::timestamp with time zone) AS currencyconvertinvoice)), 2)
             WHEN c_tax.issalestax = 'Y'::bpchar THEN 0::numeric
-            WHEN c_tax.lit_excludelipe::text <> 'N'::text THEN round(c_invoicetax.taxbaseamt * c_tax.percent / 100::numeric, 2)
+            WHEN COALESCE(c_tax.lit_excludelipe,'N')::text <> 'N'::text THEN round(c_invoicetax.taxbaseamt * c_tax.percent / 100::numeric, 2)
             ELSE round(c_invoicetax.taxbaseamt * c_tax.percent / 100::numeric, 2)
         END AS taxbaseamtfull,
         -- taxbaseamt: imponibile che concorre alla liquidazione (0 se escluso) - identico a LIT_VAT_Journal_v
@@ -189,12 +190,12 @@ and c_acctschema.ad_org_id in (0, $P{AD_Org_ID})) as iso_code,
                                 ELSE c_invoice.dateacct
                             END AS dateacct))::timestamp with time zone) AS currencyconvertinvoice)
             WHEN c_tax.issalestax = 'Y'::bpchar THEN 0::numeric
-            WHEN c_tax.lit_excludelipe::text <> 'N'::text THEN round(c_invoicetax.taxbaseamt * c_tax.percent / 100::numeric * '-1'::integer::numeric, 2)
+            WHEN COALESCE(c_tax.lit_excludelipe,'N')::text <> 'N'::text AND COALESCE(c_tax.lit_excludelipe,'N')::text <> 'EI'::text THEN round(c_invoicetax.taxbaseamt * c_tax.percent / 100::numeric * '-1'::integer::numeric, 2)
             ELSE round(c_invoicetax.taxbaseamt * c_tax.percent / 100::numeric, 2)
         END AS taxbaseamt,
         -- taxamt: IVA - identico a LIT_VAT_Journal_v (SB si netta da solo tramite il segno già in c_invoicetax)
         CASE
-            WHEN c_tax.lit_excludelipe::text = 'EX'::text THEN 0::numeric
+            WHEN c_tax.lit_excludelipe::text = 'EX'::text OR c_tax.lit_excludelipe::text = 'EI'::text THEN 0::numeric
             WHEN c_tax.lit_excludelipe::text = 'SB'::text AND c_doctype.docbasetype = 'API'::bpchar THEN c_invoicetax.taxamt * '-1'::integer::numeric
             WHEN c_tax.lit_excludelipe::text = 'SB'::text AND c_doctype.docbasetype = 'APC'::bpchar THEN c_invoicetax.taxamt
             WHEN c_tax.lit_excludelipe::text = 'SB'::text AND c_doctype.docbasetype NOT IN ('API'::bpchar, 'APC'::bpchar) AND lvj2.accountsign = 'C'::bpchar THEN c_invoicetax.taxamt * '-1'::integer::numeric
@@ -218,9 +219,34 @@ and c_acctschema.ad_org_id in (0, $P{AD_Org_ID})) as iso_code,
                                  LIMIT 1))::text) = 'Y'::text THEN c_invoice.dateinvoiced
                                 ELSE c_invoice.dateacct
                             END AS dateacct))::timestamp with time zone) AS currencyconvertinvoice)
-            WHEN c_tax.lit_excludelipe::text <> 'N'::text AND c_tax.lit_vatjournal_id IS NOT NULL AND lvj2.lit_iscreatenegativemovement = 'Y'::bpchar THEN c_invoicetax.taxamt * '-1'::integer::numeric
+            WHEN COALESCE(c_tax.lit_excludelipe,'N')::text <> 'N'::text AND c_tax.lit_vatjournal_id IS NOT NULL AND lvj2.lit_iscreatenegativemovement = 'Y'::bpchar THEN c_invoicetax.taxamt * '-1'::integer::numeric
             ELSE c_invoicetax.taxamt
         END AS taxamt,
+        -- taxamtfull: IVA reale sempre valorizzata (anche se esclusa dalla liquidazione), solo per visualizzazione
+        CASE
+            WHEN c_invoice.c_currency_id <> COALESCE(accs.c_currency_id, 102::numeric) AND (c_doctype.docbasetype = ANY (ARRAY['ARC'::bpchar, 'APC'::bpchar])) THEN (( SELECT currencyconvertinvoice(c_invoice.c_invoice_id, COALESCE(accs.c_currency_id, 102::numeric), c_invoicetax.taxamt, (( SELECT
+                            CASE
+                                WHEN ((( SELECT ad_sysconfig.value
+                                   FROM ad_sysconfig
+                                  WHERE ad_sysconfig.name::text = 'LIT_CURRENCYONDATEDOC'::text
+                                  ORDER BY ad_sysconfig.ad_client_id DESC
+                                 LIMIT 1))::text) = 'Y'::text THEN c_invoice.dateinvoiced
+                                ELSE c_invoice.dateacct
+                            END AS dateacct))::timestamp with time zone) AS currencyconvertinvoice)) * '-1'::integer::numeric
+            WHEN c_invoice.c_currency_id = COALESCE(accs.c_currency_id, 102::numeric) AND (c_doctype.docbasetype = ANY (ARRAY['ARC'::bpchar, 'APC'::bpchar])) THEN c_invoicetax.taxamt * '-1'::integer::numeric
+            WHEN c_invoice.c_currency_id <> COALESCE(accs.c_currency_id, 102::numeric) THEN ( SELECT currencyconvertinvoice(c_invoice.c_invoice_id, COALESCE(accs.c_currency_id, 102::numeric), c_invoicetax.taxamt, (( SELECT
+                            CASE
+                                WHEN ((( SELECT ad_sysconfig.value
+                                   FROM ad_sysconfig
+                                  WHERE ad_sysconfig.name::text = 'LIT_CURRENCYONDATEDOC'::text
+                                  ORDER BY ad_sysconfig.ad_client_id DESC
+                                 LIMIT 1))::text) = 'Y'::text THEN c_invoice.dateinvoiced
+                                ELSE c_invoice.dateacct
+                            END AS dateacct))::timestamp with time zone) AS currencyconvertinvoice)
+            WHEN COALESCE(c_tax.lit_excludelipe,'N')::text <> 'N'::text AND c_tax.lit_vatjournal_id IS NOT NULL AND lvj2.lit_iscreatenegativemovement = 'Y'::bpchar THEN c_invoicetax.taxamt * '-1'::integer::numeric
+            WHEN COALESCE(c_tax.lit_excludelipe,'N')::text <> 'N'::text THEN abs(c_invoicetax.taxamt)
+            ELSE c_invoicetax.taxamt
+        END AS taxamtfull,
         -- taxbaseamtnotax: solo per righe issalestax='Y' (Tax Expense pro-rata) - identico a LIT_VAT_Journal_v
         CASE
             WHEN c_tax.issalestax = 'Y'::bpchar THEN
@@ -356,6 +382,11 @@ order by vat.lit_vatjournal_id, vat.c_tax_id, dateacct, vatdocumentno]]>
 	<field name="vat_c_invoicetax_taxamt" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="vat_c_invoicetax_taxamt"/>
 		<property name="com.jaspersoft.studio.field.label" value="vat_c_invoicetax_taxamt"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="lit_vat_journal_v"/>
+	</field>
+	<field name="vat_c_invoicetax_taxamtfull" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="vat_c_invoicetax_taxamtfull"/>
+		<property name="com.jaspersoft.studio.field.label" value="vat_c_invoicetax_taxamtfull"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="lit_vat_journal_v"/>
 	</field>
 	<field name="vat_c_invoicetax_taxbaseamtnotax" class="java.math.BigDecimal">
@@ -774,7 +805,7 @@ order by vat.lit_vatjournal_id, vat.c_tax_id, dateacct, vatdocumentno]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{vat_c_invoicetax_taxamt}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{vat_c_invoicetax_taxamt}.compareTo(java.math.BigDecimal.ZERO) == 0 && $F{vat_c_invoicetax_taxamtfull}.compareTo(java.math.BigDecimal.ZERO) != 0) ? ("[" + new java.text.DecimalFormat("#,##0.00").format($F{vat_c_invoicetax_taxamtfull}) + "]") : new java.text.DecimalFormat("#,##0.00").format($F{vat_c_invoicetax_taxamt})]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
 				<reportElement style="easy_read_code" x="465" y="0" width="90" height="14" uuid="b1a2c3d4-0001-0001-0001-000000000002">

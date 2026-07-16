@@ -26,4 +26,11 @@
 		<nature>net.sf.jasperreports.nature</nature>
 		<nature>com.jaspersoft.studio.babel.editor.rbeNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>vat_summary.jrxml</name>
+			<type>1</type>
+			<location>C:/Users/longomichael/Downloads/vat_summary.jrxml</location>
+		</link>
+	</linkedResources>
 </projectDescription>

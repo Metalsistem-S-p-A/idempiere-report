@@ -651,7 +651,6 @@ order by vat.lit_vatjournal_id, vat.c_tax_id, dateacct, vatdocumentno]]>
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#999999"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Inter"/>
 					</textElement>
 					<textFieldExpression><![CDATA[str("LIT_REP_815_NonDeductibleAmt")]]></textFieldExpression>
 				</textField>

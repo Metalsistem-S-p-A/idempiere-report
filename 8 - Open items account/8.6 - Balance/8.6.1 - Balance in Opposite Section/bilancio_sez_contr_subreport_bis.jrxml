@@ -439,7 +439,6 @@ order by
 					<reportElement stretchType="ContainerHeight" x="190" y="0" width="87" height="12" uuid="4e6454da-0c85-4423-8461-049ff6d3d08e"/>
 					<box leftPadding="2" bottomPadding="0" rightPadding="2"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="SansSerif" size="8" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{saldo_lv1}]]></textFieldExpression>
 				</textField>
@@ -452,7 +451,6 @@ order by
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font fontName="SansSerif" size="8" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{lv1_value} + " " + $F{lv1_name}]]></textFieldExpression>
 				</textField>
@@ -473,7 +471,6 @@ order by
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="SansSerif" size="8" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{lv2_value} + " " + $F{lv2_name}]]></textFieldExpression>
 				</textField>
@@ -481,7 +478,6 @@ order by
 					<reportElement stretchType="ContainerHeight" x="190" y="0" width="87" height="11" uuid="ada9be93-ed46-4eac-9099-b351e63df104"/>
 					<box leftPadding="2" bottomPadding="0" rightPadding="2"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="SansSerif" size="8" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{saldo_lv2}]]></textFieldExpression>
 				</textField>
@@ -502,7 +498,6 @@ order by
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="SansSerif" size="8" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{lv3_value} + " " + $F{lv3_name}]]></textFieldExpression>
 				</textField>
@@ -510,7 +505,6 @@ order by
 					<reportElement stretchType="ContainerHeight" x="190" y="0" width="87" height="11" uuid="923b080c-586b-4e5d-adbf-d7fbd6ac4771"/>
 					<box leftPadding="2" bottomPadding="0" rightPadding="2"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="SansSerif" size="8" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{saldo_lv3}]]></textFieldExpression>
 				</textField>
@@ -531,7 +525,6 @@ order by
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="SansSerif" size="8" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{lv4_value} + " " + $F{lv4_name}]]></textFieldExpression>
 				</textField>
@@ -539,7 +532,6 @@ order by
 					<reportElement stretchType="ContainerHeight" x="190" y="0" width="87" height="11" uuid="a9e9c30a-eac8-412d-88d5-07266a9fc2bb"/>
 					<box leftPadding="2" bottomPadding="0" rightPadding="2"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="SansSerif" size="8" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{saldo_lv4}]]></textFieldExpression>
 				</textField>
@@ -560,7 +552,6 @@ order by
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="SansSerif" size="8" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{lv5_value} + " " + $F{lv5_name}]]></textFieldExpression>
 				</textField>
@@ -568,7 +559,6 @@ order by
 					<reportElement stretchType="ContainerHeight" x="190" y="0" width="87" height="11" uuid="65600b5b-7441-4e13-aa73-3b3b82bde44b"/>
 					<box leftPadding="2" bottomPadding="0" rightPadding="2"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="SansSerif" size="8" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{saldo_lv5}]]></textFieldExpression>
 				</textField>
@@ -589,7 +579,6 @@ order by
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="SansSerif" size="8" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{lv6_value} + " " + $F{lv6_name}]]></textFieldExpression>
 				</textField>
@@ -597,7 +586,6 @@ order by
 					<reportElement stretchType="ContainerHeight" x="190" y="0" width="87" height="11" uuid="74c60d43-f0a1-4415-a245-b6c5f673ac9e"/>
 					<box leftPadding="2" bottomPadding="0" rightPadding="2"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="SansSerif" size="8" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{saldo_lv6}]]></textFieldExpression>
 				</textField>
@@ -621,7 +609,6 @@ order by
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" size="8" isBold="false" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{value} +" " + $F{name}]]></textFieldExpression>
 			</textField>
@@ -634,7 +621,6 @@ order by
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="8" isBold="false" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{saldo}]]></textFieldExpression>
 			</textField>

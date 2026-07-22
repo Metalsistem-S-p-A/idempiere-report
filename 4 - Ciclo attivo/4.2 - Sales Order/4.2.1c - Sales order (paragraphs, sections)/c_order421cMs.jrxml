@@ -842,7 +842,6 @@ order by
 						<rightPen lineWidth="0.0"/>
 					</box>
 					<textElement verticalAlignment="Middle" markup="none">
-						<font fontName="SansSerif" size="7" isBold="true"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
 					<textFieldExpression><![CDATA[str("ProductValue")]]></textFieldExpression>
@@ -861,7 +860,6 @@ order by
 						<rightPen lineWidth="0.0"/>
 					</box>
 					<textElement verticalAlignment="Middle" markup="none">
-						<font fontName="SansSerif" size="7" isBold="true"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
 					<textFieldExpression><![CDATA[str("ProductDescription")]]></textFieldExpression>
@@ -897,7 +895,6 @@ order by
 						<rightPen lineWidth="0.0"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="SansSerif" size="7" isBold="true" isItalic="true"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
 					<textFieldExpression><![CDATA[str("C_UOM_ID")]]></textFieldExpression>
@@ -1686,7 +1683,6 @@ order by
 					<rightPen lineWidth="0.0" lineStyle="Solid"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" size="7" isBold="false" isItalic="true"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[($F{c_orderline_name} != null ? $F{c_orderline_name} : "") + 
@@ -2102,7 +2098,6 @@ order by
 					<rightPen lineWidth="0.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle" markup="html">
-					<font fontName="SansSerif" size="9"/>
 					<paragraph lineSpacing="Single" firstLineIndent="0" leftIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Y".equals($P{IsTax}) ? $V{GrandTotal} : "Y".equals($P{PRINT_EXTRA_COSTS}) ? $V{NetTotal}.add($F{extrafinitura}).add($F{extraimballo}) : $V{NetTotal}]]></textFieldExpression>
@@ -2123,7 +2118,6 @@ order by
 					<rightPen lineWidth="0.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
-					<font fontName="SansSerif" size="9"/>
 					<paragraph lineSpacing="Single" firstLineIndent="0" leftIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{c_currency_iso_code}]]></textFieldExpression>

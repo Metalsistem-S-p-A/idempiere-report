@@ -1806,7 +1806,6 @@ and c_orderline.bay_masterorderline_id is null
 									<bottomPen lineWidth="1.0"/>
 								</box>
 								<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-									<font fontName="SansSerif" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 									<paragraph lineSpacing="Single"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$F{lit_c_order_tax_c_ordertax_taxamt}]]></textFieldExpression>
@@ -1846,7 +1845,6 @@ and c_orderline.bay_masterorderline_id is null
 									<rightPen lineWidth="1.0"/>
 								</box>
 								<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-									<font fontName="SansSerif" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 									<paragraph lineSpacing="Single"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$F{lit_c_order_tax_c_ordertax_taxbaseamt}.add($F{lit_c_order_tax_c_ordertax_taxamt})]]></textFieldExpression>
@@ -1888,7 +1886,6 @@ and c_orderline.bay_masterorderline_id is null
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle" markup="html">
-					<font fontName="SansSerif"/>
 					<paragraph lineSpacing="Single" firstLineIndent="0" leftIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{c_order_grandtotal}]]></textFieldExpression>
@@ -1909,7 +1906,6 @@ and c_orderline.bay_masterorderline_id is null
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
-					<font fontName="SansSerif"/>
 					<paragraph lineSpacing="Single" firstLineIndent="0" leftIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{c_currency_iso_code}]]></textFieldExpression>

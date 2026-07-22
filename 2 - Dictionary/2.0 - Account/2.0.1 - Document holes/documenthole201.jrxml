@@ -164,7 +164,7 @@ inner join ad_client ad_client on lsh.ad_client_id=ad_client.ad_client_id]]>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right">
-					<font fontName="Arial" size="7"/>
+					
 				</textElement>
 				<textFieldExpression><![CDATA["Pag " + $V{PAGE_NUMBER} + " / "]]></textFieldExpression>
 			</textField>
@@ -173,7 +173,6 @@ inner join ad_client ad_client on lsh.ad_client_id=ad_client.ad_client_id]]>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left">
-					<font fontName="Arial" size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA["" + $V{PAGE_NUMBER} + ""]]></textFieldExpression>
 			</textField>
@@ -182,14 +181,12 @@ inner join ad_client ad_client on lsh.ad_client_id=ad_client.ad_client_id]]>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
-					<font fontName="dialog" size="7" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[CONCATENATE(new java.text.SimpleDateFormat("dd/MM/yyyy").format(new Date()),"-","RP.201")]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement positionType="Float" x="196" y="0" width="163" height="10" forecolor="#333333" uuid="769e4026-a200-4e0f-a290-968a5eda3430"/>
 				<textElement textAlignment="Center" markup="none">
-					<font fontName="dialog" size="7" isBold="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{RESOURCE}.getString("desc_0422")]]></textFieldExpression>

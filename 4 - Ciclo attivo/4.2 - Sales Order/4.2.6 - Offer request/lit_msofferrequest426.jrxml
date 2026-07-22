@@ -655,7 +655,6 @@ ORDER BY l.line]]>
 					<rightPen lineWidth="0.0"/>
 				</box>
 				<textElement verticalAlignment="Middle" markup="none">
-					<font fontName="SansSerif" size="7" isBold="true"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[str("ProductValue")]]></textFieldExpression>
@@ -673,7 +672,6 @@ ORDER BY l.line]]>
 					<rightPen lineWidth="0.0"/>
 				</box>
 				<textElement verticalAlignment="Middle" markup="none">
-					<font fontName="SansSerif" size="7" isBold="true"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[str("Type")]]></textFieldExpression>
@@ -691,7 +689,6 @@ ORDER BY l.line]]>
 					<rightPen lineWidth="0.0"/>
 				</box>
 				<textElement verticalAlignment="Middle" markup="none">
-					<font fontName="SansSerif" size="7" isBold="true"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[str("Description")]]></textFieldExpression>
@@ -709,7 +706,6 @@ ORDER BY l.line]]>
 					<rightPen lineWidth="0.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
-					<font fontName="SansSerif" size="7" isBold="true" isItalic="true"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[str("C_UOM_ID")]]></textFieldExpression>
@@ -727,7 +723,6 @@ ORDER BY l.line]]>
 					<rightPen lineWidth="0.0"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
-					<font fontName="SansSerif" size="7" isBold="true"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[str("Qty")]]></textFieldExpression>
@@ -745,7 +740,6 @@ ORDER BY l.line]]>
 					<rightPen lineWidth="0.0"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
-					<font fontName="SansSerif" size="7" isBold="true"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Nom."]]></textFieldExpression>
@@ -763,7 +757,6 @@ ORDER BY l.line]]>
 					<rightPen lineWidth="0.0"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
-					<font fontName="SansSerif" size="7" isBold="true"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[str("LIT_RP_426_Real")]]></textFieldExpression>
@@ -781,7 +774,6 @@ ORDER BY l.line]]>
 					<rightPen lineWidth="0.0"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
-					<font fontName="SansSerif" size="7" isBold="true"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[str("LIT_RP_426_Package")]]></textFieldExpression>

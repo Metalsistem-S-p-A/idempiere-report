@@ -100,9 +100,7 @@ and c_acctschema.ad_org_id in (0,$P{AD_Org_ID})]]>
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="10" isBold="true"/>
-				</textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[str("LIT_REP_861_Title")]]></textFieldExpression>
 			</textField>
 			<textField>
@@ -113,9 +111,7 @@ and c_acctschema.ad_org_id in (0,$P{AD_Org_ID})]]>
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="10" isBold="true"/>
-				</textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($P{DateAcct1})
 + " - " +
 new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($P{DateAcct2})]]></textFieldExpression>
@@ -132,9 +128,7 @@ new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($P{DateAcct2})]]
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="10" isBold="true"/>
-				</textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[str("LIT_REP_861_BalanceSheet")]]></textFieldExpression>
 			</textField>
 			<subreport isUsingCache="true">
@@ -227,9 +221,7 @@ new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($P{DateAcct2})]]
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="10" isBold="true"/>
-				</textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[str("LIT_REP_861_Activity")]]></textFieldExpression>
 			</textField>
 			<textField>
@@ -240,9 +232,7 @@ new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($P{DateAcct2})]]
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="10" isBold="true"/>
-				</textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[str("LIT_REP_861_Passivity")]]></textFieldExpression>
 			</textField>
 			<textField>
@@ -254,9 +244,7 @@ new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($P{DateAcct2})]]
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" size="7" isBold="true"/>
-				</textElement>
+				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[str("LIT_REP_861_TotalActivity")]]></textFieldExpression>
 			</textField>
 			<textField>
@@ -268,9 +256,7 @@ new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($P{DateAcct2})]]
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" size="7" isBold="true"/>
-				</textElement>
+				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[str("LIT_REP_861_TotalPassivity")]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" evaluationTime="Report" pattern="#,##0.00" isBlankWhenNull="true">
@@ -282,9 +268,7 @@ new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($P{DateAcct2})]]
 					<bottomPen lineWidth="0.0"/>
 					<rightPen lineWidth="0.0"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="7" isBold="true"/>
-				</textElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$V{SubAtt}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" evaluationTime="Report" pattern="#,##0.00" isBlankWhenNull="true">
@@ -296,9 +280,7 @@ new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($P{DateAcct2})]]
 					<bottomPen lineWidth="0.0"/>
 					<rightPen lineWidth="0.0"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="7" isBold="true"/>
-				</textElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$V{SubPas}]]></textFieldExpression>
 			</textField>
 			<textField>
@@ -310,9 +292,7 @@ new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($P{DateAcct2})]]
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="7" isBold="true"/>
-				</textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{iso_code}]]></textFieldExpression>
 			</textField>
 			<textField>
@@ -324,9 +304,7 @@ new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($P{DateAcct2})]]
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="7" isBold="true"/>
-				</textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{iso_code}]]></textFieldExpression>
 			</textField>
 		</band>
@@ -384,9 +362,7 @@ new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($P{DateAcct2})]]
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="10" isBold="true"/>
-				</textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[str("LIT_REP_861_Account")]]></textFieldExpression>
 			</textField>
 			<subreport isUsingCache="true">
@@ -439,9 +415,7 @@ new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($P{DateAcct2})]]
 					<bottomPen lineWidth="0.0"/>
 					<rightPen lineWidth="0.0"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="7" isBold="true"/>
-				</textElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$V{SubPer}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" evaluationTime="Report" pattern="#,##0.00" isBlankWhenNull="true">
@@ -453,9 +427,7 @@ new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($P{DateAcct2})]]
 					<bottomPen lineWidth="0.0"/>
 					<rightPen lineWidth="0.0"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="7" isBold="true"/>
-				</textElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$V{SubPro}]]></textFieldExpression>
 			</textField>
 			<subreport isUsingCache="true">
@@ -509,9 +481,7 @@ new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($P{DateAcct2})]]
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="12" isBold="true"/>
-				</textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[str("LIT_REP_861_Costs")]]></textFieldExpression>
 			</textField>
 			<textField>
@@ -524,9 +494,7 @@ new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($P{DateAcct2})]]
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="12" isBold="true"/>
-				</textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[str("LIT_REP_861_Revenue")]]></textFieldExpression>
 			</textField>
 			<textField>
@@ -538,9 +506,7 @@ new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($P{DateAcct2})]]
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" size="7" isBold="true"/>
-				</textElement>
+				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[str("LIT_REP_861_TotalCosts")]]></textFieldExpression>
 			</textField>
 			<textField>
@@ -552,9 +518,7 @@ new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($P{DateAcct2})]]
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" size="7" isBold="true"/>
-				</textElement>
+				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[str("LIT_REP_861_TotalRevenue")]]></textFieldExpression>
 			</textField>
 			<textField>
@@ -566,9 +530,7 @@ new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($P{DateAcct2})]]
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="7" isBold="true"/>
-				</textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{iso_code}]]></textFieldExpression>
 			</textField>
 			<textField>
@@ -580,9 +542,7 @@ new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($P{DateAcct2})]]
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="7" isBold="true"/>
-				</textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{iso_code}]]></textFieldExpression>
 			</textField>
 		</band>
@@ -641,9 +601,7 @@ new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($P{DateAcct2})]]
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="6"/>
-				</textElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<image onErrorType="Blank">
@@ -656,9 +614,7 @@ new SimpleDateFormat($F{datepattern}, $P{REPORT_LOCALE}).format($P{DateAcct2})]]
 				<reportElement x="0" y="0" width="290" height="10" uuid="8f806dcd-86b8-44e1-a518-4a0f52022c91">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement verticalAlignment="Middle">
-					<font fontName="dialog" size="7" isBold="false"/>
-				</textElement>
+				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA["RP.861" + " - " + new SimpleDateFormat($F{datetimepattern}, $P{REPORT_LOCALE}).format(new Date())]]></textFieldExpression>
 			</textField>
 		</band>

@@ -78,7 +78,6 @@ from (select $P{SubPro} - $P{SubPer} AS UtilePerdita, $P{SubPro} as SubPro, $P{S
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[str("LIT_REP_861_SumBreakeven")]]></textFieldExpression>
 			</textField>
@@ -86,14 +85,12 @@ from (select $P{SubPro} - $P{SubPer} AS UtilePerdita, $P{SubPro} as SubPro, $P{S
 				<reportElement x="211" y="0" width="69" height="10" uuid="46e48fe5-03ca-48bc-acf0-e3230f23d07f"/>
 				<box leftPadding="2" rightPadding="2"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{utileperditanosegno}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="0" y="0" width="170" height="10" uuid="906219eb-2f21-4b2b-be1f-58e7d407cde3"/>
 				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{descrizione}]]></textFieldExpression>
 			</textField>
@@ -101,14 +98,12 @@ from (select $P{SubPro} - $P{SubPer} AS UtilePerdita, $P{SubPro} as SubPro, $P{S
 				<reportElement x="211" y="12" width="69" height="10" uuid="ccd55d6a-af4a-442b-9f91-c59050493e04"/>
 				<box leftPadding="2" rightPadding="2"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{sommano}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="170" y="0" width="41" height="10" uuid="32a7a8d9-1f50-4558-b47f-53bb737af616"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{iso_code}]]></textFieldExpression>
 			</textField>
@@ -121,7 +116,6 @@ from (select $P{SubPro} - $P{SubPer} AS UtilePerdita, $P{SubPro} as SubPro, $P{S
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{iso_code}]]></textFieldExpression>
 			</textField>

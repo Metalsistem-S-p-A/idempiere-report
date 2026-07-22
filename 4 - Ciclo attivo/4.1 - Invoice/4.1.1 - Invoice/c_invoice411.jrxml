@@ -1470,7 +1470,7 @@
 					<rightPen lineWidth="1.0" lineColor="#999999"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="SansSerif" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[($F{c_invoice_docstatus}.equals("CO") ?  $F{c_invoice_grandtotal}.add($F{c_invoice_withholdingamt}) : $F{c_invoice_grandtotal} )]]></textFieldExpression>
@@ -1484,7 +1484,6 @@
 					<bottomPen lineWidth="1.0" lineColor="#999999"/>
 				</box>
 				<textElement verticalAlignment="Middle" markup="none">
-					<font fontName="&#xD;&#xA;SansSerif"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[str("GrandTotal")]]></textFieldExpression>

@@ -866,7 +866,7 @@ where
 				<textElement textAlignment="Left" verticalAlignment="Middle" markup="html">
 					<paragraph lineSpacing="Single" firstLineIndent="0" leftIndent="4"/>
 				</textElement>
-				<textFieldExpression><![CDATA["<b>" + str("c_bpartner_taxid") +": </b>"+T($F{c_bpartner_taxid})]]></textFieldExpression>
+				<textFieldExpression><![CDATA["<b>" + str("c_bpartner_taxid") +": </b>"+T($F{c_bpartner_lit_taxid})]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement positionType="Float" mode="Transparent" x="0" y="165" width="260" height="15" backcolor="#DFDFDF" uuid="5484afa6-10e7-417a-a545-18148745184a">

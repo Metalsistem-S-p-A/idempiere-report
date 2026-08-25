@@ -176,7 +176,8 @@ order by
 	m_attributesetinstance.LIT_MsLegacyCode,
 	coalesce(m_attributesetinstance.weight, m_product.lit_grossweight) as weight,
 	coalesce(c_uom_weight_client.uomsymbol, c_uom_weight_trl.uomsymbol) as weight_symbol,
-	m_attributesetinstance.description as description
+	m_attributesetinstance.description as description,
+	(c_orderline.isdescription = 'N' and (c_orderline.priceentered is null or c_orderline.priceentered = 0)) as has_missing_price
 from
 	c_order c_order
 left join c_orderline c_orderline on
@@ -259,8 +260,8 @@ left join M_AttributeSetInstance on
 	M_AttributeSetInstance.M_AttributeSetInstance_ID = c_orderline.M_AttributeSetInstance_ID
 where
 	c_order.c_order_id = $P{RECORD_ID}
-and c_orderline.bay_masterorderline_id is null	
-	order by c_orderline.line]]>
+and c_orderline.bay_masterorderline_id is null
+order by c_orderline.line]]>
 	</queryString>
 	<field name="c_order_dateordered" class="java.sql.Timestamp">
 		<property name="com.jaspersoft.studio.field.name" value="c_order_dateordered"/>
@@ -554,6 +555,10 @@ and c_orderline.bay_masterorderline_id is null
 		<property name="com.jaspersoft.studio.field.label" value="description"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="m_attributesetinstance"/>
 	</field>
+	<field name="has_missing_price" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.name" value="has_missing_price"/>
+		<property name="com.jaspersoft.studio.field.label" value="has_missing_price"/>
+	</field>
 	<variable name="GrossTotal" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{c_orderline_qtyordered}.multiply(($F{ad_orginfo_lit_report_param}.charAt(11)) == 'Y' ? $F{c_orderline_pricelist} : $F{c_orderline_priceactual})]]></variableExpression>
 	</variable>
@@ -562,6 +567,10 @@ and c_orderline.bay_masterorderline_id is null
 	</variable>
 	<variable name="TotalWeight" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{weight}.multiply($F{c_orderline_qtyordered})]]></variableExpression>
+	</variable>
+	<variable name="HasMissingPrice" class="java.lang.Boolean">
+		<variableExpression><![CDATA[$V{HasMissingPrice}.booleanValue() || Boolean.TRUE.equals($F{has_missing_price})]]></variableExpression>
+		<initialValueExpression><![CDATA[false]]></initialValueExpression>
 	</variable>
 	<title>
 		<band height="333">
@@ -1980,6 +1989,16 @@ and c_orderline.bay_masterorderline_id is null
 					<paragraph lineSpacing="Single" firstLineIndent="0" leftIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{TotalWeight}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="10" y="48" width="200" height="60" forecolor="#FF0905" uuid="93baeb8e-cff1-449e-b34d-fe09b606d1c3">
+					<printWhenExpression><![CDATA[Boolean.TRUE.equals($V{HasMissingPrice})]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[str("LIT_RP_421_HasMissingPrice")]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>

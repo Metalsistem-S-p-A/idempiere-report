@@ -235,13 +235,13 @@ order by
 	coalesce(c_uom_trl.uomsymbol, c_uom.uomsymbol) as c_uom_trl_uomsymbol,
 	m_product.sku as m_product_sku,
 	m_attributesetinstance.LIT_MsLegacyCode,
-coalesce(m_attributesetinstance.weight, m_product.lit_grossweight) as weight,
+	coalesce(m_attributesetinstance.weight, m_product.lit_grossweight) as weight,
 	coalesce(c_uom_weight_client.uomsymbol, c_uom_weight_trl.uomsymbol) as weight_symbol,
 	m_product.LIT_MsDimension,
 	m_attributesetinstance.description as asi_description,
 	LIT_SOParagraph.value as paragraph_value,
 	LIT_SOParagraph.name as paragraph_name,
-		LIT_SOParagraph.description as paragraph_description,
+	LIT_SOParagraph.description as paragraph_description,
 	lit_multidiscount_paragraph.lit_discount_1 as lit_discount_1_paragraph,
 	lit_multidiscount_paragraph.lit_discount_2 as lit_discount_2_paragraph,
 	lit_multidiscount_paragraph.lit_discount_3 as lit_discount_3_paragraph,
@@ -249,8 +249,9 @@ coalesce(m_attributesetinstance.weight, m_product.lit_grossweight) as weight,
 	c_orderline_section.name as section_name,
 	c_orderline_section.description as section_description,
 	c_orderline_section.lit_sosection_qty,
-	coalesce(extrafin.priceentered ,0)as extrafinitura ,
-	coalesce(extraimb.priceentered ,0)as extraimballo
+	coalesce(extrafin.priceentered, 0) as extrafinitura ,
+	coalesce(extraimb.priceentered, 0) as extraimballo,
+	(c_orderline.isdescription = 'N' and (c_orderline.priceentered is null or c_orderline.priceentered = 0)) as has_missing_price
 from
 	c_order c_order
 inner join c_orderline c_orderline_section on
@@ -720,6 +721,10 @@ order by
 		<property name="com.jaspersoft.studio.field.label" value="extraimballo"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="c_orderline"/>
 	</field>
+	<field name="has_missing_price" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.name" value="has_missing_price"/>
+		<property name="com.jaspersoft.studio.field.label" value="has_missing_price"/>
+	</field>
 	<variable name="GrossTotal" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[($F{ad_orginfo_lit_report_param}.charAt(11) == 'Y' ? $F{c_orderline_pricelist} : $F{c_orderline_priceactual})
 .multiply($F{c_orderline_lit_sosection_qty})
@@ -744,6 +749,10 @@ order by
 		<variableExpression><![CDATA[$V{SectionTotal}]]></variableExpression>
 	</variable>
 	<variable name="GrandTotal" class="java.math.BigDecimal"/>
+	<variable name="HasMissingPrice" class="java.lang.Boolean">
+		<variableExpression><![CDATA[$V{HasMissingPrice}.booleanValue() || Boolean.TRUE.equals($F{has_missing_price})]]></variableExpression>
+		<initialValueExpression><![CDATA[false]]></initialValueExpression>
+	</variable>
 	<group name="Paragraph" isReprintHeaderOnEachPage="true">
 		<groupExpression><![CDATA[$F{paragraph_value}]]></groupExpression>
 		<groupHeader>
@@ -2402,6 +2411,16 @@ order by
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[str("LIT_MsECFinitura")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="10" y="47" width="200" height="60" forecolor="#FF0905" uuid="0c7c2746-9c0a-4252-a5ba-d904ec520a4a">
+					<printWhenExpression><![CDATA[Boolean.TRUE.equals($V{HasMissingPrice})]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[str("LIT_RP_421_HasMissingPrice")]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>

@@ -627,8 +627,7 @@ order by c_orderline.line]]>
 				<textElement verticalAlignment="Middle" markup="html">
 					<paragraph lineSpacing="Single" firstLineIndent="4"/>
 				</textElement>
-				<textFieldExpression><![CDATA[($F{c_bpartner_location_ispreservecustomname}.equals("Y") ? $F{c_bpartner_name}+"<br>"+
-	$F{c_bpartner_location_a_name} : $F{c_bpartner_name}
+				<textFieldExpression><![CDATA[($F{c_bpartner_location_ispreservecustomname}.equals("Y") ? $F{c_bpartner_location_a_name} : $F{c_bpartner_name}
 )]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">

@@ -57,6 +57,7 @@
      coalesce(vat."taxamt", 0) AS vat_c_invoicetax_taxamt,
      coalesce(vat."taxamtfull", 0) AS vat_c_invoicetax_taxamtfull,
      coalesce(vat.taxbaseamtnotax, 0) as vat_c_invoicetax_taxbaseamtnotax,
+     coalesce(vat.taxbaseamtnotaxfull, 0) as vat_c_invoicetax_taxbaseamtnotaxfull,
      coalesce(vat.notaxamt, 0) as vat_cinvoicetax_notaxamt,
      vat."c_bpartner_name" AS vat_c_bpartner_name,
      vat."taxid" AS vatnumber,
@@ -247,9 +248,18 @@ and c_acctschema.ad_org_id in (0, $P{AD_Org_ID})) as iso_code,
             WHEN COALESCE(c_tax.lit_excludelipe,'N')::text <> 'N'::text THEN abs(c_invoicetax.taxamt)
             ELSE c_invoicetax.taxamt
         END AS taxamtfull,
-        -- taxbaseamtnotax: solo per righe issalestax='Y' (Tax Expense pro-rata) - identico a LIT_VAT_Journal_v
+        -- taxbaseamtnotaxfull: imponibile indetraibile reale, sempre valorizzato (anche se Escludi da LIPE) - solo per visualizzazione
         CASE
             WHEN c_tax.issalestax = 'Y'::bpchar THEN
+                CASE
+                    WHEN c_invoice.c_currency_id = COALESCE(accs.c_currency_id, 102::numeric) AND (c_doctype.docbasetype = ANY (ARRAY['ARC'::bpchar, 'APC'::bpchar])) THEN c_invoicetax.taxbaseamt * c_tax.percent / 100::numeric * '-1'::integer::numeric
+                    ELSE c_invoicetax.taxbaseamt * c_tax.percent / 100::numeric
+                END
+            ELSE 0::numeric
+        END AS taxbaseamtnotaxfull,
+        -- taxbaseamtnotax: imponibile indetraibile che concorre alla liquidazione (0 se Escludi da LIPE) - allineato a CreateRecordLiquidIVA (excludelipe='N')
+        CASE
+            WHEN c_tax.issalestax = 'Y'::bpchar AND COALESCE(c_tax.lit_excludelipe,'N')::text = 'N'::text THEN
                 CASE
                     WHEN c_invoice.c_currency_id = COALESCE(accs.c_currency_id, 102::numeric) AND (c_doctype.docbasetype = ANY (ARRAY['ARC'::bpchar, 'APC'::bpchar])) THEN c_invoicetax.taxbaseamt * c_tax.percent / 100::numeric * '-1'::integer::numeric
                     ELSE c_invoicetax.taxbaseamt * c_tax.percent / 100::numeric
@@ -392,6 +402,10 @@ order by vat.lit_vatjournal_id, vat.c_tax_id, dateacct, vatdocumentno]]>
 	<field name="vat_c_invoicetax_taxbaseamtnotax" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="vat_c_invoicetax_taxbaseamtnotax"/>
 		<property name="com.jaspersoft.studio.field.label" value="vat_c_invoicetax_taxbaseamtnotax"/>
+	</field>
+	<field name="vat_c_invoicetax_taxbaseamtnotaxfull" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="vat_c_invoicetax_taxbaseamtnotaxfull"/>
+		<property name="com.jaspersoft.studio.field.label" value="vat_c_invoicetax_taxbaseamtnotaxfull"/>
 	</field>
 	<field name="vat_cinvoicetax_notaxamt" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="vat_cinvoicetax_notaxamt"/>
@@ -786,7 +800,7 @@ order by vat.lit_vatjournal_id, vat.c_tax_id, dateacct, vatdocumentno]]>
 				</textElement>
 				<textFieldExpression><![CDATA[($F{vat_c_invoicetax_taxbaseamt}.compareTo(java.math.BigDecimal.ZERO) == 0 && $F{vat_c_invoicetax_taxbaseamtfull}.compareTo(java.math.BigDecimal.ZERO) != 0) ? ("[" + new java.text.DecimalFormat("#,##0.00").format($F{vat_c_invoicetax_taxbaseamtfull}) + "]") : new java.text.DecimalFormat("#,##0.00").format($F{vat_c_invoicetax_taxbaseamt})]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0.00">
+			<textField>
 				<reportElement style="easy_read_code" x="315" y="0" width="75" height="14" uuid="b1a2c3d4-0001-0001-0001-000000000001">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -794,7 +808,7 @@ order by vat.lit_vatjournal_id, vat.c_tax_id, dateacct, vatdocumentno]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{vat_c_invoicetax_taxbaseamtnotax}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{vat_c_invoicetax_taxbaseamtnotax}.compareTo(java.math.BigDecimal.ZERO) == 0 && $F{vat_c_invoicetax_taxbaseamtnotaxfull}.compareTo(java.math.BigDecimal.ZERO) != 0) ? ("[" + new java.text.DecimalFormat("#,##0.00").format($F{vat_c_invoicetax_taxbaseamtnotaxfull}) + "]") : new java.text.DecimalFormat("#,##0.00").format($F{vat_c_invoicetax_taxbaseamtnotax})]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
 				<reportElement style="easy_read_code" x="390" y="0" width="75" height="14" uuid="a24d2e10-eb95-466a-8d23-c1d15469a9a3">

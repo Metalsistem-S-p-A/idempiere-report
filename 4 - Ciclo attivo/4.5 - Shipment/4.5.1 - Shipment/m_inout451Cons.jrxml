@@ -791,7 +791,7 @@ where
 				<textFieldExpression><![CDATA[$F{m_inout_docstatus}.equals("CO") ? $F{c_doctype_trl_printname}:$F{c_doctype_trl_documentnote}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="true">
-				<reportElement positionType="Float" mode="Transparent" x="0" y="135" width="260" height="15" backcolor="#DFDFDF" uuid="7f79fc07-477b-4698-a5f3-550b2ad6159e">
+				<reportElement positionType="Float" mode="Transparent" x="0" y="150" width="260" height="15" backcolor="#DFDFDF" uuid="7f79fc07-477b-4698-a5f3-550b2ad6159e">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -809,7 +809,7 @@ where
 					<font isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single" firstLineIndent="0" leftIndent="4"/>
 				</textElement>
-				<textFieldExpression><![CDATA["<b>" +$F{c_doctype_order_trl_name} +": </b>"+T($F{c_order_documentno})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{c_order_documentno} != null && !$F{c_order_documentno}.isBlank() ? "<b>" +$F{c_doctype_order_trl_name} +": </b>"+T($F{c_order_documentno}) : ""]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement positionType="Float" mode="Transparent" x="0" y="180" width="260" height="15" backcolor="#DFDFDF" uuid="6890a4ae-6543-4bf4-b806-e8008add7fc8">
@@ -828,7 +828,7 @@ where
 				<textElement textAlignment="Left" verticalAlignment="Middle" markup="html">
 					<paragraph lineSpacing="Single" firstLineIndent="0" leftIndent="4" rightIndent="0"/>
 				</textElement>
-				<textFieldExpression><![CDATA["<b>" + str("PaymentTerm") +": </b>"+T($F{c_order_paymentterm_trl_name})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{c_order_paymentterm_trl_name} != null && !$F{c_order_paymentterm_trl_name}.isBlank() ? "<b>" + str("PaymentTerm") +": </b>"+T($F{c_order_paymentterm_trl_name}) : ""]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement positionType="Float" x="0" y="120" width="260" height="15" uuid="5da66d21-d4f0-4699-8099-6fde300823bf">
@@ -849,7 +849,7 @@ where
 				<textFieldExpression><![CDATA["<b>" + str("DateAcct")  + ": </b>" + T(DATEFORMAT($F{m_inout_dateacct}, $P{DATE_FORMAT}))]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement positionType="Float" mode="Transparent" x="0" y="150" width="260" height="15" backcolor="#DFDFDF" uuid="ab52806e-43bb-41ab-9df9-ed09e4f86052">
+				<reportElement positionType="Float" mode="Transparent" x="0" y="135" width="260" height="15" backcolor="#DFDFDF" uuid="ab52806e-43bb-41ab-9df9-ed09e4f86052">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -886,7 +886,7 @@ where
 				<textElement textAlignment="Left" verticalAlignment="Middle" markup="html">
 					<paragraph lineSpacing="Single" firstLineIndent="0" leftIndent="4"/>
 				</textElement>
-				<textFieldExpression><![CDATA["<b>" + str("PaymentRule") +": </b>"+T($F{ad_ref_list_trl_pr_name})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ad_ref_list_trl_pr_name} != null && !$F{ad_ref_list_trl_pr_name}.isBlank() ? "<b>" + str("PaymentRule") +": </b>"+T($F{ad_ref_list_trl_pr_name}) : ""]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement style="highlight" positionType="Float" x="300" y="90" width="255" height="30" uuid="8d730fb2-8a81-46f1-92f8-f37572f5e011">

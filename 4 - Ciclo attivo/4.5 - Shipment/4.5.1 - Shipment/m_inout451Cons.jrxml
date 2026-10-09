@@ -99,7 +99,7 @@
 	iol_c_orderline.priceactual as c_orderline_priceactual,
 	c_bpartner.name as c_bpartner_name,
 	io.bpname as shipto_bpname,
-	c_bpartner.lit_taxid as c_bpartner_lit_taxid,
+	c_bpartner.taxid as c_bpartner_lit_taxid,
 	c_bpartner.taxid as c_bpartner_taxid,
 	c_bpartner.value as c_bpartner_value,
 	c_bpartner.lit_bpreport_param as c_bpartner_lit_bpreportparam,

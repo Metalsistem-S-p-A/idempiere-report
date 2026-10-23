@@ -57,12 +57,12 @@ left join c_orderline extrafin on
 	c_order.c_order_id = extrafin.c_order_id
 	and extrafin.lit_soissection = 'N'
 	and extrafin."name" ilike '%finiture%'
-	and c_tax.rate = 22
+	--and c_tax.rate = 22
 left join c_orderline extraimb on
 	c_order.c_order_id = extraimb.c_order_id
 	and extraimb.lit_soissection = 'N'
 	and extraimb."name" ilike '%imball%'
-	and c_tax.rate = 22
+	--and c_tax.rate = 22
 where
 	c_order.c_order_id = $P{RECORD_ID}
 group by

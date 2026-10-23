@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.17.0.final utlizzo versione della libreria JasperReports6.17.0-6d93193241dd8cc42629e188b94f9e0bc5722efd  -->
+<!-- Created with Jaspersoft Studio version 6.21.5.final utlizzo versione della libreria JasperReports5.2.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="421salesorder" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" isSummaryWithPageHeaderAndFooter="true" uuid="9847bff4-9f3a-49b0-9603-8d56c23b5d53">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempieredb"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="iDempiere-Prod"/>
 	<template><![CDATA["styles/ms-style.jrtx"]]></template>
 	<style name="easy_read" style="easy_read_bg">
 		<conditionalStyle>
@@ -203,7 +203,7 @@ order by
 	ad_user_2.email as ad_user_2_email,
 	ad_user_2.phone as ad_user_2_phone,
 	coalesce(c_paymentterm_trl.name, c_paymentterm.name) as c_paymentterm_name,
-	lit_tables.name as c_order_lit_offervaliditytime_name,
+	coalesce(ltt.name,lit_tables.name) as c_order_lit_offervaliditytime_name,
 	c_bpartner_location_a.ispreservecustomname as c_bpartner_location_ispreservecustomname,
 	c_location.address1 as c_location_address1,
 	c_location.city as c_location_city,
@@ -313,6 +313,8 @@ left join c_country_trl c_country_trl on
 	and c_country_trl.ad_language = $P{LOCALE_CODE}
 left join lit_tables lit_tables on
 	c_order.lit_offervaliditytime_id = lit_tables.lit_tables_id
+left join lit_tables_trl ltt on
+	lit_tables.lit_tables_id = ltt.lit_tables_id and ltt.ad_language = $P{LOCALE_CODE}
 left join m_product m_product on
 	c_orderline.m_product_id = m_product.m_product_id
 left join c_uom c_uom on
@@ -1631,7 +1633,7 @@ order by
 				</textElement>
 				<textFieldExpression><![CDATA[str("Note")]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement positionType="Float" x="0" y="315" width="554" height="15" uuid="04b13e09-b530-48f2-94ee-51179209cb9d">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1667,7 +1669,7 @@ order by
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<printWhenExpression><![CDATA[$F{c_orderline_isdescription}.equals("N") && $P{PRINT_SECTION_DETAIL}.equals("Y")]]></printWhenExpression>
-			<textField textAdjust="StretchHeight" pattern="#,##0.00" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement style="easy_read_code" positionType="Float" stretchType="RelativeToBandHeight" mode="Opaque" x="505" y="0" width="50" height="11" isPrintInFirstWholeBand="true" forecolor="#444444" uuid="4bc6154c-a70d-4080-9744-e382b7b704d6"/>
 				<box topPadding="0" leftPadding="2" bottomPadding="0" rightPadding="2">
 					<pen lineWidth="0.25"/>
@@ -1682,7 +1684,7 @@ order by
 				</textElement>
 				<textFieldExpression><![CDATA["Y".equals($P{PRINT_SECTION_DETAIL_PRICE}) ? $F{c_orderline_linenetamt} : ""]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="easy_read" positionType="Float" stretchType="RelativeToBandHeight" mode="Opaque" x="80" y="0" width="164" height="11" isPrintInFirstWholeBand="true" forecolor="#444444" uuid="ebfcbc74-614f-4275-89b7-efcecb221958"/>
 				<box topPadding="0" leftPadding="2" bottomPadding="0" rightPadding="2">
 					<pen lineWidth="0.0" lineStyle="Solid"/>
@@ -1697,7 +1699,7 @@ order by
 				<textFieldExpression><![CDATA[($F{c_orderline_name} != null ? $F{c_orderline_name} : "") + 
 ($F{asi_description} != null ? " " + $F{asi_description} : "")]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="#,##0.00" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement style="easy_read_code" positionType="Float" stretchType="RelativeToBandHeight" mode="Opaque" x="274" y="0" width="50" height="11" isPrintInFirstWholeBand="true" forecolor="#444444" uuid="4303d7e7-b9e2-4154-b039-a931c6ca9f14">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -1714,7 +1716,7 @@ order by
 				</textElement>
 				<textFieldExpression><![CDATA[$F{c_orderline_lit_sosection_qty}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="easy_read_code" stretchType="RelativeToBandHeight" mode="Opaque" x="0" y="0" width="80" height="11" isPrintInFirstWholeBand="true" forecolor="#444444" uuid="1b8bbad7-694f-4aed-a0ad-08e610eeeee2">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -1734,7 +1736,7 @@ order by
 	: ""
 )]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="0.00" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="0.00" isBlankWhenNull="true">
 				<reportElement style="easy_read_code" positionType="Float" stretchType="RelativeToBandHeight" mode="Opaque" x="374" y="0" width="27" height="11" isPrintInFirstWholeBand="true" forecolor="#444444" uuid="fa567c80-d69c-4989-a4bc-fa9c7321f814">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -1751,7 +1753,7 @@ order by
 				</textElement>
 				<textFieldExpression><![CDATA[$F{lit_discount_1}.compareTo(BigDecimal.ZERO) > 0 && "Y".equals($P{IsDiscount}) ? $F{lit_discount_1} : ""]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="#,##0.00" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement style="easy_read_code" positionType="Float" stretchType="RelativeToBandHeight" mode="Opaque" x="324" y="0" width="50" height="11" isPrintInFirstWholeBand="true" forecolor="#444444" uuid="6a32f696-d6db-4106-8d35-31e00edacf12">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -1768,7 +1770,7 @@ order by
 				</textElement>
 				<textFieldExpression><![CDATA["Y".equals($P{PRINT_SECTION_DETAIL_PRICE}) && "Y".equals($P{IsDiscount}) ? (($F{ad_orginfo_lit_report_param}.charAt(11)) == 'Y' ? $F{c_orderline_pricelist} : $F{c_orderline_priceactual}) : ""]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
 				<reportElement style="easy_read" positionType="Float" stretchType="RelativeToBandHeight" mode="Opaque" x="244" y="0" width="30" height="11" isPrintInFirstWholeBand="true" forecolor="#444444" uuid="a2432bbc-3a8c-477f-91c4-1f17a8ac80e9">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1785,7 +1787,7 @@ order by
 				</textElement>
 				<textFieldExpression><![CDATA[$F{c_uom_trl_uomsymbol}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="#,##0.00" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement style="easy_read_code" positionType="Float" stretchType="RelativeToBandHeight" mode="Opaque" x="455" y="0" width="50" height="11" isPrintInFirstWholeBand="true" forecolor="#444444" uuid="40e2be4d-06b7-49ea-a719-dbfe732695e8">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -1800,7 +1802,7 @@ order by
 				</textElement>
 				<textFieldExpression><![CDATA["Y".equals($P{PRINT_SECTION_DETAIL_PRICE}) ? $F{c_orderline_priceentered} : ""]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="0.00" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="0.00" isBlankWhenNull="true">
 				<reportElement style="easy_read_code" positionType="Float" stretchType="RelativeToBandHeight" mode="Opaque" x="401" y="0" width="27" height="11" isPrintInFirstWholeBand="true" forecolor="#444444" uuid="1ae12d85-4d26-4c8a-9d0b-75af9e918691">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -1817,7 +1819,7 @@ order by
 				</textElement>
 				<textFieldExpression><![CDATA[$F{lit_discount_2}.compareTo(BigDecimal.ZERO) > 0 && "Y".equals($P{IsDiscount}) ? $F{lit_discount_2} : ""]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="0.00" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="0.00" isBlankWhenNull="true">
 				<reportElement style="easy_read_code" positionType="Float" stretchType="RelativeToBandHeight" mode="Opaque" x="428" y="0" width="27" height="11" isPrintInFirstWholeBand="true" forecolor="#444444" uuid="3db8f106-2d9e-4791-a921-52a842fd4adc">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -1837,7 +1839,7 @@ order by
 		</band>
 		<band height="13" splitType="Prevent">
 			<printWhenExpression><![CDATA[$P{PRINT_SECTION_DETAIL}.equals("Y")]]></printWhenExpression>
-			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
 				<reportElement style="easy_read" positionType="Float" stretchType="RelativeToBandHeight" mode="Opaque" x="0" y="0" width="555" height="13" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" forecolor="#444444" uuid="749a10db-86f2-4fa0-90f5-0ee5c8ef6eba">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1856,7 +1858,7 @@ order by
 		</band>
 		<band height="13" splitType="Prevent">
 			<printWhenExpression><![CDATA[$P{PRINT_SECTION_DETAIL}.equals("Y")]]></printWhenExpression>
-			<textField textAdjust="StretchHeight" pattern="" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
 				<reportElement style="easy_read" positionType="Float" stretchType="RelativeToBandHeight" mode="Opaque" x="0" y="0" width="555" height="13" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" forecolor="#444444" uuid="522494aa-1f7a-4d48-b288-f75a55cdd4ed">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -2073,7 +2075,7 @@ order by
 					</jr:column>
 				</jr:table>
 			</componentElement>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="highlight" positionType="Float" isPrintRepeatedValues="false" x="286" y="146" width="129" height="15" uuid="a194b19d-7916-4b0c-868b-a6fbd9fa6e11">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -2163,7 +2165,7 @@ order by
 				</textElement>
 				<textFieldExpression><![CDATA[str("LIT_RP_421_FinishLegend")]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="label" isPrintRepeatedValues="false" x="286" y="62" width="129" height="15" uuid="dbf23382-9816-4d16-b3e4-ecd0a24c058f">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -2183,7 +2185,7 @@ order by
 				</textElement>
 				<textFieldExpression><![CDATA[str("LIT_RP_421_NetTotal")]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="label" isPrintRepeatedValues="false" x="286" y="46" width="129" height="15" uuid="0b8be086-26c9-4cb9-a8cc-27bbf8d66921">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -2203,7 +2205,7 @@ order by
 				</textElement>
 				<textFieldExpression><![CDATA[str("LIT_RP_421_DiscountTotal")]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="label" isPrintRepeatedValues="false" x="286" y="31" width="129" height="15" uuid="efe9a736-9adc-4096-82c1-e103f5fc4f02">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -2289,7 +2291,7 @@ order by
 				</textElement>
 				<textFieldExpression><![CDATA[$V{NetTotal}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="label" isPrintRepeatedValues="false" x="286" y="16" width="129" height="15" uuid="0cd48bba-9917-4363-b1a1-6845b4889f42">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -2350,7 +2352,7 @@ order by
 				</textElement>
 				<textFieldExpression><![CDATA[$F{extraimballo}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="label" isPrintRepeatedValues="false" x="286" y="77" width="129" height="15" isRemoveLineWhenBlank="true" uuid="ec606cc6-caaa-469c-ac78-61f59c477603">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -2392,7 +2394,7 @@ order by
 				</textElement>
 				<textFieldExpression><![CDATA[$F{extrafinitura}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="label" isPrintRepeatedValues="false" x="286" y="92" width="129" height="15" isRemoveLineWhenBlank="true" uuid="9a6c3eee-c307-4761-8b31-27255fbdaea8">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>

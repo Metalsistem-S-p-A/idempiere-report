@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.17.0.final utlizzo versione della libreria JasperReports6.17.0-6d93193241dd8cc42629e188b94f9e0bc5722efd  -->
+<!-- Created with Jaspersoft Studio version 6.21.5.final utlizzo versione della libreria JasperReports6.21.5-74d586df47b25dbd05bd0957999819196e59934a  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="421salesorder" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" isSummaryWithPageHeaderAndFooter="true" uuid="9847bff4-9f3a-49b0-9603-8d56c23b5d53">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="idempieredb"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="iDempiere-Prod"/>
 	<template><![CDATA["styles/ms-style.jrtx"]]></template>
 	<style name="easy_read" style="easy_read_bg">
 		<conditionalStyle>
@@ -141,8 +141,8 @@ order by
 	ad_user_2.name as ad_user_2_name,
 	ad_user_2.email as ad_user_2_email,
 	ad_user_2.phone as ad_user_2_phone,
-	c_paymentterm.name as c_paymentterm_name,
-	lit_tables.name as c_order_lit_offervaliditytime_name,
+	coalesce(c_paymentterm_trl.name, c_paymentterm.name) as c_paymentterm_name,
+	coalesce(ltt.name,lit_tables.name) as c_order_lit_offervaliditytime_name,
 	c_bpartner_location_a.ispreservecustomname as c_bpartner_location_ispreservecustomname,
 	c_location.address1 as c_location_address1,
 	c_location.city as c_location_city,
@@ -205,6 +205,9 @@ left join c_doctype_trl c_doctype_trl on
 	and c_doctype_trl.ad_language = $P{LOCALE_CODE}
 left join c_paymentterm c_paymentterm on
 	c_order.c_paymentterm_id = c_paymentterm.c_paymentterm_id
+	left join c_paymentterm_trl c_paymentterm_trl on
+	c_paymentterm_trl.c_paymentterm_id = c_paymentterm.c_paymentterm_id
+	and c_paymentterm_trl.ad_language = $P{LOCALE_CODE}
 left join c_bpartner_location c_bpartner_location_a on
 	c_order.c_bpartner_location_id = c_bpartner_location_a.c_bpartner_location_id
 left join ad_user ad_user_2 on
@@ -228,6 +231,8 @@ left join c_country_trl c_country_trl on
 	and c_country_trl.ad_language = $P{LOCALE_CODE}
 left join lit_tables lit_tables on
 	c_order.lit_offervaliditytime_id = lit_tables.lit_tables_id
+left join lit_tables_trl ltt on
+	lit_tables.lit_tables_id = ltt.lit_tables_id and ltt.ad_language = $P{LOCALE_CODE}
 left join m_product m_product on
 	c_orderline.m_product_id = m_product.m_product_id
 left join c_uom c_uom on

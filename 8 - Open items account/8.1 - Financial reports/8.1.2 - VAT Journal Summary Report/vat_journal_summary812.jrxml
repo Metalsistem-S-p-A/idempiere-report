@@ -198,7 +198,7 @@ WHERE
 				</reportElement>
 				<box leftPadding="2" rightPadding="2"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-					<font isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[($V{IVA_CREDITO} != null ? $V{IVA_CREDITO} : BigDecimal.ZERO).multiply($F{lit_prorata})]]></textFieldExpression>
@@ -231,7 +231,7 @@ WHERE
 				</reportElement>
 				<box leftPadding="2" rightPadding="2"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-					<font isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{IVA_CREDITO}.subtract($V{IVA_CREDITO}.multiply($F{lit_prorata}))]]></textFieldExpression>
@@ -250,7 +250,7 @@ WHERE
 				</reportElement>
 				<box leftPadding="2" rightPadding="2"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-					<font isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{IVA_DEBITO}
@@ -264,7 +264,7 @@ WHERE
 				</reportElement>
 				<box leftPadding="2" rightPadding="2"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-					<font isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{iso_code}]]></textFieldExpression>
@@ -276,7 +276,7 @@ WHERE
 				</reportElement>
 				<box leftPadding="2" rightPadding="2"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-					<font isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{iso_code}]]></textFieldExpression>
@@ -288,7 +288,7 @@ WHERE
 				</reportElement>
 				<box leftPadding="2" rightPadding="2"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-					<font isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{iso_code}]]></textFieldExpression>
@@ -302,7 +302,7 @@ WHERE
 				</reportElement>
 				<box leftPadding="2" rightPadding="2"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-					<font isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[ABS(
@@ -343,7 +343,7 @@ WHERE
 				</reportElement>
 				<box leftPadding="2" rightPadding="2"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-					<font isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{iso_code}]]></textFieldExpression>

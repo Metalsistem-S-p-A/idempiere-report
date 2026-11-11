@@ -151,7 +151,7 @@ WHERE
 				<reportElement style="easy_read_code" positionType="Float" x="135" y="0" width="60" height="12" uuid="1b52c459-3f0d-4bcd-9d85-d6f1b4375e8c"/>
 				<box leftPadding="2" rightPadding="2"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-					<font isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{lit_c_invoice_tax_c_invoicetax_taxamt}]]></textFieldExpression>

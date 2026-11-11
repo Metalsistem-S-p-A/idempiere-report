@@ -935,7 +935,7 @@
 					<rightPen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
-					<font isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single" leftIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[str("BPartner")]]></textFieldExpression>
@@ -1273,7 +1273,7 @@
 					<rightPen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement verticalAlignment="Top" rotation="None" markup="none">
-					<font isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single" leftIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[T($F{m_product_value}) + 
@@ -1345,7 +1345,7 @@
 					<rightPen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement verticalAlignment="Top" rotation="None" markup="none">
-					<font isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single" leftIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[($F{c_invoiceline_name}!=null?$F{c_invoiceline_name}:$F{m_product_name}!=null?$F{m_product_name}:"")
@@ -1470,7 +1470,7 @@
 					<rightPen lineWidth="1.0" lineColor="#999999"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-					<font isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[($F{c_invoice_docstatus}.equals("CO") ?  $F{c_invoice_grandtotal}.add($F{c_invoice_withholdingamt}) : $F{c_invoice_grandtotal} )]]></textFieldExpression>

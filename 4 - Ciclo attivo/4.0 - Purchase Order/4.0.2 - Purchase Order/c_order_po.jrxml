@@ -602,7 +602,7 @@ order by
 					<rightPen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
-					<font isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{c_order_isdropship}.equals("Y") ? $F{c_location_dropship_address1} : $F{c_location_warehouse_address1}]]></textFieldExpression>
@@ -618,7 +618,7 @@ order by
 					<rightPen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
-					<font isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{c_order_isdropship}.equals("Y") ? 
@@ -640,7 +640,7 @@ order by
 					<rightPen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
-					<font isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{c_order_isdropship}.equals("Y") ? $F{c_bpartner_dropship_name} : $F{m_warehouse_name}]]></textFieldExpression>
@@ -1085,7 +1085,7 @@ new DecimalFormat("#,##0.00000").format($F{c_orderline_pricelist})]]></textField
 				</reportElement>
 				<box leftPadding="2" rightPadding="2"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
-					<font isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{c_currency_iso_code}]]></textFieldExpression>

@@ -806,7 +806,7 @@ where
 					<rightPen lineWidth="1.0" lineStyle="Solid"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="html">
-					<font isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single" firstLineIndent="0" leftIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{c_order_documentno} != null && !$F{c_order_documentno}.isBlank() ? "<b>" +$F{c_doctype_order_trl_name} +": </b>"+T($F{c_order_documentno}) : ""]]></textFieldExpression>

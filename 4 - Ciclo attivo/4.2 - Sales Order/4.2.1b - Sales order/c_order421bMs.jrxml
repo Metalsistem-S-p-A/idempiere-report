@@ -1526,7 +1526,7 @@ order by c_orderline.line]]>
 					<rightPen lineWidth="0.0"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
-					<font size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{c_orderline_description}]]></textFieldExpression>
@@ -1544,7 +1544,7 @@ order by c_orderline.line]]>
 					<rightPen lineWidth="0.0"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
-					<font size="5" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font size="5" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{c_orderline_help}]]></textFieldExpression>

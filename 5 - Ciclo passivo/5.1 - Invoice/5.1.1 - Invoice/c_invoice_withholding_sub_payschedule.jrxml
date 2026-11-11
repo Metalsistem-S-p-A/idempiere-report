@@ -104,7 +104,7 @@ order by  c_invoicepayschedule."duedate"]]>
 					<pen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-					<font isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 					<paragraph lineSpacing="Single" rightIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[str("DueAmt")]]></textFieldExpression>
